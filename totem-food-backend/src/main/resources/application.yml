@@ -1,0 +1,24 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    root: ${LOGGING_LEVEL:info}
+    "[com.totem.food]": ${APP_LOGGING_LEVEL:debug}
+    "[org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping]": ${SHOW_ENDPOINTS_LOGGING_LEVEL:info}
+  pattern:
+    level: "%clr(${LOG_LEVEL_PATTERN: [%X{x-request-id}] [%X{x-environment-id}] [%X{x-customer-id}] -%5p})"
+
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: totem-food
+      username: root
+      password: qwe123
+
+app:
+  version: ^project.version^
+  name: ^project.name^
+  description: ^project.description^
