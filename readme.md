@@ -1,4 +1,37 @@
-# Processo de execução das Tasks
+## Projeto
+
+Para execução do projeto esta sendo utilzado as seguintes bibliotecas e ferramentas abaixo.
+
+* Java Versão 17
+```
+openjdk 17.0.7 2023-04-18
+OpenJDK Runtime Environment (build 17.0.7+7-Ubuntu-0ubuntu120.04)
+OpenJDK 64-Bit Server VM (build 17.0.7+7-Ubuntu-0ubuntu120.04, mixed mode, sharing)
+```
+* Maven versão 3.8.1
+```
+Apache Maven 3.8.1 (05c21c65bdfed0f71a2f2ada8b84da59348c4c5d)
+Maven home: /usr/local/apache-maven-3.8.1
+Java version: 17.0.7, vendor: Private Build, runtime: /usr/lib/jvm/java-17-openjdk-amd64
+Default locale: pt_BR, platform encoding: UTF-8
+OS name: "linux", version: "5.14.0-1059-oem", arch: "amd64", family: "unix"
+```
+* Docker version 23.0.1
+```
+Docker version 23.0.1, build a5ee5b1
+```
+* Docker Compose version 1.29.2
+```
+docker-compose version 1.29.2, build 5becea4c
+```
+* IntelliJ IDE Community Edition
+```
+IntelliJ IDEA 2023.1.2 (Community Edition)
+Build #IC-231.9011.34, built on May 16, 2023
+```
+* MongoDB Compass versão 1.31.2
+
+## Processo de execução das Tasks
 
 Todo o processo de criação de novas features e correções de bugs devem sguir o processo desenhado abaixo
 
@@ -44,22 +77,26 @@ Exemplo
 feat: Foi criado novo endpoint na implementação de Y
 ```
 
-# Swagger da Aplicação
+## Swagger da Aplicação
 
 Para visualizar o swagger copiar o conteúdo do arquivo no seguinte [link](./documentation/swaggers/totem-food-service.yaml), após copiar cole no site do [swagger editor](https://editor.swagger.io/).
 
 ![Swagger](./documentation/swaggers/totem-food-service-swagger.png)
 
-# Visão Geral da Aplicação
+## Visão Geral da Aplicação
 
 Visão global da aplicação em funcionamento
 
 ![Swagger](./documentation/diagrams/GeneralVision.png)
 
-# Executar docker-compose
+## Executar docker-compose
 
 executar o commando na raiz do pasta do projeto
 
+Iniciar somente o MongoDB e executar o Totem Food Service pela IDE
+```
+./script-start-dev.sh dev
+```
 Iniciar a infraestrutura e backend do `totem-food-service`
 ```
 ./script-start-dev.sh
@@ -76,7 +113,7 @@ Ver os logs da aplicação: `mongo` ou `totem-food-service`
 ./script-logs-dev.sh totem-food-service
 ```
 
-# Gerar docker build
+## Gerar docker build
 
 - Vá até o diretório da aplicação, onde se encontra o pom.xml
 

@@ -23,3 +23,23 @@ services:
       start_period: 5s
     networks:
       - developer-network
+
+  totem-food-service:
+    container_name: totem-food-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SPRING.DATA.MONGODB.HOST: mongo-dev
+      SPRING.DATA.MONGODB.PORT: 27017
+      SPRING.DATA.MONGODB.DATABASE: totem-food
+      SPRING.DATA.MONGODB.USERNAME: root
+      SPRING.DATA.MONGODB.PASSWORD: qwe123
+      SPRING.DATA.MONGODB.AUTHENTICATION_DATABASE: admin
+    ports:
+      - "8080:8080"
+    depends_on:
+      mongo-dev:
+        condition: service_healthy
+    networks:
+      - developer-network

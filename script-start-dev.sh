@@ -1,1 +1,9 @@
-docker-compose -f docker-compose.yaml up -d
+if [ "${1}" = "dev" ]
+then
+  echo Starting only MongoDB
+  docker-compose -f docker-compose.yaml up -d mongo-dev
+else
+  echo Starting MongoDB and Totem Food Service
+  docker-compose -f docker-compose.yaml up -d
+fi
+
