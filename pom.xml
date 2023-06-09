@@ -41,7 +41,7 @@
         <bcprov-jdk18on.version>1.72</bcprov-jdk18on.version>
         <bcpkix-jdk18on.version>1.72</bcpkix-jdk18on.version>
         <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
-        <junit-jupiter-engine.version>5.9.1</junit-jupiter-engine.version>
+        <junit-jupiter-engine.version>5.7.2</junit-jupiter-engine.version>
         <mockito-junit-jupiter.version>4.8.0</mockito-junit-jupiter.version>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar-maven-plugin.version>3.9.1.2184</sonar-maven-plugin.version>
@@ -168,7 +168,8 @@
                             </goals>
                         </execution>
                         <execution>
-                            <id>report</id>
+                            <id>jacoco-report</id>
+                            <phase>test</phase>
                             <goals>
                                 <goal>report</goal>
                             </goals>
