@@ -1,0 +1,5 @@
+FROM openjdk:17.0.2-slim-buster
+LABEL maintainer="Totem Food Service"
+WORKDIR /opt/app
+COPY ./*.jar totem-food-service.jar
+ENTRYPOINT ["java","-jar","/opt/app/totem-food-service.jar"]
