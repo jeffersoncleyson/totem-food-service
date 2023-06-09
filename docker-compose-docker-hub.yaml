@@ -1,0 +1,43 @@
+version: '3.5'
+
+networks:
+  developer-network:
+    driver: bridge
+
+services:
+  mongo-dev:
+    image: mongo:latest
+    container_name: mongo-dev
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "${MY_MONGO_INITDB_ROOT_USERNAME}"
+      MONGO_INITDB_ROOT_PASSWORD: "${MY_MONGO_INITDB_ROOT_PASSWORD}"
+    ports:
+      - "${MY_MONGO_PORT}:27017"
+    volumes:
+      - ${MY_MONGO_DATA}:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo mongo-dev:27017/test --quiet
+      interval: 2s
+      timeout: 2s
+      retries: 5
+      start_period: 5s
+    networks:
+      - developer-network
+
+  totem-food-service:
+    container_name: totem-food-service
+    image: jeffersoncleyson/totem-food-service:pr-3
+    environment:
+      SPRING.DATA.MONGODB.HOST: mongo-dev
+      SPRING.DATA.MONGODB.PORT: 27017
+      SPRING.DATA.MONGODB.DATABASE: totem-food
+      SPRING.DATA.MONGODB.USERNAME: root
+      SPRING.DATA.MONGODB.PASSWORD: qwe123
+      SPRING.DATA.MONGODB.AUTHENTICATION_DATABASE: admin
+    ports:
+      - "8080:8080"
+    depends_on:
+      mongo-dev:
+        condition: service_healthy
+    networks:
+      - developer-network
