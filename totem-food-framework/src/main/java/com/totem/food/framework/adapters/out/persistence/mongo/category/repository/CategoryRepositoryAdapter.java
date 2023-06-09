@@ -14,10 +14,10 @@ import org.springframework.stereotype.Repository;
 public class CategoryRepositoryAdapter implements ICategoryRepositoryPort<CategoryDomain> {
 
 	@Repository
-	protected interface CategoryRepositoryMongo extends BaseRepository<CategoryEntity, String> {
+	protected interface CategoryRepositoryMongoDB extends BaseRepository<CategoryEntity, String> {
 	}
 
-	private final CategoryRepositoryMongo repository;
+	private final CategoryRepositoryMongoDB repository;
 	private final ICategoryEntityMapper iCategoryEntityMapper;
 
 	@Override

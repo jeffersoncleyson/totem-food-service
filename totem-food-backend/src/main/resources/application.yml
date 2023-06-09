@@ -17,6 +17,7 @@ spring:
       database: totem-food
       username: root
       password: qwe123
+      authentication-database: admin
 
 app:
   version: ^project.version^

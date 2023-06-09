@@ -1,11 +1,9 @@
-package com.totem.food.framework.adapters.out.persistence.mongo.category.entity;
+package com.totem.food.application.ports.in.dtos.category;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.ZonedDateTime;
 
@@ -13,10 +11,8 @@ import java.time.ZonedDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "category")
-public class CategoryEntity {
+public class CategoryDto {
 
-    @Id
     private String id;
     private String name;
     private ZonedDateTime modifiedAt;

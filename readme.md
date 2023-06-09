@@ -1,4 +1,80 @@
-# Dependência
+# Processo de execução das Tasks
+
+Todo o processo de criação de novas features e correções de bugs devem sguir o processo desenhado abaixo
+
+![Processo de execução das Tasks](./documentation/git-process/ProcessoDeExecucaoTasks.png)
+
+
+### PR (Pull Request)
+Todos os PRs (Pull Requests) devem ter o corpo da mensagem abaixo:
+
+Modelo: Features
+```
+Features:
+  * Task X: Implementação da criação do item H
+  * Task Y: Inclusão de novo endpoint na API W para cadastrar Z
+```
+Modelo: Bug Fix
+```
+Bug Fix
+  * Task U.1: Correção do cadastro do item ABC
+```
+
+### Commits
+
+Todos os commits devem contem uma das seguintes tags abaixo:
+
+* *feat*: implementação de uma funcionalidade nova
+* *fix*: correção de bugs
+* *chore*: ajustes simples no código sem comprometer uma feature 
+* *style*: ajustes de identação, nome de variável ou remoção de imports não utilizados
+* *docs*: alteração ou inclusão de documentação
+* *ci*: alteração de pipelines
+* *refactor*: refatoração de métodos e classes para uma melhor leitura do código ou desempenho
+* *test*: inclusão de testes unitários ou de integração
+
+Mensagem de todo commit:
+
+Modelo
+```
+TAG_COMMIT: mensagem descrevendo o que foi feito no commit
+```
+Exemplo
+```
+feat: Foi criado novo endpoint na implementação de Y
+```
+
+# Swagger da Aplicação
+
+Para visualizar o swagger copiar o conteúdo do arquivo no seguinte [link](./documentation/swaggers/totem-food-service.yaml), após copiar cole no site do [swagger editor](https://editor.swagger.io/).
+
+![Swagger](./documentation/swaggers/totem-food-service-swagger.png)
+
+# Visão Geral da Aplicação
+
+Visão global da aplicação em funcionamento
+
+![Swagger](./documentation/diagrams/GeneralVision.png)
+
+# Executar docker-compose
+
+executar o commando na raiz do pasta do projeto
+
+Iniciar a infraestrutura e backend do `totem-food-service`
+```
+./script-start-dev.sh
+```
+Parar a infraestrutura e backend do `totem-food-service`
+```
+./script-stop-dev.sh
+```
+Ver os logs da aplicação: `mongo` ou `totem-food-service`
+```
+./script-logs-dev.sh mongo
+```
+```
+./script-logs-dev.sh totem-food-service
+```
 
 # Gerar docker build
 

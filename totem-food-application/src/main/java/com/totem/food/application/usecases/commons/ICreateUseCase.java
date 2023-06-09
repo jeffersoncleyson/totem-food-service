@@ -1,7 +1,7 @@
 package com.totem.food.application.usecases.commons;
 
-public interface ICreateUseCase<T> {
+public interface ICreateUseCase<I, O> {
 
-	T createItem(T item);
+	O createItem(I item);
 
 }
