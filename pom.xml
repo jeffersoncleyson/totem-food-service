@@ -46,7 +46,8 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar-maven-plugin.version>3.9.1.2184</sonar-maven-plugin.version>
         <sonar.projectName>totem-food-service</sonar.projectName>
-        <sonar.projectKey>totem-food-service-4787bf24ba181ac258cb520837a657896a92044c</sonar.projectKey>
+        <sonar.organization>fiap-tech-challenge-4787bf24ba181ac258cb520837a657896a92044c</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
     </properties>
     <dependencyManagement>
