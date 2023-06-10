@@ -1,0 +1,451 @@
+openapi: 3.0.3
+info:
+  title: Totem Food Service Administrative - OpenAPI 3.0
+  description: |-
+    API utilizada pelo Administrativo e aplicação hospedada no Totem da Food Service
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: Category
+    description: Access to categories
+  - name: Products
+    description: Access to product
+  - name: Customers
+    description: Access to customers
+  - name: Combo
+    description: Access to combo
+  - name: Orders
+    description: Access to orders
+paths:
+  /administrative/category:
+    post:
+      tags:
+        - Category
+      summary: Create a new category
+      description: Create a new category
+      operationId: createCategory
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryCreateDto'
+      responses:
+        '201':
+          description: created operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryDto'
+        '405':
+          description: Invalid input
+    get:
+      tags:
+        - Category
+      summary: List all categories
+      description: Create a new category
+      operationId: listAllCategories
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoryDto'
+        '405':
+          description: Invalid input
+  /administrative/category/{categoryId}:
+    get:
+      tags:
+        - Category
+      summary: Get category
+      description: Create a new category
+      operationId: getCategoryByID
+      parameters:
+        - name: categoryId
+          in: path
+          description: ID of pet to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '201':
+          description: created operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryDto'
+        '405':
+          description: Invalid input
+    put:
+      tags:
+        - Category
+      summary: Update category
+      description: Update category
+      operationId: updateCategory
+      parameters:
+        - name: categoryId
+          in: path
+          description: ID of pet to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryCreateDto'
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryDto'
+        '405':
+          description: Invalid input
+    delete:
+      tags:
+        - Category
+      summary: Remove category
+      description: Remove category
+      operationId: deleteCategoryByID
+      parameters:
+        - name: categoryId
+          in: path
+          description: ID of pet to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: No content
+        '404':
+          description: Not found
+  /administrative/product:
+    post:
+      tags:
+        - Products
+      summary: Create a new product
+      description: Create a new product
+      operationId: createProduct
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCreateDto'
+      responses:
+        '201':
+          description: created operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDto'
+        '405':
+          description: Invalid input
+    get:
+      tags:
+        - Products
+      summary: List all product
+      description: List all product
+      operationId: listAllProducts
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductDto'
+        '405':
+          description: Invalid input
+  /administrative/product/{productId}:
+    get:
+      tags:
+        - Products
+      summary: Get product
+      description: Get product
+      operationId: getProductByID
+      parameters:
+        - name: productId
+          in: path
+          description: ID of pet to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '201':
+          description: created operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDto'
+        '405':
+          description: Invalid input
+    put:
+      tags:
+        - Products
+      summary: Update product
+      description: Update product
+      operationId: updateProduct
+      parameters:
+        - name: productId
+          in: path
+          description: ID of pet to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCreateDto'
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDto'
+        '405':
+          description: Invalid input
+    delete:
+      tags:
+        - Products
+      summary: Remove product
+      description: Remove product
+      operationId: deleteProductByID
+      parameters:
+        - name: productId
+          in: path
+          description: ID of pet to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: No content
+        '404':
+          description: Not found
+  /administrative/combo:
+    post:
+      tags:
+        - Combo
+      summary: Create a new combo
+      description: Create a new combo
+      operationId: createCombo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComboCreateDto'
+      responses:
+        '201':
+          description: created operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComboDto'
+        '405':
+          description: Invalid input
+  /administrative/customer:
+    get:
+      tags:
+        - Customers
+      summary: List all product
+      description: List all product
+      operationId: listAllCustomers
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerDto'
+        '405':
+          description: Invalid input
+  /administrative/orders:
+    get:
+      tags:
+        - Orders
+      summary: List all orders
+      description: List all orders
+      operationId: listAllOrders
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderAdminDto'
+        '405':
+          description: Invalid input
+components:
+  schemas:
+    CategoryDto:
+      type: object
+      properties:
+        id:
+          type: string
+          example: '64826bb3554280604d93d7b6'
+        name:
+          type: string
+          description: Category name
+          example: 'refrigerantes'
+        modifiedAt:
+          type: string
+          format: date-time
+          example: '2023-06-09T00:00:51.623596531Z'
+          description: Date of last update
+        createAt:
+          type: string
+          format: date-time
+          example: '2023-06-09T00:00:51.623596531Z'
+          description: Date of creation
+    CategoryCreateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Category name
+          example: 'refrigerantes'
+    ProductCreateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Category name
+          example: 'Coca-cola'
+        price:
+          type: number
+          description: Price
+          example: '5.90'
+    ProductDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Category name
+          example: 'Coca-cola'
+        price:
+          type: number
+          description: Price
+          example: '5.90'
+        modifiedAt:
+          type: string
+          format: date-time
+          example: '2023-06-09T00:00:51.623596531Z'
+          description: Date of last update
+        createAt:
+          type: string
+          format: date-time
+          example: '2023-06-09T00:00:51.623596531Z'
+          description: Date of creation
+    ComboCreateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Category name
+          example: 'Combo da casa'
+        price:
+          type: number
+          description: Price
+          example: '24.99'
+        products:
+          type: array
+          items:
+            type: string
+            example: '64826bb3554280604d93d7b6'
+    ComboDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Combo name
+          example: 'Combo da casa'
+        price:
+          type: number
+          description: Price
+          example: '24.99'
+        products:
+          type: array
+          items:
+            type: string
+            example: '64826bb3554280604d93d7b6'
+        modifiedAt:
+          type: string
+          format: date-time
+          example: '2023-06-09T00:00:51.623596531Z'
+          description: Date of last update
+        createAt:
+          type: string
+          format: date-time
+          example: '2023-06-09T00:00:51.623596531Z'
+          description: Date of creation
+    CustomerDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Category name
+          example: 'Joe'
+        email:
+          type: string
+          description: E-mail
+          example: 'joe@email.com'
+        mobile:
+          type: string
+          description: Mobile number
+          example: '5535989483811'
+        modifiedAt:
+          type: string
+          format: date-time
+          example: '2023-06-09T00:00:51.623596531Z'
+          description: Date of last update
+        createAt:
+          type: string
+          format: date-time
+          example: '2023-06-09T00:00:51.623596531Z'
+          description: Date of creation
+    OrderAdminDto:
+      type: object
+      properties:
+        number:
+          type: string
+          description: Order number
+          example: '1'
+        customerName:
+          type: string
+          description: Customer name
+          example: 'Joe'
+        email:
+          type: string
+          description: E-mail
+          example: 'joe@email.com'
+        amount:
+          type: number
+          description: Customer name
+          example: '53.89'

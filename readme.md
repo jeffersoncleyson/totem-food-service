@@ -86,7 +86,7 @@ feat: Foi criado novo endpoint na implementação de Y
 
 ## Swagger da Aplicação
 
-Para visualizar o swagger copiar o conteúdo do arquivo no seguinte [link](./documentation/swaggers/totem-food-service.yaml), após copiar cole no site do [swagger editor](https://editor.swagger.io/).
+Para visualizar o swagger copiar o conteúdo do arquivo no seguinte [link](./documentation/swaggers/totem-food-service-administrative.yaml), após copiar cole no site do [swagger editor](https://editor.swagger.io/).
 
 ![Swagger](./documentation/swaggers/totem-food-service-swagger.png)
 
