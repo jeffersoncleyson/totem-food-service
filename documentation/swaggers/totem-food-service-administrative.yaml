@@ -336,23 +336,47 @@ components:
       properties:
         name:
           type: string
-          description: Category name
+          description: Product name
           example: 'Coca-cola'
+        description:
+          type: string
+          description: Product description
+          example: 'Refrigerante sabor cola'
+        image:
+          type: string
+          description: Product image URL
+          example: 'https://product-image.s3.east-1.amazonaws.com/coca-cola.png'
         price:
           type: number
           description: Price
           example: '5.90'
+        category:
+          type: string
+          description: category identification
+          example: '64826bb3554280604d93d7b6'
     ProductDto:
       type: object
       properties:
         name:
           type: string
-          description: Category name
+          description: Product name
           example: 'Coca-cola'
+        description:
+          type: string
+          description: Product description
+          example: 'Refrigerante sabor cola'
+        image:
+          type: string
+          description: Product image URL
+          example: 'https://product-image.s3.east-1.amazonaws.com/coca-cola.png'
         price:
           type: number
           description: Price
           example: '5.90'
+        category:
+          type: string
+          description: category identification
+          example: '64826bb3554280604d93d7b6'
         modifiedAt:
           type: string
           format: date-time
