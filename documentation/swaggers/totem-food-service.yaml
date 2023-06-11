@@ -1,0 +1,296 @@
+openapi: 3.0.3
+info:
+  title: Totem Food Service - OpenAPI 3.0
+  description: |-
+    API utilizada pelo Administrativo e aplicação hospedada no Totem da Food Service
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: Customers
+    description: Access to customers
+  - name: Order
+    description: Access to orders
+  - name: Payment Gateway
+    description: Access to payment
+paths:
+  /customer:
+    post:
+      tags:
+        - Customers
+      summary: Create a new customer
+      description: Create a new customer
+      operationId: createCustomer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerCreateDto'
+      responses:
+        '201':
+          description: created operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerDto'
+        '405':
+          description: Invalid input
+  /order:
+    post:
+      tags:
+        - Order
+      summary: Create a new customer
+      description: Create a new customer
+      operationId: createOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderCreateDto'
+      responses:
+        '201':
+          description: created operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDto'
+        '405':
+          description: Invalid input
+  /order/{orderId}:
+    put:
+      tags:
+        - Order
+      summary: Update order
+      description: Update order
+      operationId: orderUpdate
+      parameters:
+        - name: orderId
+          in: path
+          description: ID of pet to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderCreateDto'
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDto'
+        '405':
+          description: Invalid input
+  /order/{orderId}/status/{statusName}:
+    put:
+      tags:
+        - Order
+      summary: Update order
+      description: Update order
+      operationId: orderStatus
+      parameters:
+        - name: orderId
+          in: path
+          description: ID of pet to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: statusName
+          in: path
+          description: ID of pet to return
+          required: true
+          schema:
+            $ref: '#/components/schemas/OrderStatusEnum'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderCreateDto'
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDto'
+        '405':
+          description: Invalid input
+  /payment:
+    post:
+      tags:
+        - Payment Gateway
+      summary: Create payment
+      description: Create payment
+      operationId: paymentQrCode
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentCreateDto'
+      responses:
+        '201':
+          description: created operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentQRCodeDto'
+        '405':
+          description: Invalid input
+  /payment/callback:
+    get:
+      tags:
+        - Payment Gateway
+      summary: Update order
+      description: Update order
+      operationId: orderCallbackStatus
+      parameters:
+        - name: paymentId
+          in: query
+          description: ID of pet to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: approved
+          in: query
+          description: payment status
+          required: true
+          schema:
+            type: string
+            format: string
+      responses:
+        '202':
+          description: "Accepted"
+        '405':
+          description: Invalid input
+components:
+  schemas:
+    CustomerCreateDto:
+      type: object
+      required:
+        - name
+        - email
+        - cpf
+      properties:
+        name:
+          type: string
+          description: Customer name
+          example: 'Joe'
+        email:
+          type: string
+          description: E-mail
+          example: 'joe@email.com'
+        cpf:
+          type: string
+          description: CPF
+          example: '14315476579'
+        mobile:
+          type: string
+          description: Mobile number
+          example: '5535989483811'
+    CustomerDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Customer name
+          example: 'Joe'
+        email:
+          type: string
+          description: E-mail
+          example: 'joe@email.com'
+        cpf:
+          type: string
+          description: CPF
+          example: '14315476579'
+        mobile:
+          type: string
+          description: Mobile number
+          example: '5535989483811'
+        modifiedAt:
+          type: string
+          format: date-time
+          example: '2023-06-09T00:00:51.623596531Z'
+          description: Date of last update
+        createAt:
+          type: string
+          format: date-time
+          example: '2023-06-09T00:00:51.623596531Z'
+          description: Date of creation
+    OrderCreateDto:
+      type: object
+      properties:
+        combo:
+          type: array
+          items:
+            type: string
+          example: ["22826bb3554280604d93d7b6","33826bb3554280604d93d7b6"]
+        product:
+          type: array
+          items:
+            type: string
+          example: ["11826bb3554280604d93d7b6","55526bb3554280604d93d7b6"]
+    OrderDto:
+      type: object
+      properties:
+        id:
+          type: string
+          example: '64826bb3554280604d93d7b6'
+        combo:
+          type: array
+          items:
+            type: string
+          example: ["22826bb3554280604d93d7b6","33826bb3554280604d93d7b6"]
+        product:
+          type: array
+          items:
+            type: string
+          example: ["11826bb3554280604d93d7b6","55526bb3554280604d93d7b6"]
+        status:
+          $ref: '#/components/schemas/OrderStatusEnum'
+
+    OrderStatusEnum:
+      type: string
+      description: Status order
+      enum:
+        - NEW
+        - RECEIVED
+        - IN_PREPARATION
+        - READY
+        - FINALIZED # Take the order on the counter
+        - CANCELED
+      example: RECEIVED
+
+    PaymentCreateDto:
+      type: object
+      properties:
+        orderId:
+          type: string
+          description: order identification
+          example: '11826bb3554280604d93d7b6'
+
+    PaymentQRCodeDto:
+      type: object
+      properties:
+        qrcodeBase64:
+          type: string
+          description: base64
+          example: 'iVBORw0KGgoAAAANSUhEUgAABRQAAAUUCAYAAACu5p7oAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAIABJREFUeJzs2luO3LiWQNFmI+Y/Zd6vRt36KGNXi7ZOBtcagHD4kNLeiLX33v8DAAAAABD879sDAAAAAAA/h6AIAAAAAGSCIgAAAACQCYoAAAAAQCYoAgAAAACZoAgAAAAAZIIiAAAAAJAJigAAAABAJigCAAAAAJmgCAAAAABkgiIAAAAAkAmKAAAAAEAmKAIAAAAAmaAIAAAAAGSCIgAAAACQCYoAAAAAQCYoAgAAAACZoAgAAAAAZIIiAAAAAJAJigAAAABAJigCA...'
+        qrcode:
+          type: string
+          description: QRCode
+          example: '00020126600014br.gov.bcb.pix0117test@testuser.com0217dados adicionais520400005303986540510.005802BR5913Maria Silva6008Brasilia62070503***6304E2CA'
