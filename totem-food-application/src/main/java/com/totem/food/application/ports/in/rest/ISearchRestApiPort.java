@@ -1,6 +1,9 @@
 package com.totem.food.application.ports.in.rest;
 
+import java.util.List;
+
 public interface ISearchRestApiPort<I, O> {
 
-	O getItems();
+	List<O> getItems();
+	O getItem(I id);
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Component
@@ -43,11 +44,12 @@ public class CategoryRepositoryAdapter implements ICategoryRepositoryPort<Catego
     @Override
     public List<CategoryDomain> findAll() {
         final var categorysDomain = new ArrayList<CategoryDomain>();
-
-        final var categorysEntity = repository.findAll();
-
-        categorysEntity.forEach(entity -> categorysDomain.add(iCategoryEntityMapper.toDomain(entity)));
-
+        repository.findAll().forEach(element -> categorysDomain.add(iCategoryEntityMapper.toDomain(element)));
         return categorysDomain;
+    }
+
+    @Override
+    public Optional<CategoryDomain> findById(String id) {
+        return repository.findById(id).map(iCategoryEntityMapper::toDomain);
     }
 }
