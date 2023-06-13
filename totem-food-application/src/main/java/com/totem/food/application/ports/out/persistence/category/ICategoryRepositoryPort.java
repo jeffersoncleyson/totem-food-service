@@ -7,11 +7,13 @@ public interface ICategoryRepositoryPort<T> {
 
     T saveItem(T item);
 
-    T removeItem(T item);
+    void removeItem(String item);
 
     T updateItem(T item);
 
     List<T> findAll();
 
     Optional<T> findById(String id);
+
+    boolean existsItem(T item);
 }

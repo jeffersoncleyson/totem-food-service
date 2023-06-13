@@ -1,4 +1,4 @@
-package com.totem.food.framework.adapters.in.rest;
+package com.totem.food.framework.adapters.in.rest.category;
 
 import com.totem.food.application.ports.in.dtos.category.CategoryCreateDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
@@ -11,6 +11,7 @@ import com.totem.food.application.usecases.commons.ISearchUseCase;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,8 +52,10 @@ public class AdministrativeCategoriesRestApiAdapter implements
         return ResponseEntity.ok(searchUseCase.item(categoryId)).getBody();
     }
 
+    @DeleteMapping("/{categoryId}")
     @Override
-    public ResponseEntity<Void> removeItem(String itemId) {
+    public ResponseEntity<Void> removeItem(@PathVariable String categoryId) {
+        searchUseCase.removeItem(categoryId);
         return ResponseEntity.noContent().build();
     }
 

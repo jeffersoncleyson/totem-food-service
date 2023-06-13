@@ -19,6 +19,7 @@ public class CategoryRepositoryAdapter implements ICategoryRepositoryPort<Catego
 
     @Repository
     protected interface CategoryRepositoryMongoDB extends BaseRepository<CategoryEntity, String> {
+        boolean existsByNameIgnoreCase(String name);
     }
 
     private final CategoryRepositoryMongoDB repository;
@@ -32,8 +33,8 @@ public class CategoryRepositoryAdapter implements ICategoryRepositoryPort<Catego
     }
 
     @Override
-    public CategoryDomain removeItem(CategoryDomain item) {
-        return null;
+    public void removeItem(String itemId) {
+        repository.deleteById(itemId);
     }
 
     @Override
@@ -51,5 +52,10 @@ public class CategoryRepositoryAdapter implements ICategoryRepositoryPort<Catego
     @Override
     public Optional<CategoryDomain> findById(String id) {
         return repository.findById(id).map(iCategoryEntityMapper::toDomain);
+    }
+
+    @Override
+    public boolean existsItem(CategoryDomain item) {
+        return repository.existsByNameIgnoreCase(item.getName());
     }
 }
