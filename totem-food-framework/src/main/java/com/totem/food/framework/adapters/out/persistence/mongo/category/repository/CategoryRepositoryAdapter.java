@@ -39,7 +39,7 @@ public class CategoryRepositoryAdapter implements ICategoryRepositoryPort<Catego
 
     @Override
     public CategoryDomain updateItem(CategoryDomain item) {
-        return null;
+        return saveItem(item);
     }
 
     @Override

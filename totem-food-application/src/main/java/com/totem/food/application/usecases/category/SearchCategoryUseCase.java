@@ -37,8 +37,4 @@ public class SearchCategoryUseCase implements ISearchUseCase<String, CategoryDto
         return iCategoryMapper.toDto(categoryDomain);
     }
 
-    @Override
-    public void removeItem(String id) {
-        iCategoryRepositoryPort.removeItem(id);
-    }
 }

@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface ISearchRestApiPort<I, O> {
 
-	List<O> getItems();
-	O getItem(I id);
+	List<O> listAllCategories();
+	O getCategoryByID(I id);
 }

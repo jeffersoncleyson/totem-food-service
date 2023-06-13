@@ -7,6 +7,4 @@ public interface ISearchUseCase<I, O> {
     List<O> items();
 
     O item(I id);
-
-    void removeItem(I id);
 }

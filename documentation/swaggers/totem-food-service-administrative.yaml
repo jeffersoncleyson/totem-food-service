@@ -52,7 +52,7 @@ paths:
       tags:
         - Category
       summary: List all categories
-      description: Create a new category
+      description: Search all categories
       operationId: listAllCategories
       responses:
         '200':
@@ -69,8 +69,8 @@ paths:
     get:
       tags:
         - Category
-      summary: Get category
-      description: Create a new category
+      summary: Get a category
+      description: search for a category
       operationId: getCategoryByID
       parameters:
         - name: categoryId
@@ -80,8 +80,8 @@ paths:
           schema:
             type: string
       responses:
-        '201':
-          description: created operation
+        '200':
+          description: successful operation
           content:
             application/json:
               schema:
@@ -100,8 +100,7 @@ paths:
           description: ID of pet to return
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       requestBody:
         content:
           application/json:
