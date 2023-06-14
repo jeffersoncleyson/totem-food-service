@@ -45,7 +45,7 @@ public class CategoryRepositoryAdapter implements ICategoryRepositoryPort<Catego
     @Override
     public List<CategoryDomain> findAll() {
         final var categorysDomain = new ArrayList<CategoryDomain>();
-        repository.findAll().forEach(element -> categorysDomain.add(iCategoryEntityMapper.toDomain(element)));
+        repository.findAll().forEach(entity -> categorysDomain.add(iCategoryEntityMapper.toDomain(entity)));
         return categorysDomain;
     }
 

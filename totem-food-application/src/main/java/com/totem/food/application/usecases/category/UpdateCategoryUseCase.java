@@ -28,7 +28,6 @@ public class UpdateCategoryUseCase implements IUpdateUseCase<CategoryCreateDto, 
             optionalDomain.get().updateModifiedAt();
             final var categoryDomainUpdated = iCategoryRepositoryPort.updateItem(optionalDomain.get());
             return iCategoryMapper.toDto(categoryDomainUpdated);
-
         }
 
         return iCreateCategoryUseCase.createItem(item);
