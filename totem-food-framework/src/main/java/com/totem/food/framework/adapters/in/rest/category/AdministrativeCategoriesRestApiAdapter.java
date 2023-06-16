@@ -40,43 +40,34 @@ public class AdministrativeCategoriesRestApiAdapter implements
 
     @PostMapping
     @Override
-    public CategoryDto createCategory(@RequestBody CategoryCreateDto item) {
+    public ResponseEntity<CategoryDto> createCategory(@RequestBody CategoryCreateDto item) {
         final var createdItem = iCreateCategoryUseCase.createItem(item);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(createdItem)
-                .getBody();
+        return new ResponseEntity<>(createdItem, HttpStatus.CREATED);
     }
 
     @GetMapping
     @Override
-    public List<CategoryDto> listAllCategories() {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(iSearchCategoryUseCase.items())
-                .getBody();
+    public ResponseEntity<List<CategoryDto>> listAllCategories() {
+        return new ResponseEntity<>(iSearchCategoryUseCase.items(), HttpStatus.OK);
     }
 
     @GetMapping("/{categoryId}")
     @Override
-    public CategoryDto getCategoryByID(@PathVariable String categoryId) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(iSearchCategoryUseCase.item(categoryId))
-                .getBody();
+    public ResponseEntity<CategoryDto> getCategoryByID(@PathVariable String categoryId) {
+        return new ResponseEntity<>(iSearchCategoryUseCase.item(categoryId), HttpStatus.OK);
     }
 
     @DeleteMapping("/{categoryId}")
     @Override
     public ResponseEntity<Void> deleteCategoryByID(@PathVariable String categoryId) {
         iDeleteCategoryUseCase.removeItem(categoryId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .build();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("/{categoryId}")
     @Override
-    public CategoryDto updateCategory(@RequestBody CategoryCreateDto item, @PathVariable String categoryId) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED)
-                .body(iUpdateCategoryUseCase.updateItem(item, categoryId))
-                .getBody();
+    public ResponseEntity<CategoryDto> updateCategory(@RequestBody CategoryCreateDto item, @PathVariable String categoryId) {
+        return new ResponseEntity<>(iUpdateCategoryUseCase.updateItem(item, categoryId), HttpStatus.ACCEPTED);
     }
 
 }

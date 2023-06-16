@@ -1,9 +1,12 @@
 package com.totem.food.application.ports.in.rest;
 
+import org.springframework.http.ResponseEntity;
+
 import java.util.List;
 
 public interface ISearchRestApiPort<I, O> {
 
-	List<O> listAllCategories();
-	O getCategoryByID(I id);
+    ResponseEntity<List<O>> listAllCategories();
+
+	ResponseEntity<O> getCategoryByID(I id);
 }

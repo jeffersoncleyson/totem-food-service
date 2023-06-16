@@ -1,6 +1,8 @@
 package com.totem.food.application.ports.in.rest;
 
+import org.springframework.http.ResponseEntity;
+
 public interface ICreateRestApiPort<I, O> {
 
-	O createCategory(I item);
+    ResponseEntity<O> createCategory(I item);
 }
