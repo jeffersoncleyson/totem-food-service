@@ -6,6 +6,7 @@ import com.totem.food.application.usecases.commons.ICreateUseCase;
 import com.totem.food.application.usecases.commons.IDeleteUseCase;
 import com.totem.food.application.usecases.commons.ISearchUseCase;
 import com.totem.food.application.usecases.commons.IUpdateUseCase;
+import com.totem.food.domain.exceptions.ResourceNotFound;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -91,6 +93,20 @@ class AdministrativeCategoriesRestApiAdapterTest {
         assertNotNull(responseEntity);
         assertEquals(categoryDto, responseEntity.getBody());
         assertEquals(HttpStatus.OK.value(), responseEntity.getStatusCodeValue());
+    }
+
+    @Test
+    void getCategoryByIDWhenNotFound() {
+
+        //## When
+        when(iSearchCategoryUseCase.item(anyString())).thenThrow(ResourceNotFound.class);
+
+        //## Given
+        assertThrows(ResourceNotFound.class,
+                () -> administrativeCategoriesRestApiAdapter.getCategoryByID(anyString()));
+
+        //## Then
+        verify(iSearchCategoryUseCase, times(1)).item(anyString());
     }
 
     @Test
