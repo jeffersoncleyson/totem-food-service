@@ -52,7 +52,7 @@ class AdministrativeCategoriesRestApiAdapterTest {
         when(iCreateCategoryUseCase.createItem(categoryCreateDto)).thenReturn(categoryDto);
 
         //## Given
-        var responseEntity = administrativeCategoriesRestApiAdapter.createCategory(categoryCreateDto);
+        var responseEntity = administrativeCategoriesRestApiAdapter.create(categoryCreateDto);
 
         //## Then
         assertNotNull(responseEntity);
@@ -71,7 +71,7 @@ class AdministrativeCategoriesRestApiAdapterTest {
         when(iSearchCategoryUseCase.items()).thenReturn(categorysDto);
 
         //## Given
-        var responseEntity = administrativeCategoriesRestApiAdapter.listAllCategories();
+        var responseEntity = administrativeCategoriesRestApiAdapter.listAll();
 
         //## Then
         assertNotNull(responseEntity);
@@ -87,7 +87,7 @@ class AdministrativeCategoriesRestApiAdapterTest {
         when(iSearchCategoryUseCase.item(anyString())).thenReturn(categoryDto);
 
         //## Given
-        var responseEntity = administrativeCategoriesRestApiAdapter.getCategoryByID(anyString());
+        var responseEntity = administrativeCategoriesRestApiAdapter.getById(anyString());
 
         //## Then
         assertNotNull(responseEntity);
@@ -103,7 +103,7 @@ class AdministrativeCategoriesRestApiAdapterTest {
 
         //## Given
         assertThrows(ResourceNotFound.class,
-                () -> administrativeCategoriesRestApiAdapter.getCategoryByID(anyString()));
+                () -> administrativeCategoriesRestApiAdapter.getById(anyString()));
 
         //## Then
         verify(iSearchCategoryUseCase, times(1)).item(anyString());
@@ -113,7 +113,7 @@ class AdministrativeCategoriesRestApiAdapterTest {
     void deleteCategoryByID() {
 
         //## When - Given
-        var responseEntity = administrativeCategoriesRestApiAdapter.deleteCategoryByID(anyString());
+        var responseEntity = administrativeCategoriesRestApiAdapter.deleteById(anyString());
 
         //## Then
         verify(iDeleteCategoryUseCase).removeItem(anyString());
@@ -129,7 +129,7 @@ class AdministrativeCategoriesRestApiAdapterTest {
         when(iUpdateCategoryUseCase.updateItem(categoryCreateDto, "1")).thenReturn(categoryDto);
 
         //## Given
-        var responseEntity = administrativeCategoriesRestApiAdapter.updateCategory(categoryCreateDto, "1");
+        var responseEntity = administrativeCategoriesRestApiAdapter.update(categoryCreateDto, "1");
 
         //## Then
         assertNotNull(responseEntity);

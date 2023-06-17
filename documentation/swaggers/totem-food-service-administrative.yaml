@@ -267,8 +267,8 @@ paths:
     get:
       tags:
         - Customers
-      summary: List all product
-      description: List all product
+      summary: List all clients
+      description: List all clients
       operationId: listAllCustomers
       responses:
         '200':

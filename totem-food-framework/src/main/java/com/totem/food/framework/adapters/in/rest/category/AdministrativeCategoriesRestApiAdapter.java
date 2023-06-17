@@ -40,33 +40,33 @@ public class AdministrativeCategoriesRestApiAdapter implements
 
     @PostMapping
     @Override
-    public ResponseEntity<CategoryDto> createCategory(@RequestBody CategoryCreateDto item) {
+    public ResponseEntity<CategoryDto> create(@RequestBody CategoryCreateDto item) {
         final var createdItem = iCreateCategoryUseCase.createItem(item);
         return new ResponseEntity<>(createdItem, HttpStatus.CREATED);
     }
 
     @GetMapping
     @Override
-    public ResponseEntity<List<CategoryDto>> listAllCategories() {
+    public ResponseEntity<List<CategoryDto>> listAll() {
         return new ResponseEntity<>(iSearchCategoryUseCase.items(), HttpStatus.OK);
     }
 
     @GetMapping("/{categoryId}")
     @Override
-    public ResponseEntity<CategoryDto> getCategoryByID(@PathVariable String categoryId) {
+    public ResponseEntity<CategoryDto> getById(@PathVariable String categoryId) {
         return new ResponseEntity<>(iSearchCategoryUseCase.item(categoryId), HttpStatus.OK);
     }
 
     @DeleteMapping("/{categoryId}")
     @Override
-    public ResponseEntity<Void> deleteCategoryByID(@PathVariable String categoryId) {
+    public ResponseEntity<Void> deleteById(@PathVariable String categoryId) {
         iDeleteCategoryUseCase.removeItem(categoryId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("/{categoryId}")
     @Override
-    public ResponseEntity<CategoryDto> updateCategory(@RequestBody CategoryCreateDto item, @PathVariable String categoryId) {
+    public ResponseEntity<CategoryDto> update(@RequestBody CategoryCreateDto item, @PathVariable String categoryId) {
         return new ResponseEntity<>(iUpdateCategoryUseCase.updateItem(item, categoryId), HttpStatus.ACCEPTED);
     }
 

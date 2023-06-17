@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ISearchRestApiPort<I, O> {
 
-    ResponseEntity<List<O>> listAllCategories();
+    ResponseEntity<List<O>> listAll();
 
-	ResponseEntity<O> getCategoryByID(I id);
+	ResponseEntity<O> getById(I id);
 }

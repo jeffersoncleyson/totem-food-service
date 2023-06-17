@@ -4,5 +4,5 @@ import org.springframework.http.ResponseEntity;
 
 public interface ICreateRestApiPort<I, O> {
 
-    ResponseEntity<O> createCategory(I item);
+    ResponseEntity<O> create(I item);
 }
