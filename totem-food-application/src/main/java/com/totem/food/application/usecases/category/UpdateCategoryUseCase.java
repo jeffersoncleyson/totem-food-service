@@ -2,7 +2,8 @@ package com.totem.food.application.usecases.category;
 
 import com.totem.food.application.ports.in.dtos.category.CategoryCreateDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
-import com.totem.food.application.ports.in.mappers.ICategoryMapper;
+import com.totem.food.application.ports.in.dtos.category.FilterCategoryDto;
+import com.totem.food.application.ports.in.mappers.category.ICategoryMapper;
 import com.totem.food.application.ports.out.persistence.category.ICategoryRepositoryPort;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
 import com.totem.food.application.usecases.commons.IUpdateUseCase;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class UpdateCategoryUseCase implements IUpdateUseCase<CategoryCreateDto, CategoryDto> {
 
     private final ICategoryMapper iCategoryMapper;
-    private final ICategoryRepositoryPort<CategoryDomain> iCategoryRepositoryPort;
+    private final ICategoryRepositoryPort<FilterCategoryDto, CategoryDomain> iCategoryRepositoryPort;
     private final ICreateUseCase<CategoryCreateDto, CategoryDto> iCreateCategoryUseCase;
 
     @Override

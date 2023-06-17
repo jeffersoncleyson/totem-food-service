@@ -1,7 +1,8 @@
 package com.totem.food.application.usecases.category;
 
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
-import com.totem.food.application.ports.in.mappers.ICategoryMapper;
+import com.totem.food.application.ports.in.dtos.category.FilterCategoryDto;
+import com.totem.food.application.ports.in.mappers.category.ICategoryMapper;
 import com.totem.food.application.ports.out.persistence.category.ICategoryRepositoryPort;
 import com.totem.food.application.usecases.commons.ISearchUniqueUseCase;
 import com.totem.food.domain.category.CategoryDomain;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class SearchUniqueCategoryUseCase implements ISearchUniqueUseCase<String, CategoryDto> {
 
     private final ICategoryMapper iCategoryMapper;
-    private final ICategoryRepositoryPort<CategoryDomain> iCategoryRepositoryPort;
+    private final ICategoryRepositoryPort<FilterCategoryDto, CategoryDomain> iCategoryRepositoryPort;
 
     @Override
     public CategoryDto item(String id) {

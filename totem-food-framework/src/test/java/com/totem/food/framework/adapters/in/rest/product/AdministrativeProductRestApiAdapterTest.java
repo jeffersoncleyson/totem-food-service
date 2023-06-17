@@ -4,6 +4,7 @@ package com.totem.food.framework.adapters.in.rest.product;
 import com.totem.food.application.ports.in.dtos.product.ProductCreateDto;
 import com.totem.food.application.ports.in.dtos.product.ProductDto;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
+import com.totem.food.framework.test.utils.TestUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +19,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import com.totem.food.framework.test.utils.TestUtils;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;

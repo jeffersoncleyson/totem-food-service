@@ -1,5 +1,6 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.category.repository;
 
+import com.totem.food.application.ports.in.dtos.category.FilterCategoryDto;
 import com.totem.food.application.ports.out.persistence.category.ICategoryRepositoryPort;
 import com.totem.food.domain.category.CategoryDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.category.entity.CategoryEntity;
@@ -28,7 +29,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class CategoryRepositoryAdapterTest {
 
-    private ICategoryRepositoryPort<CategoryDomain> iCategoryRepositoryPort;
+    private ICategoryRepositoryPort<FilterCategoryDto, CategoryDomain> iCategoryRepositoryPort;
     @Spy
     private ICategoryEntityMapper iCategoryEntityMapper = Mappers.getMapper(ICategoryEntityMapper.class);
     @Mock
@@ -91,10 +92,11 @@ class CategoryRepositoryAdapterTest {
 
         //## Given
         final var categorysEntity = List.of(getMock(), getMock());
-        when(categoryRepositoryMongoDB.findAll()).thenReturn(categorysEntity);
+        final var categoryFilter = new FilterCategoryDto("Name");
+        when(categoryRepositoryMongoDB.findByFilter(anyString())).thenReturn(categorysEntity);
 
         //## When
-        var listCategoryDomain = iCategoryRepositoryPort.findAll();
+        var listCategoryDomain = iCategoryRepositoryPort.findAll(categoryFilter);
 
         //## Then
         assertThat(listCategoryDomain).usingRecursiveComparison().isEqualTo(categorysEntity);

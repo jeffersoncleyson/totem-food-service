@@ -1,6 +1,7 @@
 package com.totem.food.application.usecases.category;
 
-import com.totem.food.application.ports.in.mappers.ICategoryMapper;
+import com.totem.food.application.ports.in.dtos.category.FilterCategoryDto;
+import com.totem.food.application.ports.in.mappers.category.ICategoryMapper;
 import com.totem.food.application.ports.out.persistence.category.ICategoryRepositoryPort;
 import com.totem.food.application.usecases.commons.IDeleteUseCase;
 import com.totem.food.domain.category.CategoryDomain;
@@ -23,7 +24,7 @@ class DeleteCategoryUseCaseTest {
     private ICategoryMapper iCategoryMapper = Mappers.getMapper(ICategoryMapper.class);
 
     @Mock
-    private ICategoryRepositoryPort<CategoryDomain> iCategoryRepositoryPort;
+    private ICategoryRepositoryPort<FilterCategoryDto, CategoryDomain> iCategoryRepositoryPort;
 
     private IDeleteUseCase iDeleteUseCase;
 

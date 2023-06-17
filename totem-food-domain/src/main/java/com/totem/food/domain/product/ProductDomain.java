@@ -1,8 +1,10 @@
 package com.totem.food.domain.product;
 
-import com.totem.food.domain.category.CategoryDomain;
-import com.totem.food.domain.exceptions.InvalidDomainField;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.ZoneOffset;

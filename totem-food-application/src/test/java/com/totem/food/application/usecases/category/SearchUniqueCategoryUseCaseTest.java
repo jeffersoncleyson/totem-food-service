@@ -1,7 +1,8 @@
 package com.totem.food.application.usecases.category;
 
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
-import com.totem.food.application.ports.in.mappers.ICategoryMapper;
+import com.totem.food.application.ports.in.dtos.category.FilterCategoryDto;
+import com.totem.food.application.ports.in.mappers.category.ICategoryMapper;
 import com.totem.food.application.ports.out.persistence.category.ICategoryRepositoryPort;
 import com.totem.food.application.usecases.commons.ISearchUniqueUseCase;
 import com.totem.food.domain.category.CategoryDomain;
@@ -33,7 +34,7 @@ class SearchUniqueCategoryUseCaseTest {
     private ICategoryMapper iCategoryMapper = Mappers.getMapper(ICategoryMapper.class);
 
     @Mock
-    private ICategoryRepositoryPort<CategoryDomain> iCategoryRepositoryPort;
+    private ICategoryRepositoryPort<FilterCategoryDto, CategoryDomain> iCategoryRepositoryPort;
 
     private ISearchUniqueUseCase<String, CategoryDto> iSearchUseCase;
 

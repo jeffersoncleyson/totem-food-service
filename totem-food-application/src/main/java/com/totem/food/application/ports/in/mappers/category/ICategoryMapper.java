@@ -1,4 +1,4 @@
-package com.totem.food.application.ports.in.mappers;
+package com.totem.food.application.ports.in.mappers.category;
 
 import com.totem.food.application.ports.in.dtos.category.CategoryCreateDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;

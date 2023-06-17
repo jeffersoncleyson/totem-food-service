@@ -1,7 +1,6 @@
-package com.totem.food.framework.adapters.out.persistence.mongo.product.entity;
+package com.totem.food.framework.adapters.out.persistence.mongo.customer.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,19 +11,17 @@ import java.time.ZonedDateTime;
 
 @Getter
 @Setter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "product")
-public class ProductEntity {
+@Document(collection = "customer")
+public class CustomerEntity {
 
     @Id
     private String id;
     private String name;
-    private String description;
-    private String image;
-    private double price;
-    private String category;
+    private String cpf;
+    private String email;
+    private String mobile;
     private ZonedDateTime modifiedAt;
     private ZonedDateTime createAt;
 }

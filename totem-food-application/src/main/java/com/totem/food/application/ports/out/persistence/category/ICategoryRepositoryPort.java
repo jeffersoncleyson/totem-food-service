@@ -3,17 +3,17 @@ package com.totem.food.application.ports.out.persistence.category;
 import java.util.List;
 import java.util.Optional;
 
-public interface ICategoryRepositoryPort<T> {
+public interface ICategoryRepositoryPort<I, O> {
 
-    T saveItem(T item);
+    O saveItem(O item);
 
     void removeItem(String item);
 
-    T updateItem(T item);
+    O updateItem(O item);
 
-    List<T> findAll();
+    List<O> findAll(I filter);
 
-    Optional<T> findById(String id);
+    Optional<O> findById(String id);
 
-    boolean existsItem(T item);
+    boolean existsItem(O item);
 }
