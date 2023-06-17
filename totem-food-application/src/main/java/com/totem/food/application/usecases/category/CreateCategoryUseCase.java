@@ -13,15 +13,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class CreateCategoryUseCase implements ICreateUseCase<CategoryCreateDto, CategoryDto> {
 
-	private final ICategoryMapper iCategoryMapper;
-	private final ICategoryRepositoryPort<CategoryDomain> iCategoryRepositoryPort;
+    private final ICategoryMapper iCategoryMapper;
+    private final ICategoryRepositoryPort<CategoryDomain> iCategoryRepositoryPort;
 
-	public CategoryDto createItem(CategoryCreateDto item){
-		final var categoryDomain = iCategoryMapper.toDomain(item);
-		categoryDomain.validateCategory();
-		categoryDomain.fillDates();
-		final var categoryDomainSaved = iCategoryRepositoryPort.saveItem(categoryDomain);
-		return iCategoryMapper.toDto(categoryDomainSaved);
-	}
+    public CategoryDto createItem(CategoryCreateDto item) {
+        final var categoryDomain = iCategoryMapper.toDomain(item);
+        categoryDomain.validateCategory();
+        categoryDomain.fillDates();
+
+        if (iCategoryRepositoryPort.existsItem(categoryDomain)) {
+            throw new IllegalArgumentException("Category already registered in base.");
+        }
+
+        final var categoryDomainSaved = iCategoryRepositoryPort.saveItem(categoryDomain);
+        return iCategoryMapper.toDto(categoryDomainSaved);
+    }
 
 }

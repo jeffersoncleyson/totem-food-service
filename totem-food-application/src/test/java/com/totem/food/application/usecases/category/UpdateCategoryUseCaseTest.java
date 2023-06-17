@@ -5,54 +5,76 @@ import com.totem.food.application.ports.in.dtos.category.CategoryDto;
 import com.totem.food.application.ports.in.mappers.ICategoryMapper;
 import com.totem.food.application.ports.out.persistence.category.ICategoryRepositoryPort;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
+import com.totem.food.application.usecases.commons.IUpdateUseCase;
 import com.totem.food.domain.category.CategoryDomain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class CreateCategoryUseCaseTest {
+class UpdateCategoryUseCaseTest {
 
     @Spy
     private ICategoryMapper iCategoryMapper = Mappers.getMapper(ICategoryMapper.class);
+
     @Mock
     private ICategoryRepositoryPort<CategoryDomain> iCategoryRepositoryPort;
 
+
+    private IUpdateUseCase<CategoryCreateDto, CategoryDto> iUpdateUseCase;
+
+    @Mock
     private ICreateUseCase<CategoryCreateDto, CategoryDto> iCreateUseCase;
 
-
     @BeforeEach
-    public void beforeEach() {
+    void beforeEach() {
         MockitoAnnotations.openMocks(this);
-        this.iCreateUseCase = new CreateCategoryUseCase(iCategoryMapper, iCategoryRepositoryPort);
+        this.iUpdateUseCase = new UpdateCategoryUseCase(iCategoryMapper, iCategoryRepositoryPort, iCreateUseCase);
     }
 
     @Test
-    void createItem() {
+    void updateItemWhenCategoryExist() {
 
         //## Given
         final var categoryDomain = new CategoryDomain("123", "Name", ZonedDateTime.now(ZoneOffset.UTC), ZonedDateTime.now(ZoneOffset.UTC));
-        when(iCategoryRepositoryPort.saveItem(Mockito.any(CategoryDomain.class))).thenReturn(categoryDomain);
+        when(iCategoryRepositoryPort.findById(anyString())).thenReturn(Optional.of(categoryDomain));
+        categoryDomain.updateModifiedAt();
+        when(iCategoryRepositoryPort.updateItem(any(CategoryDomain.class))).thenReturn(categoryDomain);
 
         //## When
-        final var categoryCreateDto = new CategoryCreateDto("Name");
-        final var categoryDto = iCreateUseCase.createItem(categoryCreateDto);
+        final var categoryCreateDto = new CategoryCreateDto("name");
+        final var categoryDto = iUpdateUseCase.updateItem(categoryCreateDto, anyString());
 
         //## Then
-        assertEquals(categoryCreateDto.getName(), categoryDto.getName());
-        assertThat(categoryDomain).usingRecursiveComparison().isEqualTo(categoryDto);
+        assertEquals(categoryDomain.getName(), categoryDto.getName());
+        verify(iCategoryMapper).toDto(any());
+
+    }
+
+    @Test
+    void createItemWhenCategoryNotFound() {
+
+        //## Given
+        final var categoryCreateDto = new CategoryCreateDto("Name");
+
+        //## Then
+        assertDoesNotThrow(() -> iUpdateUseCase.updateItem(categoryCreateDto, "123"));
+
     }
 }
