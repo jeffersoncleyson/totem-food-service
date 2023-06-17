@@ -2,14 +2,9 @@ package com.totem.food.framework.adapters.in.rest.category;
 
 import com.totem.food.application.ports.in.dtos.category.CategoryCreateDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
-import com.totem.food.application.ports.in.rest.ICreateRestApiPort;
-import com.totem.food.application.ports.in.rest.IRemoveRestApiPort;
-import com.totem.food.application.ports.in.rest.ISearchRestApiPort;
-import com.totem.food.application.ports.in.rest.IUpdateRestApiPort;
-import com.totem.food.application.usecases.commons.ICreateUseCase;
-import com.totem.food.application.usecases.commons.IDeleteUseCase;
-import com.totem.food.application.usecases.commons.ISearchUseCase;
-import com.totem.food.application.usecases.commons.IUpdateUseCase;
+import com.totem.food.application.ports.in.dtos.category.FilterCategoryDto;
+import com.totem.food.application.ports.in.rest.*;
+import com.totem.food.application.usecases.commons.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,13 +23,15 @@ import java.util.List;
 @RequestMapping(value = "/administrative/category")
 @AllArgsConstructor
 public class AdministrativeCategoriesRestApiAdapter implements
-        ICreateRestApiPort<CategoryCreateDto, CategoryDto>,
+        ICreateRestApiPort<CategoryCreateDto, ResponseEntity<CategoryDto>>,
         IRemoveRestApiPort<String, ResponseEntity<Void>>,
-        IUpdateRestApiPort<CategoryCreateDto, CategoryDto>,
-        ISearchRestApiPort<String, CategoryDto> {
+        IUpdateRestApiPort<CategoryCreateDto, ResponseEntity<CategoryDto>>,
+        ISearchRestApiPort<FilterCategoryDto, ResponseEntity<List<CategoryDto>>>,
+        ISearchUnique<String, ResponseEntity<CategoryDto>> {
 
     private final ICreateUseCase<CategoryCreateDto, CategoryDto> iCreateCategoryUseCase;
-    private final ISearchUseCase<String, CategoryDto> iSearchCategoryUseCase;
+    private final ISearchUseCase<FilterCategoryDto, List<CategoryDto>> iSearchCategoryUseCase;
+    private final ISearchUniqueUseCase<String, CategoryDto> iSearchUniqueCategoryUseCase;
     private final IDeleteUseCase iDeleteCategoryUseCase;
     private final IUpdateUseCase<CategoryCreateDto, CategoryDto> iUpdateCategoryUseCase;
 
@@ -47,14 +44,14 @@ public class AdministrativeCategoriesRestApiAdapter implements
 
     @GetMapping
     @Override
-    public ResponseEntity<List<CategoryDto>> listAll() {
-        return new ResponseEntity<>(iSearchCategoryUseCase.items(), HttpStatus.OK);
+    public ResponseEntity<List<CategoryDto>> listAll(FilterCategoryDto filter) {
+        return new ResponseEntity<>(iSearchCategoryUseCase.items(filter), HttpStatus.OK);
     }
 
     @GetMapping("/{categoryId}")
     @Override
     public ResponseEntity<CategoryDto> getById(@PathVariable String categoryId) {
-        return new ResponseEntity<>(iSearchCategoryUseCase.item(categoryId), HttpStatus.OK);
+        return new ResponseEntity<>(iSearchUniqueCategoryUseCase.item(categoryId), HttpStatus.OK);
     }
 
     @DeleteMapping("/{categoryId}")

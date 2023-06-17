@@ -23,7 +23,7 @@ public class AdministrativeProductRestApiAdapter implements
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Override
-    public ResponseEntity<ProductDto> createItem(@RequestBody ProductCreateDto item) {
+    public ResponseEntity<ProductDto> create(@RequestBody ProductCreateDto item) {
         final var createdItem = createProductUseCase.createItem(item);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdItem);
     }

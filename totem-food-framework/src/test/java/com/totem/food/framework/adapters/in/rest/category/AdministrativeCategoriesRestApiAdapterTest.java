@@ -2,10 +2,9 @@ package com.totem.food.framework.adapters.in.rest.category;
 
 import com.totem.food.application.ports.in.dtos.category.CategoryCreateDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
-import com.totem.food.application.usecases.commons.ICreateUseCase;
-import com.totem.food.application.usecases.commons.IDeleteUseCase;
-import com.totem.food.application.usecases.commons.ISearchUseCase;
-import com.totem.food.application.usecases.commons.IUpdateUseCase;
+import com.totem.food.application.ports.in.dtos.category.FilterCategoryDto;
+import com.totem.food.application.usecases.category.SearchCategoryUseCase;
+import com.totem.food.application.usecases.commons.*;
 import com.totem.food.domain.exceptions.ResourceNotFound;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,7 +31,10 @@ class AdministrativeCategoriesRestApiAdapterTest {
     private ICreateUseCase<CategoryCreateDto, CategoryDto> iCreateCategoryUseCase;
 
     @Mock
-    private ISearchUseCase<String, CategoryDto> iSearchCategoryUseCase;
+    private ISearchUseCase<FilterCategoryDto, List<CategoryDto>> iSearchCategoryUseCase;
+
+    @Mock
+    private ISearchUniqueUseCase<String, CategoryDto> iSearchUniqueUseCase;
 
     @Mock
     private IDeleteUseCase iDeleteCategoryUseCase;
@@ -68,10 +70,11 @@ class AdministrativeCategoriesRestApiAdapterTest {
         var categorysDto = List.of(
                 new CategoryDto("1", "Suco", ZonedDateTime.now(), ZonedDateTime.now())
         );
-        when(iSearchCategoryUseCase.items()).thenReturn(categorysDto);
+        var categoryFilter = new FilterCategoryDto("Name");
+        when(iSearchCategoryUseCase.items(categoryFilter)).thenReturn(categorysDto);
 
         //## Given
-        var responseEntity = administrativeCategoriesRestApiAdapter.listAll();
+        var responseEntity = administrativeCategoriesRestApiAdapter.listAll(categoryFilter);
 
         //## Then
         assertNotNull(responseEntity);
@@ -84,7 +87,7 @@ class AdministrativeCategoriesRestApiAdapterTest {
 
         //## When
         var categoryDto = new CategoryDto("1", "Suco", ZonedDateTime.now(), ZonedDateTime.now());
-        when(iSearchCategoryUseCase.item(anyString())).thenReturn(categoryDto);
+        when(iSearchUniqueUseCase.item(anyString())).thenReturn(categoryDto);
 
         //## Given
         var responseEntity = administrativeCategoriesRestApiAdapter.getById(anyString());
@@ -99,14 +102,14 @@ class AdministrativeCategoriesRestApiAdapterTest {
     void getCategoryByIDWhenNotFound() {
 
         //## When
-        when(iSearchCategoryUseCase.item(anyString())).thenThrow(ResourceNotFound.class);
+        when(iSearchUniqueUseCase.item(anyString())).thenThrow(ResourceNotFound.class);
 
         //## Given
         assertThrows(ResourceNotFound.class,
                 () -> administrativeCategoriesRestApiAdapter.getById(anyString()));
 
         //## Then
-        verify(iSearchCategoryUseCase, times(1)).item(anyString());
+        verify(iSearchUniqueUseCase, times(1)).item(anyString());
     }
 
     @Test
