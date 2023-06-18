@@ -23,20 +23,9 @@ public class SearchProductUseCase implements ISearchUseCase<ProductFilterDto, Li
 
     @Override
     public List<ProductDto> items(ProductFilterDto filter) {
-
-
         return Optional.ofNullable(iSearchProductRepositoryPort.findAll(filter))
                 .map(productsDomain ->
                         productsDomain.stream().map(iProductMapper::toDto).collect(Collectors.toList()))
                 .orElse(List.of());
-
-//        var listDomain = new ArrayList<ProductDto>();
-//        for (List<ProductDomain> typeProducts : iSearchProductRepositoryPort.findAll(filter)) {
-//            for (ProductDomain productDomain : typeProducts) {
-//                listDomain.add(iProductMapper.toDto(productDomain));
-//            }
-//        }
-//
-//        return listDomain;
     }
 }
