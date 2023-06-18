@@ -21,7 +21,7 @@ public class AdministrativeProductRestApiAdapter implements
         ICreateRestApiPort<ProductCreateDto, ResponseEntity<ProductDto>>,
         ISearchRestApiPort<ProductFilterDto, ResponseEntity<List<ProductDto>>>,
         ISearchUniqueRestApiPort<String, ResponseEntity<ProductDto>>,
-        IRemoveRestApiPort<String, Void>,
+        IRemoveRestApiPort<String, ResponseEntity<Void>>,
         IUpdateRestApiPort<ProductCreateDto, ResponseEntity<ProductDto>> {
 
     private final ICreateUseCase<ProductCreateDto, ProductDto> createProductUseCase;

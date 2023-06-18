@@ -2,35 +2,38 @@ package com.totem.food.application.usecases.category;
 
 import com.totem.food.application.ports.in.dtos.category.CategoryCreateDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
-import com.totem.food.application.ports.in.mappers.ICategoryMapper;
-import com.totem.food.application.ports.out.persistence.category.ICategoryRepositoryPort;
-import com.totem.food.application.usecases.commons.ICreateUseCase;
+import com.totem.food.application.ports.in.mappers.category.ICategoryMapper;
+import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
+import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
 import com.totem.food.application.usecases.commons.IUpdateUseCase;
 import com.totem.food.domain.category.CategoryDomain;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
 public class UpdateCategoryUseCase implements IUpdateUseCase<CategoryCreateDto, CategoryDto> {
 
     private final ICategoryMapper iCategoryMapper;
-    private final ICategoryRepositoryPort<CategoryDomain> iCategoryRepositoryPort;
-    private final ICreateUseCase<CategoryCreateDto, CategoryDto> iCreateCategoryUseCase;
+    private final IUpdateRepositoryPort<CategoryDomain> iUpdateRepositoryPort;
+    private final ISearchUniqueRepositoryPort<Optional<CategoryDomain>> iSearchUniqueRepositoryPort;
 
     @Override
     public CategoryDto updateItem(CategoryCreateDto item, String id) {
-        var optionalDomain = iCategoryRepositoryPort.findById(id);
+        var categoryDomain = iSearchUniqueRepositoryPort.findById(id);
 
-        if (optionalDomain.isPresent()) {
-            optionalDomain.get().setName(item.getName());
-            optionalDomain.get().validateCategory();
-            optionalDomain.get().updateModifiedAt();
-            final var categoryDomainUpdated = iCategoryRepositoryPort.updateItem(optionalDomain.get());
+        if (categoryDomain.isPresent()) {
+            categoryDomain.get().setName(item.getName());
+            categoryDomain.get().validateCategory();
+            categoryDomain.get().updateModifiedAt();
+            final var categoryDomainUpdated = iUpdateRepositoryPort.updateItem(categoryDomain.get());
             return iCategoryMapper.toDto(categoryDomainUpdated);
         }
 
-        return iCreateCategoryUseCase.createItem(item);
+        //#### Implementar tratamento de erro.
+        return null;
     }
 
 }

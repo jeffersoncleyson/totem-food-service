@@ -4,12 +4,9 @@ import com.totem.food.application.ports.out.persistence.commons.IRemoveRepositor
 import com.totem.food.domain.product.ProductDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepository;
 import com.totem.food.framework.adapters.out.persistence.mongo.product.entity.ProductEntity;
-import com.totem.food.framework.adapters.out.persistence.mongo.product.mapper.IProductEntityMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @AllArgsConstructor
 @Component

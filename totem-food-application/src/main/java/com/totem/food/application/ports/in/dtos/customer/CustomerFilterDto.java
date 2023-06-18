@@ -1,4 +1,4 @@
-package com.totem.food.application.ports.in.dtos.category;
+package com.totem.food.application.ports.in.dtos.customer;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FilterCategoryDto {
-    private String categoryName;
+public class CustomerFilterDto {
+
+    private String name;
 }

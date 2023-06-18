@@ -2,9 +2,12 @@ package com.totem.food.framework.adapters.in.rest.category;
 
 import com.totem.food.application.ports.in.dtos.category.CategoryCreateDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
-import com.totem.food.application.ports.in.dtos.category.FilterCategoryDto;
-import com.totem.food.application.usecases.category.SearchCategoryUseCase;
-import com.totem.food.application.usecases.commons.*;
+import com.totem.food.application.ports.in.dtos.category.CategoryFilterDto;
+import com.totem.food.application.usecases.commons.ICreateUseCase;
+import com.totem.food.application.usecases.commons.IDeleteUseCase;
+import com.totem.food.application.usecases.commons.ISearchUniqueUseCase;
+import com.totem.food.application.usecases.commons.ISearchUseCase;
+import com.totem.food.application.usecases.commons.IUpdateUseCase;
 import com.totem.food.domain.exceptions.ResourceNotFound;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,13 +34,13 @@ class AdministrativeCategoriesRestApiAdapterTest {
     private ICreateUseCase<CategoryCreateDto, CategoryDto> iCreateCategoryUseCase;
 
     @Mock
-    private ISearchUseCase<FilterCategoryDto, List<CategoryDto>> iSearchCategoryUseCase;
+    private ISearchUseCase<CategoryFilterDto, List<CategoryDto>> iSearchCategoryUseCase;
 
     @Mock
     private ISearchUniqueUseCase<String, CategoryDto> iSearchUniqueUseCase;
 
     @Mock
-    private IDeleteUseCase iDeleteCategoryUseCase;
+    private IDeleteUseCase<String, CategoryDto> iDeleteCategoryUseCase;
 
     @Mock
     private IUpdateUseCase<CategoryCreateDto, CategoryDto> iUpdateCategoryUseCase;
@@ -70,7 +73,7 @@ class AdministrativeCategoriesRestApiAdapterTest {
         var categorysDto = List.of(
                 new CategoryDto("1", "Suco", ZonedDateTime.now(), ZonedDateTime.now())
         );
-        var categoryFilter = new FilterCategoryDto("Name");
+        var categoryFilter = new CategoryFilterDto("Name");
         when(iSearchCategoryUseCase.items(categoryFilter)).thenReturn(categorysDto);
 
         //## Given
