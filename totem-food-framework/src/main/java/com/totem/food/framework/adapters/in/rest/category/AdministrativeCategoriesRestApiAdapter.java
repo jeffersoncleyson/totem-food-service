@@ -27,7 +27,7 @@ public class AdministrativeCategoriesRestApiAdapter implements
         IRemoveRestApiPort<String, ResponseEntity<Void>>,
         IUpdateRestApiPort<CategoryCreateDto, ResponseEntity<CategoryDto>>,
         ISearchRestApiPort<FilterCategoryDto, ResponseEntity<List<CategoryDto>>>,
-        ISearchUnique<String, ResponseEntity<CategoryDto>> {
+        ISearchUniqueRestApiPort<String, ResponseEntity<CategoryDto>> {
 
     private final ICreateUseCase<CategoryCreateDto, CategoryDto> iCreateCategoryUseCase;
     private final ISearchUseCase<FilterCategoryDto, List<CategoryDto>> iSearchCategoryUseCase;
