@@ -2,9 +2,10 @@ package com.totem.food.application.usecases.category;
 
 import com.totem.food.application.ports.in.dtos.category.CategoryCreateDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
-import com.totem.food.application.ports.in.dtos.category.FilterCategoryDto;
+import com.totem.food.application.ports.in.dtos.category.CategoryFilterDto;
 import com.totem.food.application.ports.in.mappers.category.ICategoryMapper;
-import com.totem.food.application.ports.out.persistence.category.ICategoryRepositoryPort;
+import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
+import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
 import com.totem.food.domain.category.CategoryDomain;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +31,11 @@ class CreateCategoryUseCaseTest {
     @Spy
     private ICategoryMapper iCategoryMapper = Mappers.getMapper(ICategoryMapper.class);
     @Mock
-    private ICategoryRepositoryPort<FilterCategoryDto, CategoryDomain> iCategoryRepositoryPort;
+    private ICreateRepositoryPort<CategoryFilterDto, CategoryDomain> iCreateRepositoryPort;
+
+    @Mock
+    private ISearchRepositoryPort<CategoryFilterDto, CategoryDomain> iSearchRepositoryPort;
+
 
     private ICreateUseCase<CategoryCreateDto, CategoryDto> iCreateUseCase;
 
@@ -38,7 +43,7 @@ class CreateCategoryUseCaseTest {
     @BeforeEach
     public void beforeEach() {
         MockitoAnnotations.openMocks(this);
-        this.iCreateUseCase = new CreateCategoryUseCase(iCategoryMapper, iCategoryRepositoryPort);
+        this.iCreateUseCase = new CreateCategoryUseCase(iCategoryMapper, iCreateRepositoryPort, iSearchRepositoryPort);
     }
 
     @Test
@@ -46,7 +51,7 @@ class CreateCategoryUseCaseTest {
 
         //## Given
         final var categoryDomain = new CategoryDomain("123", "Name", ZonedDateTime.now(ZoneOffset.UTC), ZonedDateTime.now(ZoneOffset.UTC));
-        when(iCategoryRepositoryPort.saveItem(Mockito.any(CategoryDomain.class))).thenReturn(categoryDomain);
+        when(iCreateRepositoryPort.saveItem(Mockito.any(CategoryDomain.class))).thenReturn(categoryDomain);
 
         //## When
         final var categoryCreateDto = new CategoryCreateDto("Name");

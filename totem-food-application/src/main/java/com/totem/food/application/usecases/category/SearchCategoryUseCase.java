@@ -1,9 +1,9 @@
 package com.totem.food.application.usecases.category;
 
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
-import com.totem.food.application.ports.in.dtos.category.FilterCategoryDto;
+import com.totem.food.application.ports.in.dtos.category.CategoryFilterDto;
 import com.totem.food.application.ports.in.mappers.category.ICategoryMapper;
-import com.totem.food.application.ports.out.persistence.category.ICategoryRepositoryPort;
+import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.usecases.commons.ISearchUseCase;
 import com.totem.food.domain.category.CategoryDomain;
 import lombok.AllArgsConstructor;
@@ -15,14 +15,14 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
-public class SearchCategoryUseCase implements ISearchUseCase<FilterCategoryDto, List<CategoryDto>> {
+public class SearchCategoryUseCase implements ISearchUseCase<CategoryFilterDto, List<CategoryDto>> {
 
     private final ICategoryMapper iCategoryMapper;
-    private final ICategoryRepositoryPort<FilterCategoryDto, CategoryDomain> iCategoryRepositoryPort;
+    private final ISearchRepositoryPort<CategoryFilterDto, CategoryDomain> iSearchRepositoryPort;
 
     @Override
-    public List<CategoryDto> items(FilterCategoryDto filter) {
-        return iCategoryRepositoryPort.findAll(filter)
+    public List<CategoryDto> items(CategoryFilterDto filter) {
+        return iSearchRepositoryPort.findAll(filter)
                 .stream()
                 .map(iCategoryMapper::toDto)
                 .collect(Collectors.toCollection(ArrayList::new));

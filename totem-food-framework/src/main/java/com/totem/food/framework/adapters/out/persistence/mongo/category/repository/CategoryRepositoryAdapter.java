@@ -1,7 +1,10 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.category.repository;
 
-import com.totem.food.application.ports.in.dtos.category.FilterCategoryDto;
-import com.totem.food.application.ports.out.persistence.category.ICategoryRepositoryPort;
+import com.totem.food.application.ports.in.dtos.category.CategoryFilterDto;
+import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
+import com.totem.food.application.ports.out.persistence.commons.IDeleteRepositoryPort;
+import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
+import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
 import com.totem.food.domain.category.CategoryDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.category.entity.CategoryEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.category.mapper.ICategoryEntityMapper;
@@ -18,7 +21,10 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @Component
-public class CategoryRepositoryAdapter implements ICategoryRepositoryPort<FilterCategoryDto, CategoryDomain> {
+public class CategoryRepositoryAdapter implements ICreateRepositoryPort<CategoryFilterDto, CategoryDomain>,
+        ISearchRepositoryPort<CategoryFilterDto, CategoryDomain>,
+        IDeleteRepositoryPort<CategoryFilterDto, CategoryDomain>,
+        IUpdateRepositoryPort<CategoryFilterDto, CategoryDomain> {
 
     @Repository
     protected interface CategoryRepositoryMongoDB extends BaseRepository<CategoryEntity, String> {
@@ -50,10 +56,10 @@ public class CategoryRepositoryAdapter implements ICategoryRepositoryPort<Filter
     }
 
     @Override
-    public List<CategoryDomain> findAll(FilterCategoryDto filterCategoryDto) {
+    public List<CategoryDomain> findAll(CategoryFilterDto categoryFilterDto) {
         final var categorysDomain = new ArrayList<CategoryDomain>();
-        if (Objects.nonNull(filterCategoryDto)) {
-            repository.findByFilter(filterCategoryDto.getCategoryName()).forEach(entity -> categorysDomain.add(iCategoryEntityMapper.toDomain(entity)));
+        if (Objects.nonNull(categoryFilterDto)) {
+            repository.findByFilter(categoryFilterDto.getCategoryName()).forEach(entity -> categorysDomain.add(iCategoryEntityMapper.toDomain(entity)));
         }
         repository.findAll().forEach(entity -> categorysDomain.add(iCategoryEntityMapper.toDomain(entity)));
         return categorysDomain;

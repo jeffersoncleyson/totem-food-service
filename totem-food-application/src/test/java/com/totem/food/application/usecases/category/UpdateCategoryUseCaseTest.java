@@ -2,9 +2,10 @@ package com.totem.food.application.usecases.category;
 
 import com.totem.food.application.ports.in.dtos.category.CategoryCreateDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
-import com.totem.food.application.ports.in.dtos.category.FilterCategoryDto;
+import com.totem.food.application.ports.in.dtos.category.CategoryFilterDto;
 import com.totem.food.application.ports.in.mappers.category.ICategoryMapper;
-import com.totem.food.application.ports.out.persistence.category.ICategoryRepositoryPort;
+import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
+import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
 import com.totem.food.application.usecases.commons.IUpdateUseCase;
 import com.totem.food.domain.category.CategoryDomain;
@@ -35,7 +36,11 @@ class UpdateCategoryUseCaseTest {
     private ICategoryMapper iCategoryMapper = Mappers.getMapper(ICategoryMapper.class);
 
     @Mock
-    private ICategoryRepositoryPort<FilterCategoryDto, CategoryDomain> iCategoryRepositoryPort;
+    private ISearchRepositoryPort<CategoryFilterDto, CategoryDomain> iSearchRepositoryPort;
+
+
+    @Mock
+    private IUpdateRepositoryPort<CategoryFilterDto, CategoryDomain> iUpdateRepositoryPort;
 
 
     private IUpdateUseCase<CategoryCreateDto, CategoryDto> iUpdateUseCase;
@@ -46,7 +51,7 @@ class UpdateCategoryUseCaseTest {
     @BeforeEach
     void beforeEach() {
         MockitoAnnotations.openMocks(this);
-        this.iUpdateUseCase = new UpdateCategoryUseCase(iCategoryMapper, iCategoryRepositoryPort, iCreateUseCase);
+        this.iUpdateUseCase = new UpdateCategoryUseCase(iCategoryMapper, iUpdateRepositoryPort, iSearchRepositoryPort, iCreateUseCase);
     }
 
     @Test
@@ -54,9 +59,9 @@ class UpdateCategoryUseCaseTest {
 
         //## Given
         final var categoryDomain = new CategoryDomain("123", "Name", ZonedDateTime.now(ZoneOffset.UTC), ZonedDateTime.now(ZoneOffset.UTC));
-        when(iCategoryRepositoryPort.findById(anyString())).thenReturn(Optional.of(categoryDomain));
+        when(iSearchRepositoryPort.findById(anyString())).thenReturn(Optional.of(categoryDomain));
         categoryDomain.updateModifiedAt();
-        when(iCategoryRepositoryPort.updateItem(any(CategoryDomain.class))).thenReturn(categoryDomain);
+        when(iUpdateRepositoryPort.updateItem(any(CategoryDomain.class))).thenReturn(categoryDomain);
 
         //## When
         final var categoryCreateDto = new CategoryCreateDto("name");

@@ -2,7 +2,7 @@ package com.totem.food.framework.adapters.in.rest.category;
 
 import com.totem.food.application.ports.in.dtos.category.CategoryCreateDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
-import com.totem.food.application.ports.in.dtos.category.FilterCategoryDto;
+import com.totem.food.application.ports.in.dtos.category.CategoryFilterDto;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
 import com.totem.food.application.usecases.commons.IDeleteUseCase;
 import com.totem.food.application.usecases.commons.ISearchUniqueUseCase;
@@ -34,7 +34,7 @@ class AdministrativeCategoriesRestApiAdapterTest {
     private ICreateUseCase<CategoryCreateDto, CategoryDto> iCreateCategoryUseCase;
 
     @Mock
-    private ISearchUseCase<FilterCategoryDto, List<CategoryDto>> iSearchCategoryUseCase;
+    private ISearchUseCase<CategoryFilterDto, List<CategoryDto>> iSearchCategoryUseCase;
 
     @Mock
     private ISearchUniqueUseCase<String, CategoryDto> iSearchUniqueUseCase;
@@ -73,7 +73,7 @@ class AdministrativeCategoriesRestApiAdapterTest {
         var categorysDto = List.of(
                 new CategoryDto("1", "Suco", ZonedDateTime.now(), ZonedDateTime.now())
         );
-        var categoryFilter = new FilterCategoryDto("Name");
+        var categoryFilter = new CategoryFilterDto("Name");
         when(iSearchCategoryUseCase.items(categoryFilter)).thenReturn(categorysDto);
 
         //## Given

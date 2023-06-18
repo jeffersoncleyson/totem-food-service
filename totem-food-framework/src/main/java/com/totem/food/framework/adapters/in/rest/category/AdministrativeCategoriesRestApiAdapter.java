@@ -2,7 +2,7 @@ package com.totem.food.framework.adapters.in.rest.category;
 
 import com.totem.food.application.ports.in.dtos.category.CategoryCreateDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
-import com.totem.food.application.ports.in.dtos.category.FilterCategoryDto;
+import com.totem.food.application.ports.in.dtos.category.CategoryFilterDto;
 import com.totem.food.application.ports.in.rest.ICreateRestApiPort;
 import com.totem.food.application.ports.in.rest.IRemoveRestApiPort;
 import com.totem.food.application.ports.in.rest.ISearchRestApiPort;
@@ -34,11 +34,11 @@ public class AdministrativeCategoriesRestApiAdapter implements
         ICreateRestApiPort<CategoryCreateDto, ResponseEntity<CategoryDto>>,
         IRemoveRestApiPort<String, ResponseEntity<Void>>,
         IUpdateRestApiPort<CategoryCreateDto, ResponseEntity<CategoryDto>>,
-        ISearchRestApiPort<FilterCategoryDto, ResponseEntity<List<CategoryDto>>>,
+        ISearchRestApiPort<CategoryFilterDto, ResponseEntity<List<CategoryDto>>>,
         ISearchUniqueRestApiPort<String, ResponseEntity<CategoryDto>> {
 
     private final ICreateUseCase<CategoryCreateDto, CategoryDto> iCreateCategoryUseCase;
-    private final ISearchUseCase<FilterCategoryDto, List<CategoryDto>> iSearchCategoryUseCase;
+    private final ISearchUseCase<CategoryFilterDto, List<CategoryDto>> iSearchCategoryUseCase;
     private final ISearchUniqueUseCase<String, CategoryDto> iSearchUniqueCategoryUseCase;
     private final IDeleteUseCase iDeleteCategoryUseCase;
     private final IUpdateUseCase<CategoryCreateDto, CategoryDto> iUpdateCategoryUseCase;
@@ -52,7 +52,7 @@ public class AdministrativeCategoriesRestApiAdapter implements
 
     @GetMapping
     @Override
-    public ResponseEntity<List<CategoryDto>> listAll(@RequestBody(required = false) FilterCategoryDto filter) {
+    public ResponseEntity<List<CategoryDto>> listAll(@RequestBody(required = false) CategoryFilterDto filter) {
         return new ResponseEntity<>(iSearchCategoryUseCase.items(filter), HttpStatus.OK);
     }
 

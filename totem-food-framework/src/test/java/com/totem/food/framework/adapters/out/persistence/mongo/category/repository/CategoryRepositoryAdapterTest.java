@@ -1,7 +1,10 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.category.repository;
 
-import com.totem.food.application.ports.in.dtos.category.FilterCategoryDto;
-import com.totem.food.application.ports.out.persistence.category.ICategoryRepositoryPort;
+import com.totem.food.application.ports.in.dtos.category.CategoryFilterDto;
+import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
+import com.totem.food.application.ports.out.persistence.commons.IDeleteRepositoryPort;
+import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
+import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
 import com.totem.food.domain.category.CategoryDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.category.entity.CategoryEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.category.mapper.ICategoryEntityMapper;
@@ -18,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static mocks.adapters.out.persistence.mongo.category.entity.CategoryEntityMock.getMock;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
@@ -29,17 +32,23 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class CategoryRepositoryAdapterTest {
 
-    private ICategoryRepositoryPort<FilterCategoryDto, CategoryDomain> iCategoryRepositoryPort;
+    private ICreateRepositoryPort<CategoryFilterDto, CategoryDomain> iCreateRepositoryPort;
+    private ISearchRepositoryPort<CategoryFilterDto, CategoryDomain> iSearchRepositoryPort;
+    private IDeleteRepositoryPort<CategoryFilterDto, CategoryDomain> iDeleteRepositoryPort;
+    private IUpdateRepositoryPort<CategoryFilterDto, CategoryDomain> iUpdateRepositoryPort;
     @Spy
     private ICategoryEntityMapper iCategoryEntityMapper = Mappers.getMapper(ICategoryEntityMapper.class);
     @Mock
-    private CategoryRepositoryAdapter.CategoryRepositoryMongoDB categoryRepositoryMongoDB;
+    private CategoryRepositoryAdapter.CategoryRepositoryMongoDB repository;
 
 
     @BeforeEach
     public void beforeEach() {
         MockitoAnnotations.openMocks(this);
-        iCategoryRepositoryPort = new CategoryRepositoryAdapter(categoryRepositoryMongoDB, iCategoryEntityMapper);
+        iCreateRepositoryPort = new CategoryRepositoryAdapter(repository, iCategoryEntityMapper);
+        iSearchRepositoryPort = new CategoryRepositoryAdapter(repository, iCategoryEntityMapper);
+        iDeleteRepositoryPort = new CategoryRepositoryAdapter(repository, iCategoryEntityMapper);
+        iUpdateRepositoryPort = new CategoryRepositoryAdapter(repository, iCategoryEntityMapper);
     }
 
     @Test
@@ -47,12 +56,12 @@ class CategoryRepositoryAdapterTest {
 
         //## Given
         final var categoryEntity = getMock();
-        when(categoryRepositoryMongoDB.save(any(CategoryEntity.class))).thenReturn(categoryEntity);
+        when(repository.save(any(CategoryEntity.class))).thenReturn(categoryEntity);
         final var categoryDomain = iCategoryEntityMapper.toDomain(categoryEntity);
         categoryDomain.setId(null);
 
         //## When
-        final var categoryDomainSaved = iCategoryRepositoryPort.saveItem(categoryDomain);
+        final var categoryDomainSaved = iCreateRepositoryPort.saveItem(categoryDomain);
 
         //## Then
         assertThat(categoryDomainSaved).usingRecursiveComparison().isEqualTo(categoryEntity);
@@ -65,10 +74,10 @@ class CategoryRepositoryAdapterTest {
         final var itemId = "123";
 
         //## When
-        iCategoryRepositoryPort.removeItem(itemId);
+        iDeleteRepositoryPort.removeItem(itemId);
 
         //## Then
-        verify(categoryRepositoryMongoDB, times(1)).deleteById(itemId);
+        verify(repository, times(1)).deleteById(itemId);
     }
 
     @Test
@@ -76,11 +85,11 @@ class CategoryRepositoryAdapterTest {
 
         //## Given
         final var categoryEntity = getMock();
-        when(categoryRepositoryMongoDB.save(any(CategoryEntity.class))).thenReturn(categoryEntity);
+        when(repository.save(any(CategoryEntity.class))).thenReturn(categoryEntity);
         var categoryDomain = iCategoryEntityMapper.toDomain(categoryEntity);
 
         //## When
-        final var categoryDomainSaved = iCategoryRepositoryPort.updateItem(categoryDomain);
+        final var categoryDomainSaved = iUpdateRepositoryPort.updateItem(categoryDomain);
 
         //## Then
         assertThat(categoryDomainSaved).usingRecursiveComparison().isEqualTo(categoryEntity);
@@ -92,11 +101,11 @@ class CategoryRepositoryAdapterTest {
 
         //## Given
         final var categorysEntity = List.of(getMock(), getMock());
-        final var categoryFilter = new FilterCategoryDto("Name");
-        when(categoryRepositoryMongoDB.findByFilter(anyString())).thenReturn(categorysEntity);
+        final var categoryFilter = new CategoryFilterDto("Name");
+        when(repository.findByFilter(anyString())).thenReturn(categorysEntity);
 
         //## When
-        var listCategoryDomain = iCategoryRepositoryPort.findAll(categoryFilter);
+        var listCategoryDomain = iSearchRepositoryPort.findAll(categoryFilter);
 
         //## Then
         assertThat(listCategoryDomain).usingRecursiveComparison().isEqualTo(categorysEntity);
@@ -109,10 +118,10 @@ class CategoryRepositoryAdapterTest {
 
         //## Given
         final var categoryEntity = getMock();
-        when(categoryRepositoryMongoDB.findById(anyString())).thenReturn(Optional.of(categoryEntity));
+        when(repository.findById(anyString())).thenReturn(Optional.of(categoryEntity));
 
         //## When
-        var categoryDomain = iCategoryRepositoryPort.findById(anyString());
+        var categoryDomain = iSearchRepositoryPort.findById(anyString());
 
         //## Then
         assertThat(categoryDomain.get()).usingRecursiveComparison().isEqualTo(categoryEntity);
@@ -124,11 +133,11 @@ class CategoryRepositoryAdapterTest {
 
         //## Given
         final var categoryEntity = getMock();
-        when(categoryRepositoryMongoDB.existsByNameIgnoreCase(anyString())).thenReturn(true);
+        when(repository.existsByNameIgnoreCase(anyString())).thenReturn(true);
         var domain = iCategoryEntityMapper.toDomain(categoryEntity);
 
         //## When
-        var existItem = iCategoryRepositoryPort.existsItem(domain);
+        var existItem = iSearchRepositoryPort.existsItem(domain);
 
         //## Then
         assertTrue(existItem);
