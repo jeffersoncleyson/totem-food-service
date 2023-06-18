@@ -1,9 +1,10 @@
 package com.totem.food.application.usecases.product;
 
-import com.totem.food.application.ports.in.dtos.product.ProductCreateDto;
 import com.totem.food.application.ports.in.dtos.product.ProductDto;
+import com.totem.food.application.ports.in.dtos.product.ProductFilterDto;
 import com.totem.food.application.ports.in.mappers.product.IProductMapper;
-import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
+import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
+import com.totem.food.application.usecases.commons.ISearchUseCase;
 import com.totem.food.domain.product.ProductDomain;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,30 +19,26 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class CreateProductUseCaseTest {
+class SearchProductUseCaseTest {
 
     @Spy
     private IProductMapper iProductMapper = Mappers.getMapper(IProductMapper.class);
-
     @Mock
-    private ICreateRepositoryPort<ProductDomain> iProductRepositoryPort;
-
-    private CreateProductUseCase createProductUseCase;
+    private ISearchRepositoryPort<ProductFilterDto, List<ProductDomain>> iSearchProductRepositoryPort;
+    private ISearchUseCase<ProductFilterDto, List<ProductDto>> iSearchUseCase;
     private AutoCloseable closeable;
 
     @BeforeEach
-    void beforeEach() {
+    private void beforeEach() {
         closeable = MockitoAnnotations.openMocks(this);
-        createProductUseCase = new CreateProductUseCase(iProductMapper, iProductRepositoryPort);
+        iSearchUseCase = new SearchProductUseCase(iProductMapper, iSearchProductRepositoryPort);
     }
 
     @AfterEach
@@ -50,7 +47,7 @@ class CreateProductUseCaseTest {
     }
 
     @Test
-    void createItem() {
+    void items() {
 
         //### Given - Objects and Values
         final var id = UUID.randomUUID().toString();
@@ -60,25 +57,6 @@ class CreateProductUseCaseTest {
         final var price = 10D * (Math.random() + 1);
         final var category = "Refrigerante";
         final var now = ZonedDateTime.now(ZoneOffset.UTC);
-
-        final var productDto = new ProductDto(
-                id,
-                name,
-                description,
-                image,
-                price,
-                category,
-                now,
-                now
-        );
-
-        final var productCreateDto = new ProductCreateDto(
-                name,
-                description,
-                image,
-                price,
-                category
-        );
 
         final var productDomain = ProductDomain.builder()
                 .id(id)
@@ -91,23 +69,21 @@ class CreateProductUseCaseTest {
                 .modifiedAt(now)
                 .build();
 
+        final var productDomainList = List.of(productDomain);
+        final var productFilterDto = new ProductFilterDto(name);
+
         //### Given - Mocks
-        when(iProductRepositoryPort.saveItem(Mockito.any(ProductDomain.class))).thenReturn(productDomain);
+        when(iSearchProductRepositoryPort.findAll(Mockito.any(ProductFilterDto.class))).thenReturn(productDomainList);
 
         //### When
-        final var productDtoUseCase = createProductUseCase.createItem(productCreateDto);
+        final var productDtoList = iSearchUseCase.items(productFilterDto);
 
         //### Then
-        verify(iProductMapper, times(1)).toDomain(Mockito.any(ProductCreateDto.class));
-        verify(iProductRepositoryPort, times(1)).saveItem(Mockito.any(ProductDomain.class));
         verify(iProductMapper, times(1)).toDto(Mockito.any(ProductDomain.class));
+        verify(iSearchProductRepositoryPort, times(1)).findAll(Mockito.any(ProductFilterDto.class));
 
-        assertThat(productDtoUseCase)
+        assertThat(productDtoList)
                 .usingRecursiveComparison()
-                .isEqualTo(productDto);
-
-        assertNotNull(productDtoUseCase.getCreateAt());
-        assertNotNull(productDtoUseCase.getModifiedAt());
+                .isEqualTo(productDomainList);
     }
-
 }
