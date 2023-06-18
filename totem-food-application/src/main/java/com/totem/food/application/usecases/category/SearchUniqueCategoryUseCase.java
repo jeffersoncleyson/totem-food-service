@@ -16,7 +16,7 @@ import java.util.Optional;
 public class SearchUniqueCategoryUseCase implements ISearchUniqueUseCase<String, CategoryDto> {
 
     private final ICategoryMapper iCategoryMapper;
-    private final ISearchUniqueRepositoryPort<String, Optional<CategoryDomain>> iSearchRepositoryPort;
+    private final ISearchUniqueRepositoryPort<Optional<CategoryDomain>> iSearchRepositoryPort;
 
     @Override
     public CategoryDto item(String id) {

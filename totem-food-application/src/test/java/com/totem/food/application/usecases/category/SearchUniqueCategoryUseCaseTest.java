@@ -33,7 +33,7 @@ class SearchUniqueCategoryUseCaseTest {
     private ICategoryMapper iCategoryMapper = Mappers.getMapper(ICategoryMapper.class);
 
     @Mock
-    private ISearchUniqueRepositoryPort<String, Optional<CategoryDomain>> iSearchRepositoryPort;
+    private ISearchUniqueRepositoryPort<Optional<CategoryDomain>> iSearchRepositoryPort;
 
     private ISearchUniqueUseCase<String, CategoryDto> iSearchUseCase;
 

@@ -40,7 +40,7 @@ class AdministrativeCategoriesRestApiAdapterTest {
     private ISearchUniqueUseCase<String, CategoryDto> iSearchUniqueUseCase;
 
     @Mock
-    private IDeleteUseCase iDeleteCategoryUseCase;
+    private IDeleteUseCase<String, CategoryDto> iDeleteCategoryUseCase;
 
     @Mock
     private IUpdateUseCase<CategoryCreateDto, CategoryDto> iUpdateCategoryUseCase;

@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @Component
-public class SearchUniqueCategoryRepositoryAdapter implements ISearchUniqueRepositoryPort<String, Optional<CategoryDomain>> {
+public class SearchUniqueCategoryRepositoryAdapter implements ISearchUniqueRepositoryPort<Optional<CategoryDomain>> {
 
     @Repository
     protected interface CategoryRepositoryMongoDB extends BaseRepository<CategoryEntity, String> {

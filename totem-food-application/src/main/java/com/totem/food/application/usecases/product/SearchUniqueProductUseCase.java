@@ -8,16 +8,16 @@ import com.totem.food.domain.product.ProductDomain;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @AllArgsConstructor
 @Service
 public class SearchUniqueProductUseCase implements ISearchUniqueUseCase<String, ProductDto> {
-
     private final IProductMapper iProductMapper;
     private final ISearchUniqueRepositoryPort<ProductDomain> iSearchUniqueRepositoryPort;
 
     @Override
     public ProductDto item(String id) {
-        final var productDomain = iSearchUniqueRepositoryPort.findById(id);
-        return iProductMapper.toDto(productDomain);
+        return Optional.ofNullable(iSearchUniqueRepositoryPort.findById(id)).map(iProductMapper::toDto).orElseThrow();
     }
 }

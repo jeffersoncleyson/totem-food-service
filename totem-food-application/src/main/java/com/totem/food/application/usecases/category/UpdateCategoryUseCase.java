@@ -2,7 +2,6 @@ package com.totem.food.application.usecases.category;
 
 import com.totem.food.application.ports.in.dtos.category.CategoryCreateDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
-import com.totem.food.application.ports.in.dtos.category.CategoryFilterDto;
 import com.totem.food.application.ports.in.mappers.category.ICategoryMapper;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
@@ -18,8 +17,8 @@ import java.util.Optional;
 public class UpdateCategoryUseCase implements IUpdateUseCase<CategoryCreateDto, CategoryDto> {
 
     private final ICategoryMapper iCategoryMapper;
-    private final IUpdateRepositoryPort<CategoryFilterDto, CategoryDomain> iUpdateRepositoryPort;
-    private final ISearchUniqueRepositoryPort<String, Optional<CategoryDomain>> iSearchUniqueRepositoryPort;
+    private final IUpdateRepositoryPort<CategoryDomain> iUpdateRepositoryPort;
+    private final ISearchUniqueRepositoryPort<Optional<CategoryDomain>> iSearchUniqueRepositoryPort;
 
     @Override
     public CategoryDto updateItem(CategoryCreateDto item, String id) {

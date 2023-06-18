@@ -40,10 +40,10 @@ class UpdateCategoryUseCaseTest {
 
 
     @Mock
-    private IUpdateRepositoryPort<CategoryFilterDto, CategoryDomain> iUpdateRepositoryPort;
+    private IUpdateRepositoryPort<CategoryDomain> iUpdateRepositoryPort;
 
     @Mock
-    private ISearchUniqueRepositoryPort<String, Optional<CategoryDomain>> iSearchUniqueRepositoryPort;
+    private ISearchUniqueRepositoryPort<Optional<CategoryDomain>> iSearchUniqueRepositoryPort;
 
     private IUpdateUseCase<CategoryCreateDto, CategoryDto> iUpdateUseCase;
 
