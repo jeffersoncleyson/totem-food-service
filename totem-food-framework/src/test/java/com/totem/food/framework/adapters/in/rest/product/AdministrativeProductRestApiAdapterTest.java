@@ -6,6 +6,7 @@ import com.totem.food.application.ports.in.dtos.product.ProductCreateDto;
 import com.totem.food.application.ports.in.dtos.product.ProductDto;
 import com.totem.food.application.ports.in.dtos.product.ProductFilterDto;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
+import com.totem.food.application.usecases.commons.IDeleteUseCase;
 import com.totem.food.application.usecases.commons.ISearchUniqueUseCase;
 import com.totem.food.application.usecases.commons.ISearchUseCase;
 import com.totem.food.framework.test.utils.TestUtils;
@@ -34,9 +35,8 @@ import java.util.UUID;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -53,6 +53,8 @@ class AdministrativeProductRestApiAdapterTest {
     private ISearchUseCase<ProductFilterDto, List<ProductDto>> iSearchProductUseCase;
     @Mock
     private ISearchUniqueUseCase<String, Optional<ProductDto>> iSearchUniqueUseCase;
+    @Mock
+    private IDeleteUseCase<ProductDto> iDeleteUseCase;
 
     private MockMvc mockMvc;
     private AutoCloseable autoCloseable;
@@ -60,7 +62,7 @@ class AdministrativeProductRestApiAdapterTest {
     @BeforeEach
     void setup() {
         autoCloseable = MockitoAnnotations.openMocks(this);
-        final var administrativeProductRestApiAdapter = new AdministrativeProductRestApiAdapter(createProductUseCase, iSearchProductUseCase, iSearchUniqueUseCase);
+        final var administrativeProductRestApiAdapter = new AdministrativeProductRestApiAdapter(createProductUseCase, iSearchProductUseCase, iSearchUniqueUseCase, iDeleteUseCase);
         mockMvc = MockMvcBuilders.standaloneSetup(administrativeProductRestApiAdapter).build();
     }
 
@@ -128,6 +130,7 @@ class AdministrativeProductRestApiAdapterTest {
                 .ignoringFieldsOfTypes(ZonedDateTime.class)
                 .isEqualTo(productDtoResponse);
 
+        verify(createProductUseCase, times(1)).createItem(Mockito.any(ProductCreateDto.class));
     }
 
     @ParameterizedTest
@@ -183,6 +186,8 @@ class AdministrativeProductRestApiAdapterTest {
                 .usingRecursiveComparison()
                 .ignoringFieldsOfTypes(ZonedDateTime.class)
                 .isEqualTo(productDtoList);
+
+        verify(iSearchProductUseCase, times(1)).items(Mockito.any(ProductFilterDto.class));
     }
 
     @ParameterizedTest
@@ -233,6 +238,49 @@ class AdministrativeProductRestApiAdapterTest {
                 .usingRecursiveComparison()
                 .ignoringFieldsOfTypes(ZonedDateTime.class)
                 .isEqualTo(productDto);
+
+        verify(iSearchUniqueUseCase, times(1)).item(Mockito.anyString());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = "/administrative/product/{productId}")
+    void deleteById(String endpoint) throws Exception {
+
+        //### Given - Objects and Values
+        final var id = UUID.randomUUID().toString();
+        final var name = "Coca-cola";
+        final var description = "description";
+        final var image = "https://mybucket.s3.amazonaws.com/myfolder/afile.jpg";
+        final var price = 10D * (Math.random() + 1);
+        final var category = "Refrigerante";
+        final var modifiedAt = ZonedDateTime.now(ZoneOffset.UTC);
+        final var createAt = ZonedDateTime.now(ZoneOffset.UTC);
+
+        final var productDto = new ProductDto(
+                id,
+                name,
+                description,
+                image,
+                price,
+                category,
+                modifiedAt,
+                createAt
+        );
+
+        //### Given - Mocks
+        when(iSearchUniqueUseCase.item(Mockito.anyString())).thenReturn(Optional.of(productDto));
+
+        final var httpServletRequest = delete(endpoint, id);
+
+        //### When
+        final var resultActions = mockMvc.perform(httpServletRequest);
+
+        //### Then
+        resultActions.andDo(print())
+                .andExpect(status().isNoContent());
+
+        verify(iDeleteUseCase, times(1)).removeItem(Mockito.anyString());
+
     }
 
 }
