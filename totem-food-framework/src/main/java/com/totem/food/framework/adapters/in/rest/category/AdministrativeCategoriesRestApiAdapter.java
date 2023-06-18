@@ -3,7 +3,11 @@ package com.totem.food.framework.adapters.in.rest.category;
 import com.totem.food.application.ports.in.dtos.category.CategoryCreateDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryFilterDto;
-import com.totem.food.application.ports.in.rest.*;
+import com.totem.food.application.ports.in.rest.ICreateRestApiPort;
+import com.totem.food.application.ports.in.rest.IRemoveRestApiPort;
+import com.totem.food.application.ports.in.rest.ISearchRestApiPort;
+import com.totem.food.application.ports.in.rest.ISearchUniqueRestApiPort;
+import com.totem.food.application.ports.in.rest.IUpdateRestApiPort;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
 import com.totem.food.application.usecases.commons.IDeleteUseCase;
 import com.totem.food.application.usecases.commons.ISearchUniqueUseCase;
@@ -36,7 +40,7 @@ public class AdministrativeCategoriesRestApiAdapter implements
     private final ICreateUseCase<CategoryCreateDto, CategoryDto> iCreateCategoryUseCase;
     private final ISearchUseCase<CategoryFilterDto, List<CategoryDto>> iSearchCategoryUseCase;
     private final ISearchUniqueUseCase<String, CategoryDto> iSearchUniqueCategoryUseCase;
-    private final IDeleteUseCase iDeleteCategoryUseCase;
+    private final IDeleteUseCase<String, CategoryDto> iDeleteCategoryUseCase;
     private final IUpdateUseCase<CategoryCreateDto, CategoryDto> iUpdateCategoryUseCase;
 
     @PostMapping

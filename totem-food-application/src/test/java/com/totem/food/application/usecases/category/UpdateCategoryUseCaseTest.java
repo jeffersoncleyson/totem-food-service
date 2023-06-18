@@ -43,10 +43,9 @@ class UpdateCategoryUseCaseTest {
     private IUpdateRepositoryPort<CategoryFilterDto, CategoryDomain> iUpdateRepositoryPort;
 
     @Mock
-    private ISearchUniqueRepositoryPort<CategoryDomain> iSearchUniqueRepositoryPort;
+    private ISearchUniqueRepositoryPort<String, Optional<CategoryDomain>> iSearchUniqueRepositoryPort;
 
     private IUpdateUseCase<CategoryCreateDto, Optional<CategoryDto>> iUpdateUseCase;
-
 
 
     @BeforeEach
@@ -60,7 +59,7 @@ class UpdateCategoryUseCaseTest {
 
         //## Given
         final var categoryDomain = new CategoryDomain("123", "Name", ZonedDateTime.now(ZoneOffset.UTC), ZonedDateTime.now(ZoneOffset.UTC));
-        when(iSearchUniqueRepositoryPort.findById(anyString())).thenReturn(categoryDomain);
+        when(iSearchUniqueRepositoryPort.findById(anyString())).thenReturn(Optional.of(categoryDomain));
         categoryDomain.updateModifiedAt();
         when(iUpdateRepositoryPort.updateItem(any(CategoryDomain.class))).thenReturn(categoryDomain);
 
@@ -80,6 +79,7 @@ class UpdateCategoryUseCaseTest {
 
         //## Given
         final var categoryCreateDto = new CategoryCreateDto("Name");
+        when(iSearchUniqueRepositoryPort.findById(anyString())).thenReturn(Optional.empty());
 
         //## Then
         assertDoesNotThrow(() -> iUpdateUseCase.updateItem(categoryCreateDto, "123"));

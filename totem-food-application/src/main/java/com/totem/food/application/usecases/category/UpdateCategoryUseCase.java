@@ -11,7 +11,6 @@ import com.totem.food.domain.category.CategoryDomain;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -20,17 +19,17 @@ public class UpdateCategoryUseCase implements IUpdateUseCase<CategoryCreateDto, 
 
     private final ICategoryMapper iCategoryMapper;
     private final IUpdateRepositoryPort<CategoryFilterDto, CategoryDomain> iUpdateRepositoryPort;
-    private final ISearchUniqueRepositoryPort<CategoryDomain> iSearchUniqueRepositoryPort;
+    private final ISearchUniqueRepositoryPort<String, Optional<CategoryDomain>> iSearchUniqueRepositoryPort;
 
     @Override
     public Optional<CategoryDto> updateItem(CategoryCreateDto item, String id) {
         var categoryDomain = iSearchUniqueRepositoryPort.findById(id);
 
-        if(Objects.nonNull(categoryDomain)){
-            categoryDomain.setName(item.getName());
-            categoryDomain.validateCategory();
-            categoryDomain.updateModifiedAt();
-            final var categoryDomainUpdated = iUpdateRepositoryPort.updateItem(categoryDomain);
+        if (categoryDomain.isPresent()) {
+            categoryDomain.get().setName(item.getName());
+            categoryDomain.get().validateCategory();
+            categoryDomain.get().updateModifiedAt();
+            final var categoryDomainUpdated = iUpdateRepositoryPort.updateItem(categoryDomain.get());
             return Optional.of(iCategoryMapper.toDto(categoryDomainUpdated));
         }
 

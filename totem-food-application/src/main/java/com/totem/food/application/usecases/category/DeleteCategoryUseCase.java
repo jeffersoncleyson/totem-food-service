@@ -1,5 +1,6 @@
 package com.totem.food.application.usecases.category;
 
+import com.totem.food.application.ports.in.dtos.category.CategoryDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryFilterDto;
 import com.totem.food.application.ports.out.persistence.commons.IDeleteRepositoryPort;
 import com.totem.food.application.usecases.commons.IDeleteUseCase;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
 @Service
-public class DeleteCategoryUseCase implements IDeleteUseCase {
+public class DeleteCategoryUseCase implements IDeleteUseCase<String, CategoryDto> {
 
     private final IDeleteRepositoryPort<CategoryFilterDto, CategoryDomain> iDeleteRepositoryPort;
 

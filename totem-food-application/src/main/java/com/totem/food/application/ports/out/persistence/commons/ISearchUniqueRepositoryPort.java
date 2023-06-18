@@ -1,6 +1,6 @@
 package com.totem.food.application.ports.out.persistence.commons;
 
-public interface ISearchUniqueRepositoryPort<O> {
+public interface ISearchUniqueRepositoryPort<I, O> {
 
-	O findById(String id);
+    O findById(I id);
 }
