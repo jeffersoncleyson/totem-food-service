@@ -32,7 +32,7 @@ public class AdministrativeCategoriesRestApiAdapter implements
     private final ICreateUseCase<CategoryCreateDto, CategoryDto> iCreateCategoryUseCase;
     private final ISearchUseCase<FilterCategoryDto, List<CategoryDto>> iSearchCategoryUseCase;
     private final ISearchUniqueUseCase<String, CategoryDto> iSearchUniqueCategoryUseCase;
-    private final IDeleteUseCase iDeleteCategoryUseCase;
+    private final IDeleteUseCase<String, CategoryDto> iDeleteCategoryUseCase;
     private final IUpdateUseCase<CategoryCreateDto, CategoryDto> iUpdateCategoryUseCase;
 
     @PostMapping
