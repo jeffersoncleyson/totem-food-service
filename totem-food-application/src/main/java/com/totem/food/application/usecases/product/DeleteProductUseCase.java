@@ -14,12 +14,13 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @Service
-public class DeleteProductUseCase implements IDeleteUseCase<ProductDto> {
+public class DeleteProductUseCase implements IDeleteUseCase<String, ProductDto> {
 
     private final IRemoveRepositoryPort<ProductDomain> iSearchUniqueRepositoryPort;
 
     @Override
-    public void removeItem(String id) {
+    public ProductDto removeItem(String id) {
         iSearchUniqueRepositoryPort.removeItem(id);
+        return null;
     }
 }

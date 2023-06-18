@@ -12,12 +12,12 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @Service
-public class SearchUniqueProductUseCase implements ISearchUniqueUseCase<String, Optional<ProductDto>> {
+public class SearchUniqueProductUseCase implements ISearchUniqueUseCase<String, ProductDto> {
     private final IProductMapper iProductMapper;
-    private final ISearchUniqueRepositoryPort<Optional<ProductDomain>> iSearchUniqueRepositoryPort;
+    private final ISearchUniqueRepositoryPort<ProductDomain> iSearchUniqueRepositoryPort;
 
     @Override
-    public Optional<ProductDto> item(String id) {
-        return iSearchUniqueRepositoryPort.findById(id).map(iProductMapper::toDto);
+    public ProductDto item(String id) {
+        return Optional.ofNullable(iSearchUniqueRepositoryPort.findById(id)).map(iProductMapper::toDto).orElseThrow();
     }
 }

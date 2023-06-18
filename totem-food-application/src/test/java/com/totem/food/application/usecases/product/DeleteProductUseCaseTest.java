@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.Mockito.times;
@@ -21,7 +22,7 @@ class DeleteProductUseCaseTest {
     @Mock
     private IRemoveRepositoryPort<ProductDomain> iSearchUniqueRepositoryPort;
 
-    private IDeleteUseCase<ProductDto> iDeleteUseCase;
+    private IDeleteUseCase<String, ProductDto> iDeleteUseCase;
 
     private AutoCloseable closeable;
 

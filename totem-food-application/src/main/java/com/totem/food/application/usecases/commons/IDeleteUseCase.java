@@ -1,6 +1,6 @@
 package com.totem.food.application.usecases.commons;
 
-public interface IDeleteUseCase<T> {
+public interface IDeleteUseCase<I, O> {
 
-    void removeItem(String id);
+    O removeItem(I id);
 }

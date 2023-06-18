@@ -7,14 +7,17 @@ import com.totem.food.domain.category.CategoryDomain;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @AllArgsConstructor
 @Service
-public class DeleteCategoryUseCase implements IDeleteUseCase<CategoryDto> {
+public class DeleteCategoryUseCase implements IDeleteUseCase<String, CategoryDto> {
 
     private final ICategoryRepositoryPort<CategoryDomain> iCategoryRepositoryPort;
 
     @Override
-    public void removeItem(String id) {
+    public CategoryDto removeItem(String id) {
         iCategoryRepositoryPort.removeItem(id);
+        return null;
     }
 }
