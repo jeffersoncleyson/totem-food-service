@@ -29,7 +29,7 @@ class SearchCategoryUseCaseTest {
     private ICategoryMapper iCategoryMapper = Mappers.getMapper(ICategoryMapper.class);
 
     @Mock
-    private ISearchRepositoryPort<CategoryFilterDto, CategoryDomain> iSearchRepositoryPort;
+    private ISearchRepositoryPort<CategoryFilterDto, List<CategoryDomain>> iSearchRepositoryPort;
 
     private ISearchUseCase<CategoryFilterDto, List<CategoryDto>> iSearchUseCase;
 

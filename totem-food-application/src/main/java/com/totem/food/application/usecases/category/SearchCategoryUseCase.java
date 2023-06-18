@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class SearchCategoryUseCase implements ISearchUseCase<CategoryFilterDto, List<CategoryDto>> {
 
     private final ICategoryMapper iCategoryMapper;
-    private final ISearchRepositoryPort<CategoryFilterDto, CategoryDomain> iSearchRepositoryPort;
+    private final ISearchRepositoryPort<CategoryFilterDto, List<CategoryDomain>> iSearchRepositoryPort;
 
     @Override
     public List<CategoryDto> items(CategoryFilterDto filter) {

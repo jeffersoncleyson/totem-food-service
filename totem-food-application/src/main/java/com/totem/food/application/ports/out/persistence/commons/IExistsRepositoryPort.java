@@ -1,6 +1,6 @@
 package com.totem.food.application.ports.out.persistence.commons;
 
-public interface ICreateRepositoryPort<O> {
+public interface IExistsRepositoryPort<I, O> {
 
-    O saveItem(O item);
+	O exists(I item);
 }

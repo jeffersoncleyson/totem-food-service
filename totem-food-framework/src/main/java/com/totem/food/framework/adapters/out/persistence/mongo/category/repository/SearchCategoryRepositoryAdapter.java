@@ -17,43 +17,20 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @AllArgsConstructor
 @Component
-public class CategoryRepositoryAdapter implements ICreateRepositoryPort<CategoryFilterDto, CategoryDomain>,
-        ISearchRepositoryPort<CategoryFilterDto, CategoryDomain>,
-        IDeleteRepositoryPort<CategoryFilterDto, CategoryDomain>,
-        IUpdateRepositoryPort<CategoryFilterDto, CategoryDomain> {
+public class SearchCategoryRepositoryAdapter implements ISearchRepositoryPort<CategoryFilterDto, List<CategoryDomain>> {
 
     @Repository
     protected interface CategoryRepositoryMongoDB extends BaseRepository<CategoryEntity, String> {
-
         @Query("{'name': ?0 }")
         List<CategoryEntity> findByFilter(String name);
-
-        boolean existsByNameIgnoreCase(String name);
     }
 
     private final CategoryRepositoryMongoDB repository;
     private final ICategoryEntityMapper iCategoryEntityMapper;
 
-    @Override
-    public CategoryDomain saveItem(CategoryDomain item) {
-        final var categoryEntity = iCategoryEntityMapper.toEntity(item);
-        final var savedCategoryEntity = repository.save(categoryEntity);
-        return iCategoryEntityMapper.toDomain(savedCategoryEntity);
-    }
-
-    @Override
-    public void removeItem(String itemId) {
-        repository.deleteById(itemId);
-    }
-
-    @Override
-    public CategoryDomain updateItem(CategoryDomain item) {
-        return saveItem(item);
-    }
 
     @Override
     public List<CategoryDomain> findAll(CategoryFilterDto categoryFilterDto) {
@@ -63,15 +40,5 @@ public class CategoryRepositoryAdapter implements ICreateRepositoryPort<Category
         }
         repository.findAll().forEach(entity -> categorysDomain.add(iCategoryEntityMapper.toDomain(entity)));
         return categorysDomain;
-    }
-
-    @Override
-    public Optional<CategoryDomain> findById(String id) {
-        return repository.findById(id).map(iCategoryEntityMapper::toDomain);
-    }
-
-    @Override
-    public boolean existsItem(CategoryDomain item) {
-        return repository.existsByNameIgnoreCase(item.getName());
     }
 }

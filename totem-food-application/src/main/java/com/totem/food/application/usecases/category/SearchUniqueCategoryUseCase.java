@@ -4,18 +4,21 @@ import com.totem.food.application.ports.in.dtos.category.CategoryDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryFilterDto;
 import com.totem.food.application.ports.in.mappers.category.ICategoryMapper;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
+import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.usecases.commons.ISearchUniqueUseCase;
 import com.totem.food.domain.category.CategoryDomain;
 import com.totem.food.domain.exceptions.ResourceNotFound;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @AllArgsConstructor
 @Service
 public class SearchUniqueCategoryUseCase implements ISearchUniqueUseCase<String, CategoryDto> {
 
     private final ICategoryMapper iCategoryMapper;
-    private final ISearchRepositoryPort<CategoryFilterDto, CategoryDomain> iSearchRepositoryPort;
+    private final ISearchUniqueRepositoryPort<Optional<CategoryDomain>> iSearchRepositoryPort;
 
     @Override
     public CategoryDto item(String id) {

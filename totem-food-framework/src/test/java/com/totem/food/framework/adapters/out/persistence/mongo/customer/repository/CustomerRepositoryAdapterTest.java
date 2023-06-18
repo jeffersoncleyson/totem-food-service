@@ -24,17 +24,17 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class CustomerRepositoryAdapterTest {
 
-    private CustomerRepositoryAdapter customerRepositoryAdapter;
+    private SearchCustomerRepositoryAdapter customerRepositoryAdapter;
     @Spy
     private ICustomerEntityMapper iCustomerEntityMapper = Mappers.getMapper(ICustomerEntityMapper.class);
 
     @Mock
-    private CustomerRepositoryAdapter.CustomerRepositoryMongoDB repository;
+    private SearchCustomerRepositoryAdapter.CustomerRepositoryMongoDB repository;
 
     @BeforeEach
     public void beforeEach() {
         MockitoAnnotations.openMocks(this);
-        customerRepositoryAdapter = new CustomerRepositoryAdapter(repository, iCustomerEntityMapper);
+        customerRepositoryAdapter = new SearchCustomerRepositoryAdapter(repository, iCustomerEntityMapper);
     }
 
     @Test

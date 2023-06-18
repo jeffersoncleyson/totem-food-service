@@ -5,6 +5,7 @@ import com.totem.food.application.ports.in.dtos.category.CategoryDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryFilterDto;
 import com.totem.food.application.ports.in.mappers.category.ICategoryMapper;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
+import com.totem.food.application.ports.out.persistence.commons.IExistsRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
 import com.totem.food.domain.category.CategoryDomain;
@@ -31,11 +32,10 @@ class CreateCategoryUseCaseTest {
     @Spy
     private ICategoryMapper iCategoryMapper = Mappers.getMapper(ICategoryMapper.class);
     @Mock
-    private ICreateRepositoryPort<CategoryFilterDto, CategoryDomain> iCreateRepositoryPort;
+    private ICreateRepositoryPort<CategoryDomain> iCreateRepositoryPort;
 
     @Mock
-    private ISearchRepositoryPort<CategoryFilterDto, CategoryDomain> iSearchRepositoryPort;
-
+    private IExistsRepositoryPort<CategoryDomain, Boolean> iSearchRepositoryPort;
 
     private ICreateUseCase<CategoryCreateDto, CategoryDto> iCreateUseCase;
 

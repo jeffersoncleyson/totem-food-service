@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class CreateProductUseCase implements ICreateUseCase<ProductCreateDto, ProductDto> {
 
     private final IProductMapper iProductMapper;
-    private final ICreateRepositoryPort<ProductFilterDto, ProductDomain> iProductRepositoryPort;
+    private final ICreateRepositoryPort<ProductDomain> iProductRepositoryPort;
 
     public ProductDto createItem(ProductCreateDto item) {
         final var domain = iProductMapper.toDomain(item);

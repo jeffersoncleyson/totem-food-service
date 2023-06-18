@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -23,18 +25,18 @@ public class SearchProductUseCase implements ISearchUseCase<ProductFilterDto, Li
     public List<ProductDto> items(ProductFilterDto filter) {
 
 
-//        return Optional.ofNullable(iSearchProductRepositoryPort.findAll(filter))
-//                .map(productsDomain ->
-//                        productsDomain.stream().map(iProductMapper::toDto).collect(Collectors.toList()))
-//                .orElse(List.of());
+        return Optional.ofNullable(iSearchProductRepositoryPort.findAll(filter))
+                .map(productsDomain ->
+                        productsDomain.stream().map(iProductMapper::toDto).collect(Collectors.toList()))
+                .orElse(List.of());
 
-        var listDomain = new ArrayList<ProductDto>();
-        for (List<ProductDomain> typeProducts : iSearchProductRepositoryPort.findAll(filter)) {
-            for (ProductDomain productDomain : typeProducts) {
-                listDomain.add(iProductMapper.toDto(productDomain));
-            }
-        }
-
-        return listDomain;
+//        var listDomain = new ArrayList<ProductDto>();
+//        for (List<ProductDomain> typeProducts : iSearchProductRepositoryPort.findAll(filter)) {
+//            for (ProductDomain productDomain : typeProducts) {
+//                listDomain.add(iProductMapper.toDto(productDomain));
+//            }
+//        }
+//
+//        return listDomain;
     }
 }

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class SearchCustomerUseCase implements ISearchUseCase<CustomerFilterDto, List<CustomerDto>> {
 
     private final ICustomerMapper iCustomerMapper;
-    private final ISearchRepositoryPort<CustomerFilterDto, CustomerDomain> iCustomerRepositoryPort;
+    private final ISearchRepositoryPort<CustomerFilterDto, List<CustomerDomain>> iCustomerRepositoryPort;
 
     @Override
     public List<CustomerDto> items(CustomerFilterDto customerFilterDto) {

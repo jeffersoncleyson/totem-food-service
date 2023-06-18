@@ -12,11 +12,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @AllArgsConstructor
 @Component
-public class CustomerRepositoryAdapter implements ISearchRepositoryPort<CustomerFilterDto, CustomerDomain> {
+public class SearchCustomerRepositoryAdapter implements ISearchRepositoryPort<CustomerFilterDto, List<CustomerDomain>> {
 
     @Repository
     protected interface CustomerRepositoryMongoDB extends BaseRepository<CustomerEntity, String> {
@@ -31,15 +30,4 @@ public class CustomerRepositoryAdapter implements ISearchRepositoryPort<Customer
         repository.findAll().forEach(entity -> customersDomain.add(iCustomerEntityMapper.toDomain(entity)));
         return customersDomain;
     }
-
-    @Override
-    public Optional<CustomerDomain> findById(String id) {
-        return repository.findById(id).map(iCustomerEntityMapper::toDomain);
-    }
-
-    @Override
-    public boolean existsItem(CustomerDomain item) {
-        return false;
-    }
-
 }

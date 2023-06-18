@@ -5,8 +5,8 @@ import com.totem.food.application.ports.in.dtos.category.CategoryDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryFilterDto;
 import com.totem.food.application.ports.in.mappers.category.ICategoryMapper;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
+import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
-import com.totem.food.application.usecases.commons.ICreateUseCase;
 import com.totem.food.application.usecases.commons.IUpdateUseCase;
 import com.totem.food.domain.category.CategoryDomain;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,16 +42,17 @@ class UpdateCategoryUseCaseTest {
     @Mock
     private IUpdateRepositoryPort<CategoryFilterDto, CategoryDomain> iUpdateRepositoryPort;
 
-
-    private IUpdateUseCase<CategoryCreateDto, CategoryDto> iUpdateUseCase;
-
     @Mock
-    private ICreateUseCase<CategoryCreateDto, CategoryDto> iCreateUseCase;
+    private ISearchUniqueRepositoryPort<CategoryDomain> iSearchUniqueRepositoryPort;
+
+    private IUpdateUseCase<CategoryCreateDto, Optional<CategoryDto>> iUpdateUseCase;
+
+
 
     @BeforeEach
     void beforeEach() {
         MockitoAnnotations.openMocks(this);
-        this.iUpdateUseCase = new UpdateCategoryUseCase(iCategoryMapper, iUpdateRepositoryPort, iSearchRepositoryPort, iCreateUseCase);
+        this.iUpdateUseCase = new UpdateCategoryUseCase(iCategoryMapper, iUpdateRepositoryPort, iSearchUniqueRepositoryPort);
     }
 
     @Test
@@ -59,15 +60,16 @@ class UpdateCategoryUseCaseTest {
 
         //## Given
         final var categoryDomain = new CategoryDomain("123", "Name", ZonedDateTime.now(ZoneOffset.UTC), ZonedDateTime.now(ZoneOffset.UTC));
-        when(iSearchRepositoryPort.findById(anyString())).thenReturn(Optional.of(categoryDomain));
+        when(iSearchUniqueRepositoryPort.findById(anyString())).thenReturn(categoryDomain);
         categoryDomain.updateModifiedAt();
         when(iUpdateRepositoryPort.updateItem(any(CategoryDomain.class))).thenReturn(categoryDomain);
 
         //## When
         final var categoryCreateDto = new CategoryCreateDto("name");
-        final var categoryDto = iUpdateUseCase.updateItem(categoryCreateDto, anyString());
+        final var categoryDtoOpt = iUpdateUseCase.updateItem(categoryCreateDto, anyString());
 
         //## Then
+        final var categoryDto = categoryDtoOpt.orElseThrow();
         assertEquals(categoryDomain.getName(), categoryDto.getName());
         verify(iCategoryMapper).toDto(any());
 

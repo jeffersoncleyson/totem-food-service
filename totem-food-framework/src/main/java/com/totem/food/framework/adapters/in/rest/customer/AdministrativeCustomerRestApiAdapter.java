@@ -3,7 +3,7 @@ package com.totem.food.framework.adapters.in.rest.customer;
 import com.totem.food.application.ports.in.dtos.customer.CustomerDto;
 import com.totem.food.application.ports.in.dtos.customer.CustomerFilterDto;
 import com.totem.food.application.ports.in.rest.ISearchRestApiPort;
-import com.totem.food.application.ports.in.rest.ISearchUnique;
+import com.totem.food.application.ports.in.rest.ISearchUniqueRestApiPort;
 import com.totem.food.application.usecases.commons.ISearchUseCase;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping(value = "/administrative/customer")
 @AllArgsConstructor
 public class AdministrativeCustomerRestApiAdapter implements ISearchRestApiPort<CustomerFilterDto, ResponseEntity<List<CustomerDto>>>,
-        ISearchUnique<String, ResponseEntity<CustomerDto>> {
+        ISearchUniqueRestApiPort<String, ResponseEntity<CustomerDto>> {
 
     private final ISearchUseCase<CustomerFilterDto, List<CustomerDto>> iSearchCustomerUseCase;
 
