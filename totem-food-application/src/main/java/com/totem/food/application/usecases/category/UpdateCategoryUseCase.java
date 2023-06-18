@@ -15,14 +15,14 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @Service
-public class UpdateCategoryUseCase implements IUpdateUseCase<CategoryCreateDto, Optional<CategoryDto>> {
+public class UpdateCategoryUseCase implements IUpdateUseCase<CategoryCreateDto, CategoryDto> {
 
     private final ICategoryMapper iCategoryMapper;
     private final IUpdateRepositoryPort<CategoryFilterDto, CategoryDomain> iUpdateRepositoryPort;
     private final ISearchUniqueRepositoryPort<String, Optional<CategoryDomain>> iSearchUniqueRepositoryPort;
 
     @Override
-    public Optional<CategoryDto> updateItem(CategoryCreateDto item, String id) {
+    public CategoryDto updateItem(CategoryCreateDto item, String id) {
         var categoryDomain = iSearchUniqueRepositoryPort.findById(id);
 
         if (categoryDomain.isPresent()) {
@@ -30,10 +30,11 @@ public class UpdateCategoryUseCase implements IUpdateUseCase<CategoryCreateDto, 
             categoryDomain.get().validateCategory();
             categoryDomain.get().updateModifiedAt();
             final var categoryDomainUpdated = iUpdateRepositoryPort.updateItem(categoryDomain.get());
-            return Optional.of(iCategoryMapper.toDto(categoryDomainUpdated));
+            return iCategoryMapper.toDto(categoryDomainUpdated);
         }
 
-        return Optional.empty();
+        //#### Implementar tratamento de erro.
+        return null;
     }
 
 }

@@ -45,7 +45,7 @@ class UpdateCategoryUseCaseTest {
     @Mock
     private ISearchUniqueRepositoryPort<String, Optional<CategoryDomain>> iSearchUniqueRepositoryPort;
 
-    private IUpdateUseCase<CategoryCreateDto, Optional<CategoryDto>> iUpdateUseCase;
+    private IUpdateUseCase<CategoryCreateDto, CategoryDto> iUpdateUseCase;
 
 
     @BeforeEach
@@ -65,10 +65,9 @@ class UpdateCategoryUseCaseTest {
 
         //## When
         final var categoryCreateDto = new CategoryCreateDto("name");
-        final var categoryDtoOpt = iUpdateUseCase.updateItem(categoryCreateDto, anyString());
+        final var categoryDto = iUpdateUseCase.updateItem(categoryCreateDto, anyString());
 
         //## Then
-        final var categoryDto = categoryDtoOpt.orElseThrow();
         assertEquals(categoryDomain.getName(), categoryDto.getName());
         verify(iCategoryMapper).toDto(any());
 
