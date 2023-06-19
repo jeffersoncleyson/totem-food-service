@@ -17,7 +17,7 @@ public class OrderAdminDto {
 
     private String orderId;
     private Integer showNumber;
-    private BigDecimal amout;
+    private BigDecimal amount;
     private CustomerDto customer;
     private ZonedDateTime createAt;
 }

@@ -9,7 +9,9 @@ import com.totem.food.application.usecases.commons.ISearchUseCase;
 import com.totem.food.domain.order.OrderAdminDomain;
 import lombok.AllArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @UseCase
@@ -20,6 +22,9 @@ public class SearchOrderAdminUseCase implements ISearchUseCase<OrderFilterDto, L
 
     @Override
     public List<OrderAdminDto> items(OrderFilterDto filter) {
-        return null;
+        return iSearchOrderRepositoryPort.findAll(filter)
+                .stream()
+                .map(iOrderAdminMapper::toDto)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }

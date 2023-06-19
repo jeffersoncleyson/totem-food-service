@@ -20,7 +20,7 @@ public class OrderAdminDomain {
     //########### Main Fields
     private String orderId;
     private Integer showNumber;
-    private BigDecimal amout;
+    private BigDecimal amount;
     private CustomerDomain customer;
     private ZonedDateTime createAt;
 

@@ -1,15 +1,17 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.order.mapper;
 
-import com.totem.food.framework.adapters.out.persistence.mongo.order.entity.OrderEntity;
+import com.totem.food.domain.order.OrderAdminDomain;
+import com.totem.food.framework.adapters.out.persistence.mongo.order.entity.OrderAdminEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring",
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
         unmappedSourcePolicy = ReportingPolicy.IGNORE,
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface IOrderEntityMapper {
 
-    OrderEntity toEntity(OrderDomain input);
+    OrderAdminEntity toEntity(OrderAdminDomain input);
 
-    OrderDomain toDomain(OrderEntity input);
+    OrderAdminDomain toDomain(OrderAdminEntity input);
 }
