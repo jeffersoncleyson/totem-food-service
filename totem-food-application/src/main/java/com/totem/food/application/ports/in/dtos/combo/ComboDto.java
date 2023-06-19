@@ -1,5 +1,6 @@
 package com.totem.food.application.ports.in.dtos.combo;
 
+import com.totem.food.application.ports.in.dtos.product.ProductDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ public class ComboDto {
 
     private String name;
     private BigDecimal price;
-    private List<String> products;
+    private List<ProductDto> products;
     private ZonedDateTime modifiedAt;
     private ZonedDateTime createAt;
 

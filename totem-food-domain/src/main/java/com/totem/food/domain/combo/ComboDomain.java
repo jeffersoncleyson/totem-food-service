@@ -2,6 +2,7 @@ package com.totem.food.domain.combo;
 
 import com.totem.food.domain.category.CategoryDomain;
 import com.totem.food.domain.exceptions.InvalidDomainField;
+import com.totem.food.domain.product.ProductDomain;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +24,7 @@ public class ComboDomain {
     private String id;
     private String name;
     private BigDecimal price;
-    private List<String> products;
+    private List<ProductDomain> products;
     private ZonedDateTime modifiedAt;
     private ZonedDateTime createAt;
 

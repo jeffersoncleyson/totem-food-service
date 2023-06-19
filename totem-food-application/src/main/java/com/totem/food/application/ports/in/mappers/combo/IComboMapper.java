@@ -5,6 +5,7 @@ import com.totem.food.application.ports.in.dtos.combo.ComboDto;
 import com.totem.food.domain.combo.ComboDomain;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
+import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
@@ -12,6 +13,7 @@ import org.mapstruct.ReportingPolicy;
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface IComboMapper {
 
+    @Mapping(target = "products", ignore = true)
     ComboDomain toDomain(ComboCreateDto input);
 
     ComboDto toDto(ComboDomain input);
