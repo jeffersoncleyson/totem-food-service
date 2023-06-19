@@ -1,5 +1,6 @@
 package com.totem.food.application.usecases.product;
 
+import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.ports.in.dtos.product.ProductCreateDto;
 import com.totem.food.application.ports.in.dtos.product.ProductDto;
 import com.totem.food.application.ports.in.mappers.product.IProductMapper;
@@ -26,9 +27,11 @@ public class UpdateProductUseCase implements IUpdateUseCase<ProductCreateDto, Pr
     public ProductDto updateItem(ProductCreateDto item, String id) {
 
         final var productDomainOpt = iSearchUniqueRepositoryPort.findById(id);
-        final var productDomain = productDomainOpt.orElseThrow();
+        final var productDomain = productDomainOpt
+                .orElseThrow(() -> new ElementNotFoundException(String.format("Product [%s] not found", id)));
 
-        final var categoryDomain = iSearchUniqueCategoryRepositoryPort.findById(item.getCategory()).orElseThrow();
+        final var categoryDomain = iSearchUniqueCategoryRepositoryPort.findById(item.getCategory())
+                .orElseThrow(() -> new ElementNotFoundException(String.format("Category [%s] not found", item.getCategory())));
 
         productDomain.setName(item.getName());
         productDomain.setDescription(item.getDescription());

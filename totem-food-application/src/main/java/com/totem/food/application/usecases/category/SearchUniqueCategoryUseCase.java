@@ -22,7 +22,7 @@ public class SearchUniqueCategoryUseCase implements ISearchUniqueUseCase<String,
     public CategoryDto item(String id) {
         final var categoryDomain = iSearchRepositoryPort.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFound(SearchUniqueCategoryUseCase.class, "Error searching item by identifier"));
+                        new ResourceNotFound(SearchUniqueCategoryUseCase.class, "ResponseError searching item by identifier"));
 
         return iCategoryMapper.toDto(categoryDomain);
     }

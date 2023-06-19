@@ -1,5 +1,6 @@
 package com.totem.food.application.usecases.category;
 
+import com.totem.food.application.exceptions.ElementExistsException;
 import com.totem.food.application.ports.in.dtos.category.CategoryCreateDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
 import com.totem.food.application.ports.in.mappers.category.ICategoryMapper;
@@ -24,7 +25,7 @@ public class CreateCategoryUseCase implements ICreateUseCase<CategoryCreateDto, 
         categoryDomain.fillDates();
 
         if (Boolean.TRUE.equals(iSearchRepositoryPort.exists(categoryDomain))) {
-            throw new IllegalArgumentException("Category already registered in base.");
+            throw new ElementExistsException(String.format("Category [%s] already registered", item.getName()));
         }
 
         final var categoryDomainSaved = iCreateRepositoryPort.saveItem(categoryDomain);
