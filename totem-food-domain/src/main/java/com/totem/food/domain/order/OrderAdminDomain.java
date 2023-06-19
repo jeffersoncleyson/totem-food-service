@@ -1,7 +1,8 @@
-package com.totem.food.application.ports.in.dtos.order;
+package com.totem.food.domain.order;
 
-import com.totem.food.application.ports.in.dtos.customer.CustomerDto;
+import com.totem.food.domain.customer.CustomerDomain;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,13 +12,16 @@ import java.time.ZonedDateTime;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderAdminDto {
+public class OrderAdminDomain {
 
+    //########### Main Fields
     private String orderId;
     private Integer showNumber;
     private BigDecimal amout;
-    private CustomerDto customer;
+    private CustomerDomain customer;
     private ZonedDateTime createAt;
+
 }

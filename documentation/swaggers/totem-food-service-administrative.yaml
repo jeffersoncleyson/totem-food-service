@@ -429,6 +429,10 @@ components:
     CustomerDto:
       type: object
       properties:
+        id:
+          type: string
+          description: Id customer
+          example: '13fe534r79k4280604d93d7b6'
         name:
           type: string
           description: Category name
@@ -458,10 +462,15 @@ components:
     OrderAdminDto:
       type: object
       properties:
-        number:
+        orderId:
           type: string
-          description: Order number
+          description: Order id
           example: '1'
+        showNumber:
+          type: integer
+          format: int64
+          description: Order number to display
+          example: 1
         amount:
           type: number
           description: Customer name
