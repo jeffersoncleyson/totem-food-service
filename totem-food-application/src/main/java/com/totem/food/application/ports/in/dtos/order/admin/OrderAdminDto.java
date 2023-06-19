@@ -1,4 +1,4 @@
-package com.totem.food.application.ports.in.dtos.order;
+package com.totem.food.application.ports.in.dtos.order.admin;
 
 import com.totem.food.application.ports.in.dtos.customer.CustomerDto;
 import lombok.AllArgsConstructor;

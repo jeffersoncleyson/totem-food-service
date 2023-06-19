@@ -1,11 +1,11 @@
-package com.totem.food.framework.adapters.out.persistence.mongo.order.repository;
+package com.totem.food.framework.adapters.out.persistence.mongo.order.admin.repository;
 
-import com.totem.food.application.ports.in.dtos.order.OrderFilterDto;
+import com.totem.food.application.ports.in.dtos.order.admin.OrderAdminFilterDto;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
-import com.totem.food.domain.order.OrderAdminDomain;
+import com.totem.food.domain.order.admin.OrderAdminDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepository;
-import com.totem.food.framework.adapters.out.persistence.mongo.order.entity.OrderAdminEntity;
-import com.totem.food.framework.adapters.out.persistence.mongo.order.mapper.IOrderEntityMapper;
+import com.totem.food.framework.adapters.out.persistence.mongo.order.admin.entity.OrderAdminEntity;
+import com.totem.food.framework.adapters.out.persistence.mongo.order.admin.mapper.IOrderEntityMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Component;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Component
-public class SearchOrderRepositoryAdapter implements ISearchRepositoryPort<OrderFilterDto, List<OrderAdminDomain>> {
+public class SearchOrderRepositoryAdapter implements ISearchRepositoryPort<OrderAdminFilterDto, List<OrderAdminDomain>> {
 
     @Repository
     protected interface OrderRepositoryMongoDB extends BaseRepository<OrderAdminEntity, String> {
@@ -30,7 +30,7 @@ public class SearchOrderRepositoryAdapter implements ISearchRepositoryPort<Order
     private final IOrderEntityMapper iOrderEntityMapper;
 
     @Override
-    public List<OrderAdminDomain> findAll(OrderFilterDto filter) {
+    public List<OrderAdminDomain> findAll(OrderAdminFilterDto filter) {
         return repository.findAll().stream().map(iOrderEntityMapper::toDomain).toList();
     }
 }

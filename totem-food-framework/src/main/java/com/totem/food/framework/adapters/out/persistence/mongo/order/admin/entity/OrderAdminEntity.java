@@ -1,4 +1,4 @@
-package com.totem.food.framework.adapters.out.persistence.mongo.order.entity;
+package com.totem.food.framework.adapters.out.persistence.mongo.order.admin.entity;
 
 import com.totem.food.framework.adapters.out.persistence.mongo.customer.entity.CustomerEntity;
 import lombok.*;

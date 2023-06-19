@@ -1,9 +1,9 @@
-package com.totem.food.framework.adapters.in.rest.order;
+package com.totem.food.framework.adapters.in.rest.order.admin;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.totem.food.application.ports.in.dtos.customer.CustomerDto;
-import com.totem.food.application.ports.in.dtos.order.OrderAdminDto;
-import com.totem.food.application.ports.in.dtos.order.OrderFilterDto;
+import com.totem.food.application.ports.in.dtos.order.admin.OrderAdminDto;
+import com.totem.food.application.ports.in.dtos.order.admin.OrderAdminFilterDto;
 import com.totem.food.application.usecases.commons.ISearchUseCase;
 import com.totem.food.framework.test.utils.TestUtils;
 import org.apache.commons.collections4.CollectionUtils;
@@ -40,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AdministrativeOrderRestApiAdapterTest {
 
     @Mock
-    private ISearchUseCase<OrderFilterDto, List<OrderAdminDto>> iSearchOrderUseCase;
+    private ISearchUseCase<OrderAdminFilterDto, List<OrderAdminDto>> iSearchOrderUseCase;
 
     private MockMvc mockMvc;
     private AutoCloseable autoCloseable;
@@ -95,7 +95,7 @@ class AdministrativeOrderRestApiAdapterTest {
         final var orders = List.of(order);
 
         //### Given - Mocks
-        when(iSearchOrderUseCase.items(Mockito.any(OrderFilterDto.class))).thenReturn(orders);
+        when(iSearchOrderUseCase.items(Mockito.any(OrderAdminFilterDto.class))).thenReturn(orders);
 
         //### When
         final var httpServletRequest = get(endpoint)
@@ -119,6 +119,6 @@ class AdministrativeOrderRestApiAdapterTest {
                 .ignoringFieldsOfTypes(ZonedDateTime.class)
                 .isEqualTo(orders);
 
-        verify(iSearchOrderUseCase, times(1)).items(Mockito.any(OrderFilterDto.class));
+        verify(iSearchOrderUseCase, times(1)).items(Mockito.any(OrderAdminFilterDto.class));
     }
 }

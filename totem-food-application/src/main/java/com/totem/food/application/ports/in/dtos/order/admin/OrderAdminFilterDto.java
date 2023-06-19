@@ -1,4 +1,4 @@
-package com.totem.food.application.ports.in.dtos.order;
+package com.totem.food.application.ports.in.dtos.order.admin;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Builder
 @Getter
-public class OrderFilterDto {
+public class OrderAdminFilterDto {
 
     private String orderId;
 

@@ -1,12 +1,12 @@
-package com.totem.food.application.usecases.order;
+package com.totem.food.application.usecases.order.admin;
 
-import com.totem.food.application.ports.in.dtos.order.OrderAdminDto;
-import com.totem.food.application.ports.in.dtos.order.OrderFilterDto;
-import com.totem.food.application.ports.in.mappers.order.IOrderAdminMapper;
+import com.totem.food.application.ports.in.dtos.order.admin.OrderAdminDto;
+import com.totem.food.application.ports.in.dtos.order.admin.OrderAdminFilterDto;
+import com.totem.food.application.ports.in.mappers.order.admin.IOrderAdminMapper;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.ISearchUseCase;
-import com.totem.food.domain.order.OrderAdminDomain;
+import com.totem.food.domain.order.admin.OrderAdminDomain;
 import lombok.AllArgsConstructor;
 
 import java.util.ArrayList;
@@ -15,13 +15,13 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @UseCase
-public class SearchOrderAdminUseCase implements ISearchUseCase<OrderFilterDto, List<OrderAdminDto>> {
+public class SearchOrderAdminUseCase implements ISearchUseCase<OrderAdminFilterDto, List<OrderAdminDto>> {
 
     private final IOrderAdminMapper iOrderAdminMapper;
-    private final ISearchRepositoryPort<OrderFilterDto, List<OrderAdminDomain>> iSearchOrderRepositoryPort;
+    private final ISearchRepositoryPort<OrderAdminFilterDto, List<OrderAdminDomain>> iSearchOrderRepositoryPort;
 
     @Override
-    public List<OrderAdminDto> items(OrderFilterDto filter) {
+    public List<OrderAdminDto> items(OrderAdminFilterDto filter) {
         return iSearchOrderRepositoryPort.findAll(filter)
                 .stream()
                 .map(iOrderAdminMapper::toDto)

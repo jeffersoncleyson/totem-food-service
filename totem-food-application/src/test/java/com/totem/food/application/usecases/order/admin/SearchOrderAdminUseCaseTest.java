@@ -1,12 +1,12 @@
-package com.totem.food.framework.adapters.out.persistence.mongo.order.repository;
+package com.totem.food.application.usecases.order.admin;
 
-import com.totem.food.application.ports.in.dtos.order.OrderFilterDto;
+import com.totem.food.application.ports.in.dtos.order.admin.OrderAdminDto;
+import com.totem.food.application.ports.in.dtos.order.admin.OrderAdminFilterDto;
+import com.totem.food.application.ports.in.mappers.order.admin.IOrderAdminMapper;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
-import com.totem.food.domain.order.OrderAdminDomain;
-import com.totem.food.framework.adapters.out.persistence.mongo.customer.entity.CustomerEntity;
-import com.totem.food.framework.adapters.out.persistence.mongo.order.entity.OrderAdminEntity;
-import com.totem.food.framework.adapters.out.persistence.mongo.order.mapper.IOrderEntityMapper;
-import org.apache.commons.collections4.CollectionUtils;
+import com.totem.food.application.usecases.commons.ISearchUseCase;
+import com.totem.food.domain.customer.CustomerDomain;
+import com.totem.food.domain.order.admin.OrderAdminDomain;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,24 +25,23 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class SearchOrderRepositoryAdapterTest {
+class SearchOrderAdminUseCaseTest {
 
-    @Mock
-    private SearchOrderRepositoryAdapter.OrderRepositoryMongoDB repository;
     @Spy
-    private IOrderEntityMapper iOrderEntityMapper = Mappers.getMapper(IOrderEntityMapper.class);
+    private IOrderAdminMapper iOrderAdminMapper = Mappers.getMapper(IOrderAdminMapper.class);
+    @Mock
+    private ISearchRepositoryPort<OrderAdminFilterDto, List<OrderAdminDomain>> iSearchOrderRepositoryPort;
 
-    private ISearchRepositoryPort<OrderFilterDto, List<OrderAdminDomain>> iSearchRepositoryPort;
+    private ISearchUseCase<OrderAdminFilterDto, List<OrderAdminDto>> iSearchUseCase;
     private AutoCloseable closeable;
 
     @BeforeEach
     private void beforeEach() {
         closeable = MockitoAnnotations.openMocks(this);
-        iSearchRepositoryPort = new SearchOrderRepositoryAdapter(repository, iOrderEntityMapper);
+        iSearchUseCase = new SearchOrderAdminUseCase(iOrderAdminMapper, iSearchOrderRepositoryPort);
     }
 
     @AfterEach
@@ -51,7 +50,7 @@ class SearchOrderRepositoryAdapterTest {
     }
 
     @Test
-    void findAll() {
+    void items() {
 
         //### Given - Objects and Values
         final var customerId = UUID.randomUUID().toString();
@@ -61,7 +60,7 @@ class SearchOrderRepositoryAdapterTest {
         final var customerMobile = "5535944345655";
         final var customerModifiedAt = ZonedDateTime.now(ZoneOffset.UTC).minusDays(10);
         final var customerCreateAt = ZonedDateTime.now(ZoneOffset.UTC).minusDays(10);
-        final var customer = new CustomerEntity(
+        final var customer = new CustomerDomain(
                 customerId,
                 customerName,
                 customerCpf,
@@ -76,36 +75,33 @@ class SearchOrderRepositoryAdapterTest {
         final var amount = new BigDecimal("59.90");
         final var createAt = ZonedDateTime.now(ZoneOffset.UTC);
 
-        final var order = new OrderAdminEntity(
-                UUID.randomUUID().toString(),
+        final var order = new OrderAdminDomain(
                 orderId,
                 showNumber,
                 amount,
                 customer,
                 createAt
         );
-        final var orderAdminEntityList = List.of(order);
-        final var orderFilterDto = OrderFilterDto.builder().orderId(orderId).build();
+        final var orderAdminDomainList = List.of(order);
+        final var orderFilterDto = OrderAdminFilterDto.builder().orderId(orderId).build();
 
         //### Given - Mocks
-        when(repository.findAll()).thenReturn(orderAdminEntityList);
-
+        when(iSearchOrderRepositoryPort.findAll(Mockito.any(OrderAdminFilterDto.class))).thenReturn(orderAdminDomainList);
 
         //### When
-        final var orderAdminDtoList = iSearchRepositoryPort.findAll(orderFilterDto);
-
+        final var listAdminOrderDto = iSearchUseCase.items(orderFilterDto);
 
         //### Then
-        verify(iOrderEntityMapper, times(1)).toDomain(Mockito.any(OrderAdminEntity.class));
-        verify(repository, times(1)).findAll();
+        verify(iOrderAdminMapper, times(1)).toDto(Mockito.any(OrderAdminDomain.class));
+        verify(iSearchOrderRepositoryPort, times(1)).findAll(Mockito.any(OrderAdminFilterDto.class));
 
+        final var orderDto = iOrderAdminMapper.toDto(order);
+        final var oderDtoList = List.of(orderDto);
 
-        final var orderDomain = iOrderEntityMapper.toDomain(order);
-        final var orderDomainList = List.of(orderDomain);
-
-        assertTrue(CollectionUtils.isNotEmpty(orderAdminDtoList));
-        assertThat(orderAdminDtoList)
+        assertThat(listAdminOrderDto)
                 .usingRecursiveComparison()
-                .isEqualTo(orderDomainList);
+                .isEqualTo(oderDtoList);
+
+
     }
 }

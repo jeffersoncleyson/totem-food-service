@@ -1,4 +1,4 @@
-package com.totem.food.domain.order;
+package com.totem.food.domain.order.admin;
 
 import com.totem.food.domain.customer.CustomerDomain;
 import lombok.AllArgsConstructor;

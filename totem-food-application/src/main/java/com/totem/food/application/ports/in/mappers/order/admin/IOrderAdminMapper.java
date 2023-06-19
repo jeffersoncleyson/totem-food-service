@@ -1,7 +1,7 @@
-package com.totem.food.application.ports.in.mappers.order;
+package com.totem.food.application.ports.in.mappers.order.admin;
 
-import com.totem.food.application.ports.in.dtos.order.OrderAdminDto;
-import com.totem.food.domain.order.OrderAdminDomain;
+import com.totem.food.application.ports.in.dtos.order.admin.OrderAdminDto;
+import com.totem.food.domain.order.admin.OrderAdminDomain;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;

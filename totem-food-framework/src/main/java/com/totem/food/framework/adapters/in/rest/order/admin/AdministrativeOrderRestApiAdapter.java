@@ -1,7 +1,7 @@
-package com.totem.food.framework.adapters.in.rest.order;
+package com.totem.food.framework.adapters.in.rest.order.admin;
 
-import com.totem.food.application.ports.in.dtos.order.OrderAdminDto;
-import com.totem.food.application.ports.in.dtos.order.OrderFilterDto;
+import com.totem.food.application.ports.in.dtos.order.admin.OrderAdminDto;
+import com.totem.food.application.ports.in.dtos.order.admin.OrderAdminFilterDto;
 import com.totem.food.application.ports.in.rest.ISearchRestApiPort;
 import com.totem.food.application.usecases.commons.ISearchUseCase;
 import lombok.AllArgsConstructor;
@@ -17,13 +17,13 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/administrative/orders")
 @AllArgsConstructor
-public class AdministrativeOrderRestApiAdapter implements ISearchRestApiPort<OrderFilterDto, ResponseEntity<List<OrderAdminDto>>> {
+public class AdministrativeOrderRestApiAdapter implements ISearchRestApiPort<OrderAdminFilterDto, ResponseEntity<List<OrderAdminDto>>> {
 
-    private final ISearchUseCase<OrderFilterDto, List<OrderAdminDto>> iSearchOrderUseCase;
+    private final ISearchUseCase<OrderAdminFilterDto, List<OrderAdminDto>> iSearchOrderUseCase;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @Override
-    public ResponseEntity<List<OrderAdminDto>> listAll(OrderFilterDto filter) {
+    public ResponseEntity<List<OrderAdminDto>> listAll(OrderAdminFilterDto filter) {
         final var orders = iSearchOrderUseCase.items(filter);
         return ResponseEntity.status(HttpStatus.OK).body(orders);
     }
