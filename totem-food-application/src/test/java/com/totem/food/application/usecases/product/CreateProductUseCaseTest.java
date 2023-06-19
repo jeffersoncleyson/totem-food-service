@@ -5,6 +5,7 @@ import com.totem.food.application.ports.in.dtos.product.ProductCreateDto;
 import com.totem.food.application.ports.in.dtos.product.ProductDto;
 import com.totem.food.application.ports.in.mappers.product.IProductMapper;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
+import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.domain.category.CategoryDomain;
 import com.totem.food.domain.product.ProductDomain;
 import org.junit.jupiter.api.AfterEach;
@@ -20,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,13 +39,16 @@ class CreateProductUseCaseTest {
     @Mock
     private ICreateRepositoryPort<ProductDomain> iProductRepositoryPort;
 
+    @Mock
+    private ISearchUniqueRepositoryPort<Optional<CategoryDomain>> iSearchRepositoryPort;
+
     private CreateProductUseCase createProductUseCase;
     private AutoCloseable closeable;
 
     @BeforeEach
     void beforeEach() {
         closeable = MockitoAnnotations.openMocks(this);
-        createProductUseCase = new CreateProductUseCase(iProductMapper, iProductRepositoryPort);
+        createProductUseCase = new CreateProductUseCase(iProductMapper, iProductRepositoryPort, iSearchRepositoryPort);
     }
 
     @AfterEach
@@ -98,6 +103,7 @@ class CreateProductUseCaseTest {
                 .build();
 
         //### Given - Mocks
+        when(iSearchRepositoryPort.findById(Mockito.anyString())).thenReturn(Optional.of(categoryDomain));
         when(iProductRepositoryPort.saveItem(Mockito.any(ProductDomain.class))).thenReturn(productDomain);
 
         //### When
@@ -105,6 +111,7 @@ class CreateProductUseCaseTest {
 
         //### Then
         verify(iProductMapper, times(1)).toDomain(Mockito.any(ProductCreateDto.class));
+        verify(iSearchRepositoryPort, times(1)).findById(Mockito.anyString());
         verify(iProductRepositoryPort, times(1)).saveItem(Mockito.any(ProductDomain.class));
         verify(iProductMapper, times(1)).toDto(Mockito.any(ProductDomain.class));
 
