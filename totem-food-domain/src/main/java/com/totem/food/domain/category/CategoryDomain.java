@@ -1,10 +1,7 @@
 package com.totem.food.domain.category;
 
 import com.totem.food.domain.exceptions.InvalidDomainField;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.ZoneOffset;
@@ -12,6 +9,7 @@ import java.time.ZonedDateTime;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryDomain {

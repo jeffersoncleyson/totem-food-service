@@ -1,6 +1,8 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.product.repository;
 
+import com.totem.food.domain.category.CategoryDomain;
 import com.totem.food.domain.product.ProductDomain;
+import com.totem.food.framework.adapters.out.persistence.mongo.category.entity.CategoryEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.product.entity.ProductEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.product.mapper.IProductEntityMapper;
 import org.junit.jupiter.api.AfterEach;
@@ -60,23 +62,27 @@ class ProductRepositoryAdapterTest {
         final var category = "Refrigerante";
         final var now = ZonedDateTime.now(ZoneOffset.UTC);
 
+        final var categoryId = UUID.randomUUID().toString();
+        final var categoryDomain = CategoryDomain.builder().id(categoryId).build();
+
         final var productDomain = ProductDomain.builder()
                 .name(name)
                 .description(description)
                 .image(image)
                 .price(price)
-                .category(category)
+                .category(categoryDomain)
                 .createAt(now)
                 .modifiedAt(now)
                 .build();
 
+        final var categoryEntity = CategoryEntity.builder().id(categoryId).build();
         final var productEntity = ProductEntity.builder()
                 .id(id)
                 .name(name)
                 .description(description)
                 .image(image)
                 .price(price)
-                .category(category)
+                .category(categoryEntity)
                 .createAt(now)
                 .modifiedAt(now)
                 .build();

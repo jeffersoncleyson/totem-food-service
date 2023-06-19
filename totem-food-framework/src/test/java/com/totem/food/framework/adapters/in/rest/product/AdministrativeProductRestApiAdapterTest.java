@@ -2,6 +2,7 @@ package com.totem.food.framework.adapters.in.rest.product;
 
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.totem.food.application.ports.in.dtos.category.CategoryDto;
 import com.totem.food.application.ports.in.dtos.product.ProductCreateDto;
 import com.totem.food.application.ports.in.dtos.product.ProductDto;
 import com.totem.food.application.ports.in.dtos.product.ProductFilterDto;
@@ -83,13 +84,16 @@ class AdministrativeProductRestApiAdapterTest {
         final var modifiedAt = ZonedDateTime.now(ZoneOffset.UTC);
         final var createAt = ZonedDateTime.now(ZoneOffset.UTC);
 
+        final var categoryId = UUID.randomUUID().toString();
+        final var categoryDTO = CategoryDto.builder().id(categoryId).build();
+
         final var productDto = new ProductDto(
                 id,
                 name,
                 description,
                 image,
                 price,
-                category,
+                categoryDTO,
                 modifiedAt,
                 createAt
         );
@@ -98,7 +102,7 @@ class AdministrativeProductRestApiAdapterTest {
                 description,
                 image,
                 price,
-                category
+                categoryId
         );
 
         //### Given - Mocks
@@ -145,13 +149,16 @@ class AdministrativeProductRestApiAdapterTest {
         final var modifiedAt = ZonedDateTime.now(ZoneOffset.UTC);
         final var createAt = ZonedDateTime.now(ZoneOffset.UTC);
 
+        final var categoryId = UUID.randomUUID().toString();
+        final var categoryDTO = CategoryDto.builder().id(categoryId).build();
+
         final var productDto = new ProductDto(
                 id,
                 name,
                 description,
                 image,
                 price,
-                category,
+                categoryDTO,
                 modifiedAt,
                 createAt
         );
@@ -202,13 +209,16 @@ class AdministrativeProductRestApiAdapterTest {
         final var modifiedAt = ZonedDateTime.now(ZoneOffset.UTC);
         final var createAt = ZonedDateTime.now(ZoneOffset.UTC);
 
+        final var categoryId = UUID.randomUUID().toString();
+        final var categoryDTO = CategoryDto.builder().id(categoryId).build();
+
         final var productDto = new ProductDto(
                 id,
                 name,
                 description,
                 image,
                 price,
-                category,
+                categoryDTO,
                 modifiedAt,
                 createAt
         );
@@ -254,13 +264,16 @@ class AdministrativeProductRestApiAdapterTest {
         final var modifiedAt = ZonedDateTime.now(ZoneOffset.UTC);
         final var createAt = ZonedDateTime.now(ZoneOffset.UTC);
 
+        final var categoryId = UUID.randomUUID().toString();
+        final var categoryDTO = CategoryDto.builder().id(categoryId).build();
+
         final var productDto = new ProductDto(
                 id,
                 name,
                 description,
                 image,
                 price,
-                category,
+                categoryDTO,
                 modifiedAt,
                 createAt
         );
@@ -295,13 +308,16 @@ class AdministrativeProductRestApiAdapterTest {
         final var modifiedAt = ZonedDateTime.now(ZoneOffset.UTC);
         final var createAt = ZonedDateTime.now(ZoneOffset.UTC);
 
+        final var categoryId = UUID.randomUUID().toString();
+        final var categoryDTO = CategoryDto.builder().id(categoryId).build();
+
         final var productDto = new ProductDto(
                 id,
                 name,
                 description,
                 image,
                 price,
-                category,
+                categoryDTO,
                 modifiedAt,
                 createAt
         );
@@ -310,7 +326,7 @@ class AdministrativeProductRestApiAdapterTest {
                 description,
                 image,
                 price,
-                category
+                categoryId
         );
 
         //### Given - Mocks

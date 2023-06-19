@@ -5,6 +5,7 @@ import com.totem.food.application.ports.in.dtos.product.ProductFilterDto;
 import com.totem.food.application.ports.in.mappers.product.IProductMapper;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.usecases.commons.ISearchUseCase;
+import com.totem.food.domain.category.CategoryDomain;
 import com.totem.food.domain.product.ProductDomain;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,8 +56,10 @@ class SearchProductUseCaseTest {
         final var description = "description";
         final var image = "https://mybucket.s3.amazonaws.com/myfolder/afile.jpg";
         final var price = 10D * (Math.random() + 1);
-        final var category = "Refrigerante";
         final var now = ZonedDateTime.now(ZoneOffset.UTC);
+
+        final var categoryId = UUID.randomUUID().toString();
+        final var categoryDomain = CategoryDomain.builder().id(categoryId).build();
 
         final var productDomain = ProductDomain.builder()
                 .id(id)
@@ -64,7 +67,7 @@ class SearchProductUseCaseTest {
                 .description(description)
                 .image(image)
                 .price(price)
-                .category(category)
+                .category(categoryDomain)
                 .createAt(now)
                 .modifiedAt(now)
                 .build();
