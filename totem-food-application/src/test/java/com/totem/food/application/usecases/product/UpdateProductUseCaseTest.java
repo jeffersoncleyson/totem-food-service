@@ -1,11 +1,13 @@
 package com.totem.food.application.usecases.product;
 
+import com.totem.food.application.ports.in.dtos.category.CategoryDto;
 import com.totem.food.application.ports.in.dtos.product.ProductCreateDto;
 import com.totem.food.application.ports.in.dtos.product.ProductDto;
 import com.totem.food.application.ports.in.mappers.product.IProductMapper;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
 import com.totem.food.application.usecases.commons.IUpdateUseCase;
+import com.totem.food.domain.category.CategoryDomain;
 import com.totem.food.domain.product.ProductDomain;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +20,7 @@ import org.mockito.Spy;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,7 +34,9 @@ class UpdateProductUseCaseTest {
     @Mock
     private IUpdateRepositoryPort<ProductDomain> iProductRepositoryPort;
     @Mock
-    private ISearchUniqueRepositoryPort<ProductDomain> iSearchUniqueRepositoryPort;
+    private ISearchUniqueRepositoryPort<Optional<ProductDomain>> iSearchUniqueRepositoryPort;
+    @Mock
+    private ISearchUniqueRepositoryPort<Optional<CategoryDomain>> iSearchUniqueCategoryRepositoryPort;
 
     private IUpdateUseCase<ProductCreateDto, ProductDto> iUpdateUseCase;
     private AutoCloseable closeable;
@@ -39,7 +44,7 @@ class UpdateProductUseCaseTest {
     @BeforeEach
     private void beforeEach() {
         closeable = MockitoAnnotations.openMocks(this);
-        iUpdateUseCase = new UpdateProductUseCase(iProductMapper, iProductRepositoryPort, iSearchUniqueRepositoryPort);
+        iUpdateUseCase = new UpdateProductUseCase(iProductMapper, iProductRepositoryPort, iSearchUniqueRepositoryPort, iSearchUniqueCategoryRepositoryPort);
     }
 
     @AfterEach
@@ -59,13 +64,17 @@ class UpdateProductUseCaseTest {
         final var category = "Refrigerante";
         final var now = ZonedDateTime.now(ZoneOffset.UTC);
 
+        final var categoryId = UUID.randomUUID().toString();
+        final var categoryDomain = CategoryDomain.builder().id(categoryId).build();
+
+        final var categoryDTO = CategoryDto.builder().id(categoryId).build();
         final var productDto = new ProductDto(
                 id,
                 name,
                 description,
                 image,
                 price,
-                category,
+                categoryDTO,
                 now,
                 now
         );
@@ -84,13 +93,14 @@ class UpdateProductUseCaseTest {
                 .description(description)
                 .image(image)
                 .price(price)
-                .category(category)
+                .category(categoryDomain)
                 .createAt(now)
                 .modifiedAt(now)
                 .build();
 
         //### Given - Mocks
-        when(iSearchUniqueRepositoryPort.findById(Mockito.anyString())).thenReturn(productDomain);
+        when(iSearchUniqueRepositoryPort.findById(Mockito.anyString())).thenReturn(Optional.of(productDomain));
+        when(iSearchUniqueCategoryRepositoryPort.findById(Mockito.anyString())).thenReturn(Optional.of(categoryDomain));
         when(iProductRepositoryPort.updateItem(Mockito.any(ProductDomain.class))).thenReturn(productDomain);
 
         //### When

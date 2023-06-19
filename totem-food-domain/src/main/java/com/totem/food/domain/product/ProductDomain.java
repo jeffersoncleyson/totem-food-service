@@ -1,5 +1,6 @@
 package com.totem.food.domain.product;
 
+import com.totem.food.domain.category.CategoryDomain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,7 +24,7 @@ public class ProductDomain {
     private String description;
     private String image;
     private double price;
-    private String category;
+    private CategoryDomain category;
     private ZonedDateTime modifiedAt;
     private ZonedDateTime createAt;
 

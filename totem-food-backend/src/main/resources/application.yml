@@ -10,6 +10,8 @@ logging:
     level: "%clr(${LOG_LEVEL_PATTERN: [%X{x-request-id}] [%X{x-environment-id}] [%X{x-customer-id}] -%5p})"
 
 spring:
+  jackson:
+    default-property-inclusion: non_null
   data:
     mongodb:
       host: localhost

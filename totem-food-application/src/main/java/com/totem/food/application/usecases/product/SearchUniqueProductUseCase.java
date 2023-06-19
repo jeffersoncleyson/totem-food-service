@@ -14,10 +14,10 @@ import java.util.Optional;
 @UseCase
 public class SearchUniqueProductUseCase implements ISearchUniqueUseCase<String, ProductDto> {
     private final IProductMapper iProductMapper;
-    private final ISearchUniqueRepositoryPort<ProductDomain> iSearchUniqueRepositoryPort;
+    private final ISearchUniqueRepositoryPort<Optional<ProductDomain>> iSearchUniqueRepositoryPort;
 
     @Override
     public ProductDto item(String id) {
-        return Optional.ofNullable(iSearchUniqueRepositoryPort.findById(id)).map(iProductMapper::toDto).orElseThrow();
+        return iSearchUniqueRepositoryPort.findById(id).map(iProductMapper::toDto).orElseThrow();
     }
 }

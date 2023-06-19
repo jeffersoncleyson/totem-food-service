@@ -1,9 +1,11 @@
 package com.totem.food.application.usecases.product;
 
+import com.totem.food.application.ports.in.dtos.category.CategoryDto;
 import com.totem.food.application.ports.in.dtos.product.ProductCreateDto;
 import com.totem.food.application.ports.in.dtos.product.ProductDto;
 import com.totem.food.application.ports.in.mappers.product.IProductMapper;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
+import com.totem.food.domain.category.CategoryDomain;
 import com.totem.food.domain.product.ProductDomain;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,13 +63,16 @@ class CreateProductUseCaseTest {
         final var category = "Refrigerante";
         final var now = ZonedDateTime.now(ZoneOffset.UTC);
 
+        final var categoryId = UUID.randomUUID().toString();
+        final var categoryDTO = CategoryDto.builder().id(categoryId).build();
+
         final var productDto = new ProductDto(
                 id,
                 name,
                 description,
                 image,
                 price,
-                category,
+                categoryDTO,
                 now,
                 now
         );
@@ -80,13 +85,14 @@ class CreateProductUseCaseTest {
                 category
         );
 
+        final var categoryDomain = CategoryDomain.builder().id(categoryId).build();
         final var productDomain = ProductDomain.builder()
                 .id(id)
                 .name(name)
                 .description(description)
                 .image(image)
                 .price(price)
-                .category(category)
+                .category(categoryDomain)
                 .createAt(now)
                 .modifiedAt(now)
                 .build();

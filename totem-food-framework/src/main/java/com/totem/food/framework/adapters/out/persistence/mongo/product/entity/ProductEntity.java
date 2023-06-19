@@ -1,11 +1,9 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.product.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.totem.food.framework.adapters.out.persistence.mongo.category.entity.CategoryEntity;
+import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.ZonedDateTime;
@@ -24,7 +22,10 @@ public class ProductEntity {
     private String description;
     private String image;
     private double price;
-    private String category;
+
+    @DBRef
+    private CategoryEntity category;
+
     private ZonedDateTime modifiedAt;
     private ZonedDateTime createAt;
 }
