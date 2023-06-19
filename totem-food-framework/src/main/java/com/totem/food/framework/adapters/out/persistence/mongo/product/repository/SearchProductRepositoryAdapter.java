@@ -20,7 +20,7 @@ public class SearchProductRepositoryAdapter implements ISearchRepositoryPort<Pro
 	@Repository
 	protected interface ProductRepositoryMongoDB extends BaseRepository<ProductEntity, String> {
 
-		@Query("{'name': ?0")
+		@Query("{'name': ?0}")
 		List<ProductEntity> findByFilter(String name);
 	}
 

@@ -5,15 +5,15 @@ import com.totem.food.application.ports.in.dtos.category.CategoryDto;
 import com.totem.food.application.ports.in.mappers.category.ICategoryMapper;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
+import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.IUpdateUseCase;
 import com.totem.food.domain.category.CategoryDomain;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @AllArgsConstructor
-@Service
+@UseCase
 public class UpdateCategoryUseCase implements IUpdateUseCase<CategoryCreateDto, CategoryDto> {
 
     private final ICategoryMapper iCategoryMapper;

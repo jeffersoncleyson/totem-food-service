@@ -5,13 +5,13 @@ import com.totem.food.application.ports.in.dtos.category.CategoryDto;
 import com.totem.food.application.ports.in.mappers.category.ICategoryMapper;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.IExistsRepositoryPort;
+import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
 import com.totem.food.domain.category.CategoryDomain;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
-@Service
+@UseCase
 public class CreateCategoryUseCase implements ICreateUseCase<CategoryCreateDto, CategoryDto> {
 
     private final ICategoryMapper iCategoryMapper;
