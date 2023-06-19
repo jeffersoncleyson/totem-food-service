@@ -73,7 +73,7 @@ class SearchProductUseCaseTest {
                 .build();
 
         final var productDomainList = List.of(productDomain);
-        final var productFilterDto = new ProductFilterDto(name);
+        final var productFilterDto = ProductFilterDto.builder().name(name).build();
 
         //### Given - Mocks
         when(iSearchProductRepositoryPort.findAll(Mockito.any(ProductFilterDto.class))).thenReturn(productDomainList);

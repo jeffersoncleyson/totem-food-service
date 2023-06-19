@@ -1,6 +1,7 @@
 package mocks.domains;
 
 import com.totem.food.domain.combo.ComboDomain;
+import com.totem.food.domain.product.ProductDomain;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -12,7 +13,8 @@ public class ComboDomainMock {
         comboDomain.setId("1");
         comboDomain.setName("Combo da casa");
         comboDomain.setPrice(BigDecimal.ZERO);
-        comboDomain.setProducts(List.of("1", "2"));
+        final var productDomain = ProductDomain.builder().id("1").build();
+        comboDomain.setProducts(List.of(productDomain));
         return comboDomain;
     }
 }
