@@ -164,7 +164,7 @@ class AdministrativeProductRestApiAdapterTest {
         );
         final var productDtoList = List.of(productDto);
 
-        final var filter = new ProductFilterDto(name);
+        final var filter = ProductFilterDto.builder().name(name).build();
 
         //### Given - Mocks
         when(iSearchProductUseCase.items(Mockito.any(ProductFilterDto.class))).thenReturn(productDtoList);

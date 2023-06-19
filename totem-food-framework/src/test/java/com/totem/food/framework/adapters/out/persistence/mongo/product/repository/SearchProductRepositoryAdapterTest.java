@@ -74,7 +74,7 @@ class SearchProductRepositoryAdapterTest {
 
         final var productEntityList = List.of(productEntity);
 
-        final var productFilterDto = new ProductFilterDto(name);
+        final var productFilterDto = ProductFilterDto.builder().name(name).build();
 
         //### Given - Mocks
         when(repository.findByFilter(Mockito.anyString())).thenReturn(productEntityList);

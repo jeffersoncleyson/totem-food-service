@@ -1,10 +1,12 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.combo.entity;
 
+import com.totem.food.framework.adapters.out.persistence.mongo.product.entity.ProductEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
@@ -22,7 +24,10 @@ public class ComboEntity {
     private String id;
     private String name;
     private BigDecimal price;
-    private List<String> products;
+
+    @DBRef
+    private List<ProductEntity> products;
+
     private ZonedDateTime modifiedAt;
     private ZonedDateTime createAt;
 
