@@ -26,20 +26,20 @@ public class CustomerDomain {
     private ZonedDateTime createAt;
 
     //########### Constants
-    public static final int MAX_CATEGORY_LENGTH = 50;
+    public static final int MAX_CUSTOMER_LENGTH = 100;
 
 
-    public void validateCategory() {
+    public void validateName() {
 
-        if (StringUtils.isNotEmpty(name) && name.length() > MAX_CATEGORY_LENGTH) {
-            throw new InvalidDomainField(CustomerDomain.class, "name", "Max length accepted is ".concat(String.valueOf(MAX_CATEGORY_LENGTH)));
+        if (StringUtils.isNotEmpty(name) && name.length() > MAX_CUSTOMER_LENGTH) {
+            throw new InvalidDomainField(CustomerDomain.class, "name", "Max length accepted is ".concat(String.valueOf(MAX_CUSTOMER_LENGTH)));
         }
 
     }
 
-    public void isValidEmailAddress(String email) {
+    public void validEmailAddress() {
         String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-        if (email.matches(regex)) {
+        if (StringUtils.isNotEmpty(email) && email.matches(regex)) {
             throw new InvalidDomainField(CustomerDomain.class, "email", "Invalid e-mail address.");
         }
     }

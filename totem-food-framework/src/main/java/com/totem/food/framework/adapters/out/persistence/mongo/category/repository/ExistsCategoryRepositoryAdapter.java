@@ -3,7 +3,6 @@ package com.totem.food.framework.adapters.out.persistence.mongo.category.reposit
 import com.totem.food.application.ports.out.persistence.commons.IExistsRepositoryPort;
 import com.totem.food.domain.category.CategoryDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.category.entity.CategoryEntity;
-import com.totem.food.framework.adapters.out.persistence.mongo.category.mapper.ICategoryEntityMapper;
 import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;

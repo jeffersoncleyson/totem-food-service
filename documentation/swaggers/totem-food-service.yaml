@@ -23,7 +23,7 @@ tags:
   - name: Payment Gateway
     description: Access to payment
 paths:
-  /customer:
+  /totem/customer:
     post:
       tags:
         - Customers
@@ -44,7 +44,7 @@ paths:
                 $ref: '#/components/schemas/CustomerDto'
         '405':
           description: Invalid input
-  /order:
+  /totem/order:
     post:
       tags:
         - Order
@@ -65,7 +65,7 @@ paths:
                 $ref: '#/components/schemas/OrderDto'
         '405':
           description: Invalid input
-  /order/{orderId}:
+  /totem/order/{orderId}:
     put:
       tags:
         - Order
@@ -94,7 +94,7 @@ paths:
                 $ref: '#/components/schemas/OrderDto'
         '405':
           description: Invalid input
-  /order/{orderId}/status/{statusName}:
+  /totem/order/{orderId}/status/{statusName}:
     put:
       tags:
         - Order
@@ -129,7 +129,7 @@ paths:
                 $ref: '#/components/schemas/OrderDto'
         '405':
           description: Invalid input
-  /payment:
+  /totem/payment:
     post:
       tags:
         - Payment Gateway
@@ -150,7 +150,7 @@ paths:
                 $ref: '#/components/schemas/PaymentQRCodeDto'
         '405':
           description: Invalid input
-  /payment/callback:
+  /totem/payment/callback:
     get:
       tags:
         - Payment Gateway
@@ -238,12 +238,12 @@ components:
           type: array
           items:
             type: string
-          example: ["22826bb3554280604d93d7b6","33826bb3554280604d93d7b6"]
+          example: [ "22826bb3554280604d93d7b6","33826bb3554280604d93d7b6" ]
         product:
           type: array
           items:
             type: string
-          example: ["11826bb3554280604d93d7b6","55526bb3554280604d93d7b6"]
+          example: [ "11826bb3554280604d93d7b6","55526bb3554280604d93d7b6" ]
     OrderDto:
       type: object
       properties:
@@ -254,12 +254,12 @@ components:
           type: array
           items:
             type: string
-          example: ["22826bb3554280604d93d7b6","33826bb3554280604d93d7b6"]
+          example: [ "22826bb3554280604d93d7b6","33826bb3554280604d93d7b6" ]
         product:
           type: array
           items:
             type: string
-          example: ["11826bb3554280604d93d7b6","55526bb3554280604d93d7b6"]
+          example: [ "11826bb3554280604d93d7b6","55526bb3554280604d93d7b6" ]
         status:
           $ref: '#/components/schemas/OrderStatusEnum'
 
