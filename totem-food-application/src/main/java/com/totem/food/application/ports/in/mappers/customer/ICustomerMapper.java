@@ -4,6 +4,7 @@ import com.totem.food.application.ports.in.dtos.customer.CustomerCreateDto;
 import com.totem.food.application.ports.in.dtos.customer.CustomerDto;
 import com.totem.food.domain.customer.CustomerDomain;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
 
@@ -14,6 +15,7 @@ public interface ICustomerMapper {
 
     CustomerDomain toDomain(CustomerDto input);
 
+    @Mapping(target = "id", ignore = true)
     CustomerDto toDto(CustomerDomain input);
 
     CustomerDomain toDomain(CustomerCreateDto input);

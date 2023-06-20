@@ -25,7 +25,9 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class SearchOrderAdminUseCaseTest {
@@ -60,15 +62,15 @@ class SearchOrderAdminUseCaseTest {
         final var customerMobile = "5535944345655";
         final var customerModifiedAt = ZonedDateTime.now(ZoneOffset.UTC).minusDays(10);
         final var customerCreateAt = ZonedDateTime.now(ZoneOffset.UTC).minusDays(10);
-        final var customer = new CustomerDomain(
-                customerId,
-                customerName,
-                customerCpf,
-                customerEmail,
-                customerMobile,
-                customerModifiedAt,
-                customerCreateAt
-        );
+        final var customerDomain = new CustomerDomain();
+        customerDomain.setId(customerId);
+        customerDomain.setName(customerName);
+        customerDomain.setCpf(customerCpf);
+        customerDomain.setEmail(customerEmail);
+        customerDomain.setMobile(customerMobile);
+        customerDomain.setModifiedAt(customerModifiedAt);
+        customerDomain.setCreateAt(customerCreateAt);
+
 
         final var orderId = UUID.randomUUID().toString();
         final var showNumber = 12;
@@ -79,7 +81,7 @@ class SearchOrderAdminUseCaseTest {
                 orderId,
                 showNumber,
                 amount,
-                customer,
+                customerDomain,
                 createAt
         );
         final var orderAdminDomainList = List.of(order);
