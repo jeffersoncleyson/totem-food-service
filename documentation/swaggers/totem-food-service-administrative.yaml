@@ -429,10 +429,18 @@ components:
     CustomerDto:
       type: object
       properties:
+        id:
+          type: string
+          description: Id customer
+          example: '13fe534r79k4280604d93d7b6'
         name:
           type: string
           description: Category name
           example: 'Joe'
+        cpf:
+          type: string
+          description: CPF
+          example: '12312312399'
         email:
           type: string
           description: E-mail
@@ -454,19 +462,23 @@ components:
     OrderAdminDto:
       type: object
       properties:
-        number:
+        orderId:
           type: string
-          description: Order number
+          description: Order id
           example: '1'
-        customerName:
-          type: string
-          description: Customer name
-          example: 'Joe'
-        email:
-          type: string
-          description: E-mail
-          example: 'joe@email.com'
+        showNumber:
+          type: integer
+          format: int64
+          description: Order number to display
+          example: 1
         amount:
           type: number
           description: Customer name
           example: '53.89'
+        customer:
+          $ref: '#/components/schemas/CustomerDto'
+        createAt:
+          type: string
+          format: date-time
+          example: '2023-06-09T00:00:51.623596531Z'
+          description: Date of order creation
