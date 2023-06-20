@@ -13,4 +13,5 @@ public class CustomerCreateDto {
     private String email;
     private String cpf;
     private String mobile;
+    private String password;
 }

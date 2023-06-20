@@ -22,6 +22,7 @@ public class CustomerDomain {
     private String cpf;
     private String email;
     private String mobile;
+    private String password;
     private ZonedDateTime modifiedAt;
     private ZonedDateTime createAt;
 
@@ -39,7 +40,7 @@ public class CustomerDomain {
 
     public void validEmailAddress() {
         String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-        if (StringUtils.isNotEmpty(email) && email.matches(regex)) {
+        if (StringUtils.isNotEmpty(email) && !email.matches(regex)) {
             throw new InvalidDomainField(CustomerDomain.class, "email", "Invalid e-mail address.");
         }
     }

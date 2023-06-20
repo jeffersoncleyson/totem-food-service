@@ -1,4 +1,4 @@
-package com.totem.food.framework.adapters.in.rest.customer;
+package com.totem.food.framework.adapters.in.rest.customer.admin;
 
 import com.totem.food.application.ports.in.dtos.customer.CustomerDto;
 import com.totem.food.application.ports.in.dtos.customer.CustomerFilterDto;

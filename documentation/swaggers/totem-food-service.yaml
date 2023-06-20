@@ -202,6 +202,10 @@ components:
           type: string
           description: Mobile number
           example: '5535989483811'
+        password:
+          type: string
+          description: Password
+          example: 'x!iu#112'
     CustomerDto:
       type: object
       properties:
@@ -238,12 +242,12 @@ components:
           type: array
           items:
             type: string
-          example: [ "22826bb3554280604d93d7b6","33826bb3554280604d93d7b6" ]
+          example: ["22826bb3554280604d93d7b6","33826bb3554280604d93d7b6"]
         product:
           type: array
           items:
             type: string
-          example: [ "11826bb3554280604d93d7b6","55526bb3554280604d93d7b6" ]
+          example: ["11826bb3554280604d93d7b6","55526bb3554280604d93d7b6"]
     OrderDto:
       type: object
       properties:
@@ -254,12 +258,12 @@ components:
           type: array
           items:
             type: string
-          example: [ "22826bb3554280604d93d7b6","33826bb3554280604d93d7b6" ]
+          example: ["22826bb3554280604d93d7b6","33826bb3554280604d93d7b6"]
         product:
           type: array
           items:
             type: string
-          example: [ "11826bb3554280604d93d7b6","55526bb3554280604d93d7b6" ]
+          example: ["11826bb3554280604d93d7b6","55526bb3554280604d93d7b6"]
         status:
           $ref: '#/components/schemas/OrderStatusEnum'
 
