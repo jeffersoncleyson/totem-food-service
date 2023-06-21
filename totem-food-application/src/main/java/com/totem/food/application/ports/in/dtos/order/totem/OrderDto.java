@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Getter
@@ -15,8 +16,12 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderDto {
 
+    private String id;
     private String customerId;
     private List<ProductDto> products;
     private List<ComboDto> combos;
     private String status;
+    private double price;
+    private ZonedDateTime modifiedAt;
+    private ZonedDateTime createAt;
 }

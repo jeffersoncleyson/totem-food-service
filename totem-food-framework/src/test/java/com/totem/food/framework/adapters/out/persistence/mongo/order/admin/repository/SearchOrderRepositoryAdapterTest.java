@@ -32,7 +32,7 @@ import static org.mockito.Mockito.*;
 class SearchOrderRepositoryAdapterTest {
 
     @Mock
-    private SearchOrderRepositoryAdapter.OrderRepositoryMongoDB repository;
+    private SearchOrderAdminRepositoryAdapter.OrderRepositoryMongoDB repository;
     @Spy
     private IOrderAdminEntityMapper iOrderEntityMapper = Mappers.getMapper(IOrderAdminEntityMapper.class);
 
@@ -42,7 +42,7 @@ class SearchOrderRepositoryAdapterTest {
     @BeforeEach
     private void beforeEach() {
         closeable = MockitoAnnotations.openMocks(this);
-        iSearchRepositoryPort = new SearchOrderRepositoryAdapter(repository, iOrderEntityMapper);
+        iSearchRepositoryPort = new SearchOrderAdminRepositoryAdapter(repository, iOrderEntityMapper);
     }
 
     @AfterEach

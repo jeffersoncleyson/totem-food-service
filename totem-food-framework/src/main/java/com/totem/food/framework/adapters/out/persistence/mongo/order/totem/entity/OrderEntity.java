@@ -33,6 +33,8 @@ public class OrderEntity {
 
     private String status;
 
+    private double price;
+
     private ZonedDateTime modifiedAt;
     private ZonedDateTime createAt;
 }

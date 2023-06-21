@@ -4,16 +4,15 @@ import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.ports.in.dtos.combo.ComboFilterDto;
 import com.totem.food.application.ports.in.dtos.order.totem.OrderCreateDto;
 import com.totem.food.application.ports.in.dtos.order.totem.OrderDto;
+import com.totem.food.application.ports.in.dtos.order.totem.OrderUpdateDto;
 import com.totem.food.application.ports.in.dtos.product.ProductFilterDto;
 import com.totem.food.application.ports.in.mappers.order.totem.IOrderMapper;
-import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
+import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
 import com.totem.food.application.usecases.annotations.UseCase;
-import com.totem.food.application.usecases.commons.ICreateUseCase;
+import com.totem.food.application.usecases.commons.IUpdateUseCase;
 import com.totem.food.domain.combo.ComboDomain;
-import com.totem.food.domain.customer.CustomerDomain;
-import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import com.totem.food.domain.order.totem.OrderDomain;
 import com.totem.food.domain.product.ProductDomain;
 import lombok.AllArgsConstructor;
@@ -24,54 +23,50 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @UseCase
-public class CreateOrderUseCase implements ICreateUseCase<OrderCreateDto, OrderDto> {
+public class UpdateOrderUseCase implements IUpdateUseCase<OrderUpdateDto, OrderDto> {
 
     private final IOrderMapper iOrderMapper;
-    private final ICreateRepositoryPort<OrderDomain> iCreateRepositoryPort;
-    private final ISearchUniqueRepositoryPort<Optional<CustomerDomain>> iSearchUniqueCustomerRepositoryPort;
+    private final ISearchUniqueRepositoryPort<Optional<OrderDomain>> iSearchUniqueRepositoryPort;
+    private final ISearchRepositoryPort<ComboFilterDto, List<ComboDomain>> iSearchComboDomainRepositoryPort;
     private final ISearchRepositoryPort<ProductFilterDto, List<ProductDomain>> iSearchProductRepositoryPort;
-    private final ISearchRepositoryPort<ComboFilterDto, List<ComboDomain>> iSearchDomainRepositoryPort;
+    private final IUpdateRepositoryPort<OrderDomain> iProductRepositoryPort;
 
     @Override
-    public OrderDto createItem(OrderCreateDto item) {
+    public OrderDto updateItem(OrderUpdateDto item, String id) {
 
-        final var domain = new OrderDomain();
+        final var orderDomainOpt = iSearchUniqueRepositoryPort.findById(id);
 
-        setCustomer(item, domain);
+        final var domain = orderDomainOpt
+                .orElseThrow(() -> new ElementNotFoundException(String.format("Order [%s] not found", id)));
+
         setProductsToDomain(item, domain);
         setCombosToDomain(item, domain);
 
-        domain.updateOrderStatus(OrderStatusEnumDomain.NEW);
         domain.calculatePrice();
-        domain.fillDates();
+        domain.updateModifiedAt();
 
-        final var domainSaved = iCreateRepositoryPort.saveItem(domain);
+        final var domainSaved = iProductRepositoryPort.updateItem(domain);
+
         return iOrderMapper.toDto(domainSaved);
     }
 
-    private void setCustomer(OrderCreateDto item, OrderDomain domain) {
-
-        final var customerDomain = iSearchUniqueCustomerRepositoryPort.findById(item.getCustomerId())
-                .orElseThrow(() -> new ElementNotFoundException(String.format("Customer [%s] not found", item.getCustomerId())));
-
-        domain.setCustomer(customerDomain);
-    }
-
-    private void setCombosToDomain(OrderCreateDto item, OrderDomain domain) {
+    private void setCombosToDomain(OrderUpdateDto item, OrderDomain domain) {
         if(CollectionUtils.isNotEmpty(item.getCombos())){
 
-            final var productFilterDto = ComboFilterDto.builder().ids(item.getCombos()).build();
-            final var combos = iSearchDomainRepositoryPort.findAll(productFilterDto);
+            final var comboFilterDto = ComboFilterDto.builder().ids(item.getCombos()).build();
+            final var combos = iSearchComboDomainRepositoryPort.findAll(comboFilterDto);
 
             if(CollectionUtils.size(item.getCombos()) != CollectionUtils.size(combos)){
                 throw new ElementNotFoundException(String.format("Combos [%s] some combos are invalid", item.getProducts()));
             }
 
             domain.setCombos(combos);
+        } else {
+            domain.clearCombos();
         }
     }
 
-    private void setProductsToDomain(OrderCreateDto item, OrderDomain domain) {
+    private void setProductsToDomain(OrderUpdateDto item, OrderDomain domain) {
         if(CollectionUtils.isNotEmpty(item.getProducts())){
 
             final var productFilterDto = ProductFilterDto.builder().ids(item.getProducts()).build();
@@ -82,6 +77,8 @@ public class CreateOrderUseCase implements ICreateUseCase<OrderCreateDto, OrderD
             }
 
             domain.setProducts(products);
+        } else {
+            domain.clearProducts();
         }
     }
 }

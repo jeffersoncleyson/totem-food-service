@@ -2,16 +2,26 @@ package com.totem.food.domain.order.totem;
 
 import com.totem.food.domain.combo.ComboDomain;
 import com.totem.food.domain.customer.CustomerDomain;
+import com.totem.food.domain.exceptions.InvalidStatusTransition;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import com.totem.food.domain.product.ProductDomain;
 import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderDomain {
+
+    @Getter @Setter
+    private String id;
 
     @Getter @Setter
     private CustomerDomain customer;
@@ -26,13 +36,52 @@ public class OrderDomain {
     @Builder.Default
     private OrderStatusEnumDomain status = OrderStatusEnumDomain.NEW;
 
+    @Getter @Setter
+    private double price;
+
+    @Getter @Setter
+    private ZonedDateTime modifiedAt;
+
+    @Getter @Setter
+    private ZonedDateTime createAt;
+
     public void updateOrderStatus(OrderStatusEnumDomain status){
 
-        final var statusTransition = StatusTransition.from(status.key).orElseThrow();
+        final var statusTransition = StatusTransition.from(this.status)
+                .orElseThrow(() -> new InvalidStatusTransition(this.status.key, status.key, OrderStatusEnumDomain.getKeys()));
 
-        if(!Objects.equals(status.key, statusTransition.key) && statusTransition.allowedTransitions().contains(status)){
+        if(statusTransition.allowedTransitions().contains(status)){
             this.status = status;
         }
+    }
+
+    public void updateModifiedAt(){
+        this.modifiedAt = ZonedDateTime.now(ZoneOffset.UTC);
+    }
+
+    public void fillDates(){
+        if(StringUtils.isEmpty(this.id)){
+            this.createAt = ZonedDateTime.now(ZoneOffset.UTC);
+            this.modifiedAt = ZonedDateTime.now(ZoneOffset.UTC);
+        }
+    }
+
+    public void clearProducts(){
+        this.products = null;
+    }
+
+    public void clearCombos(){
+        this.combos = null;
+    }
+
+    public void calculatePrice(){
+
+        final var productsPrice = Optional.ofNullable(this.products)
+                .map(p -> p.stream().mapToDouble(ProductDomain::getPrice).sum()).orElse(0D);
+        final var comboPrice = Optional.ofNullable(this.combos)
+                .map(c -> c.stream().mapToDouble(ComboDomain::getPrice).sum()).orElse(0D);
+
+        this.price = productsPrice + comboPrice;
     }
 
     private enum StatusTransition {
@@ -66,12 +115,6 @@ public class OrderDomain {
             public Set<OrderStatusEnumDomain> allowedTransitions() {
                 return Set.of(OrderStatusEnumDomain.CANCELED);
             }
-        },
-        UNKNOWN("UNKNOWN") {
-            @Override
-            public Set<OrderStatusEnumDomain> allowedTransitions() {
-                return Set.of(OrderStatusEnumDomain.UNKNOWN);
-            }
         };
 
         public final String key;
@@ -83,9 +126,8 @@ public class OrderDomain {
 
         public abstract Set<OrderStatusEnumDomain> allowedTransitions();
 
-        public static Optional<StatusTransition> from(final String source){
-            if (source == null) return Optional.of(UNKNOWN);
-            return Arrays.stream(StatusTransition.values()).filter(e -> e.key.equalsIgnoreCase(source)).findFirst();
+        public static Optional<StatusTransition> from(final OrderStatusEnumDomain source){
+            return Arrays.stream(StatusTransition.values()).filter(e -> source.name().equals(e.name())).findFirst();
         }
 
     }

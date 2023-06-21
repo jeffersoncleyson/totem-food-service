@@ -23,7 +23,7 @@ public class ComboEntity {
     @Id
     private String id;
     private String name;
-    private BigDecimal price;
+    private double price;
 
     @DBRef
     private List<ProductEntity> products;

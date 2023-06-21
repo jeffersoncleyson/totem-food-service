@@ -15,7 +15,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Component
-public class SearchOrderRepositoryAdapter implements ISearchRepositoryPort<OrderAdminFilterDto, List<OrderAdminDomain>> {
+public class SearchOrderAdminRepositoryAdapter implements ISearchRepositoryPort<OrderAdminFilterDto, List<OrderAdminDomain>> {
 
     @Repository
     protected interface OrderRepositoryMongoDB extends BaseRepository<OrderAdminEntity, String> {
@@ -26,7 +26,7 @@ public class SearchOrderRepositoryAdapter implements ISearchRepositoryPort<Order
         List<OrderAdminEntity> findAll();
     }
 
-    private final SearchOrderRepositoryAdapter.OrderRepositoryMongoDB repository;
+    private final SearchOrderAdminRepositoryAdapter.OrderRepositoryMongoDB repository;
     private final IOrderAdminEntityMapper iOrderEntityMapper;
 
     @Override
