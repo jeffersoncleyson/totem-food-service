@@ -12,7 +12,7 @@ public class ComboDomainMock {
         var comboDomain = new ComboDomain();
         comboDomain.setId("1");
         comboDomain.setName("Combo da casa");
-        comboDomain.setPrice(BigDecimal.ZERO);
+        comboDomain.setPrice(Double.MIN_NORMAL);
         final var productDomain = ProductDomain.builder().id("1").build();
         comboDomain.setProducts(List.of(productDomain));
         return comboDomain;

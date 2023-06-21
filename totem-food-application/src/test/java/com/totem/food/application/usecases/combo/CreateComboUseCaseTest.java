@@ -58,7 +58,7 @@ class CreateComboUseCaseTest {
         //## Given
         final var productId = UUID.randomUUID().toString();
         final var productDomain = ProductDomain.builder().id(productId).build();
-        final var comboDomain = new ComboDomain("1", "Combo da casa", BigDecimal.TEN, List.of(productDomain), ZonedDateTime.now(ZoneOffset.UTC), ZonedDateTime.now(ZoneOffset.UTC));
+        final var comboDomain = new ComboDomain("1", "Combo da casa", Double.MAX_VALUE, List.of(productDomain), ZonedDateTime.now(ZoneOffset.UTC), ZonedDateTime.now(ZoneOffset.UTC));
 
         //### Given - Mocks
         when(iSearchProductRepositoryPort.findAll(Mockito.any(ProductFilterDto.class))).thenReturn(List.of(productDomain));

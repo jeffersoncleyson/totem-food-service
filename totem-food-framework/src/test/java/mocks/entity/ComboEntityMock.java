@@ -13,7 +13,7 @@ public class ComboEntityMock {
         var comboEntity = new ComboEntity();
         comboEntity.setId("1");
         comboEntity.setName("Combo da casa");
-        comboEntity.setPrice(BigDecimal.ZERO);
+        comboEntity.setPrice(Double.MIN_NORMAL);
         final var productEntity = ProductEntity.builder().id("1").build();
         comboEntity.setProducts(List.of(productEntity));
         return comboEntity;
