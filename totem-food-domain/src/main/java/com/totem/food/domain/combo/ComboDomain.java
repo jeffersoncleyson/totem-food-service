@@ -23,7 +23,7 @@ public class ComboDomain {
     //########### Main Fields
     private String id;
     private String name;
-    private BigDecimal price;
+    private double price;
     private List<ProductDomain> products;
     private ZonedDateTime modifiedAt;
     private ZonedDateTime createAt;

@@ -8,6 +8,7 @@ import com.totem.food.framework.adapters.out.persistence.mongo.product.entity.Pr
 import com.totem.food.framework.adapters.out.persistence.mongo.product.mapper.IProductEntityMapper;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
@@ -26,6 +27,8 @@ public class SearchProductRepositoryAdapter implements ISearchRepositoryPort<Pro
 
 		@Query("{ '_id': { $in: ?0 } }")
 		List<ProductEntity> findAllByIds(List<String> ids);
+
+		List<ProductEntity> findAll();
 	}
 
 	private final ProductRepositoryMongoDB repository;
@@ -35,6 +38,8 @@ public class SearchProductRepositoryAdapter implements ISearchRepositoryPort<Pro
 	public List<ProductDomain> findAll(ProductFilterDto filter) {
 		if(CollectionUtils.isNotEmpty(filter.getIds()))
 			return repository.findAllByIds(filter.getIds()).stream().map(iProductEntityMapper::toDomain).toList();
-		return repository.findByFilter(filter.getName()).stream().map(iProductEntityMapper::toDomain).toList();
+		if(StringUtils.isNotEmpty(filter.getName()))
+			return repository.findByFilter(filter.getName()).stream().map(iProductEntityMapper::toDomain).toList();
+		return repository.findAll().stream().map(iProductEntityMapper::toDomain).toList();
 	}
 }

@@ -5,7 +5,7 @@ import com.totem.food.application.ports.out.persistence.commons.ISearchRepositor
 import com.totem.food.domain.order.admin.OrderAdminDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.customer.entity.CustomerEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.order.admin.entity.OrderAdminEntity;
-import com.totem.food.framework.adapters.out.persistence.mongo.order.admin.mapper.IOrderEntityMapper;
+import com.totem.food.framework.adapters.out.persistence.mongo.order.admin.mapper.IOrderAdminEntityMapper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,9 +32,9 @@ import static org.mockito.Mockito.*;
 class SearchOrderRepositoryAdapterTest {
 
     @Mock
-    private SearchOrderRepositoryAdapter.OrderRepositoryMongoDB repository;
+    private SearchOrderAdminRepositoryAdapter.OrderRepositoryMongoDB repository;
     @Spy
-    private IOrderEntityMapper iOrderEntityMapper = Mappers.getMapper(IOrderEntityMapper.class);
+    private IOrderAdminEntityMapper iOrderEntityMapper = Mappers.getMapper(IOrderAdminEntityMapper.class);
 
     private ISearchRepositoryPort<OrderAdminFilterDto, List<OrderAdminDomain>> iSearchRepositoryPort;
     private AutoCloseable closeable;
@@ -42,7 +42,7 @@ class SearchOrderRepositoryAdapterTest {
     @BeforeEach
     private void beforeEach() {
         closeable = MockitoAnnotations.openMocks(this);
-        iSearchRepositoryPort = new SearchOrderRepositoryAdapter(repository, iOrderEntityMapper);
+        iSearchRepositoryPort = new SearchOrderAdminRepositoryAdapter(repository, iOrderEntityMapper);
     }
 
     @AfterEach
