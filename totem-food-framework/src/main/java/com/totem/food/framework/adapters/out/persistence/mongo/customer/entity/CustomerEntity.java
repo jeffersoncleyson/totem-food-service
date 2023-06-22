@@ -1,5 +1,6 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.customer.entity;
 
+import lombok.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import java.time.ZonedDateTime;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "customer")
