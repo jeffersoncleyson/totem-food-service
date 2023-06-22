@@ -1,21 +1,18 @@
 package com.totem.food.application.ports.in.dtos.payment;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.ZonedDateTime;
+import lombok.Setter;
 
 @Getter
-@Builder
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PaymentDto {
+public class PaymentQRCodeDto {
 
-    private String id;
-    private double price;
+    private String qrcodeBase64;
+    private String qrcode;
     private String status;
-    private ZonedDateTime modifiedAt;
-    private ZonedDateTime createAt;
+    private String paymentId;
 }

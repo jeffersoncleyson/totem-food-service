@@ -23,6 +23,7 @@ public class PaymentEntity {
     private OrderEntity order;
     @DBRef
     private CustomerEntity customer;
+    private String status;
     private double price;
     private String token;
     private ZonedDateTime modifiedAt;

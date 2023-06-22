@@ -2,7 +2,7 @@ package com.totem.food.application.usecases.payment;
 
 import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.ports.in.dtos.payment.PaymentCreateDto;
-import com.totem.food.application.ports.in.dtos.payment.PaymentDto;
+import com.totem.food.application.ports.in.dtos.payment.PaymentQRCodeDto;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.web.ISendRequest;
@@ -18,15 +18,15 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @UseCase
-public class CreatePaymentUseCase implements ICreateUseCase<PaymentCreateDto, PaymentDto> {
+public class CreatePaymentUseCase implements ICreateUseCase<PaymentCreateDto, PaymentQRCodeDto> {
 
     private final ICreateRepositoryPort<PaymentDomain> iCreateRepositoryPort;
     private final ISearchUniqueRepositoryPort<Optional<OrderDomain>> iSearchUniqueOrderRepositoryPort;
     private final ISearchUniqueRepositoryPort<Optional<CustomerDomain>> iSearchUniqueCustomerRepositoryPort;
-    private final ISendRequest<PaymentDomain, PaymentDto> iSendRequest;
+    private final ISendRequest<PaymentDomain, PaymentQRCodeDto> iSendRequest;
 
     @Override
-    public PaymentDto createItem(PaymentCreateDto item) {
+    public PaymentQRCodeDto createItem(PaymentCreateDto item) {
 
         final var orderDomain = iSearchUniqueOrderRepositoryPort.findById(item.getOrderId())
                 .orElseThrow(() -> new ElementNotFoundException(String.format("Order [%s] not found", item.getOrderId())));
@@ -38,11 +38,15 @@ public class CreatePaymentUseCase implements ICreateUseCase<PaymentCreateDto, Pa
                 .customer(customerDomain)
                 .price(orderDomain.getPrice())
                 .token(UUID.randomUUID().toString())
+                .status(PaymentDomain.PaymentStatus.PENDING)
                 .build();
         paymentDomain.fillDates();
 
         final var paymentDomainSaved = iCreateRepositoryPort.saveItem(paymentDomain);
-        return iSendRequest.sendRequest(paymentDomainSaved);
+        final var paymentDto = iSendRequest.sendRequest(paymentDomainSaved);
+        paymentDto.setStatus(PaymentDomain.PaymentStatus.PENDING.key);
+        paymentDto.setPaymentId(paymentDomainSaved.getId());
+        return paymentDto;
     }
 
 }
