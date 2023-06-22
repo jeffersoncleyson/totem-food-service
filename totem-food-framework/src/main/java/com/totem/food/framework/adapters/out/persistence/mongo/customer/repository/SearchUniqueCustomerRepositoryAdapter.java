@@ -17,6 +17,7 @@ public class SearchUniqueCustomerRepositoryAdapter implements ISearchUniqueRepos
 
     @Repository
     protected interface CustomerRepositoryMongoDB extends BaseRepository<CustomerEntity, String> {
+
     }
 
     private final CustomerRepositoryMongoDB repository;
