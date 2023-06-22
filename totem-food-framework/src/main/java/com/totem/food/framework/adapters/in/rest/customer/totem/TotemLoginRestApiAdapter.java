@@ -18,7 +18,6 @@ public class TotemLoginRestApiAdapter {
 
     private final ILoginUseCase<CustomerDto> iLoginUseCase;
 
-
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CustomerDto> findById(@RequestHeader String cpf, @RequestHeader String password) {
         final var customer = iLoginUseCase.login(cpf, password);
