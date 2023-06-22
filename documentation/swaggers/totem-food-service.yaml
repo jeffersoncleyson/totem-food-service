@@ -44,6 +44,35 @@ paths:
                 $ref: '#/components/schemas/CustomerDto'
         '405':
           description: Invalid input
+  /totem/login:
+    get:
+      tags:
+        - Customers
+      summary: Login totem
+      description: Login customer in totem
+      operationId: loginCustomer
+      parameters:
+        - name: cpf
+          in: header
+          description: Document consumer (CPF)
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: header
+          description: Password to login consumer
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerDto'
+        '405':
+          description: Invalid input
   /totem/order:
     post:
       tags:
@@ -177,6 +206,7 @@ paths:
           description: "Accepted"
         '405':
           description: Invalid input
+
 components:
   schemas:
     CustomerCreateDto:
