@@ -5,7 +5,7 @@ import com.totem.food.application.ports.out.persistence.commons.ISearchRepositor
 import com.totem.food.domain.order.admin.OrderAdminDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepository;
 import com.totem.food.framework.adapters.out.persistence.mongo.order.admin.entity.OrderAdminEntity;
-import com.totem.food.framework.adapters.out.persistence.mongo.order.admin.mapper.IOrderEntityMapper;
+import com.totem.food.framework.adapters.out.persistence.mongo.order.admin.mapper.IOrderAdminEntityMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Component;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Component
-public class SearchOrderRepositoryAdapter implements ISearchRepositoryPort<OrderAdminFilterDto, List<OrderAdminDomain>> {
+public class SearchOrderAdminRepositoryAdapter implements ISearchRepositoryPort<OrderAdminFilterDto, List<OrderAdminDomain>> {
 
     @Repository
     protected interface OrderRepositoryMongoDB extends BaseRepository<OrderAdminEntity, String> {
@@ -26,8 +26,8 @@ public class SearchOrderRepositoryAdapter implements ISearchRepositoryPort<Order
         List<OrderAdminEntity> findAll();
     }
 
-    private final SearchOrderRepositoryAdapter.OrderRepositoryMongoDB repository;
-    private final IOrderEntityMapper iOrderEntityMapper;
+    private final SearchOrderAdminRepositoryAdapter.OrderRepositoryMongoDB repository;
+    private final IOrderAdminEntityMapper iOrderEntityMapper;
 
     @Override
     public List<OrderAdminDomain> findAll(OrderAdminFilterDto filter) {
