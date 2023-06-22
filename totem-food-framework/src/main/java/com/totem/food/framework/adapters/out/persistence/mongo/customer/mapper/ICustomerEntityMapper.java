@@ -3,6 +3,7 @@ package com.totem.food.framework.adapters.out.persistence.mongo.customer.mapper;
 import com.totem.food.domain.customer.CustomerDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.customer.entity.CustomerEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
 
@@ -13,5 +14,6 @@ public interface ICustomerEntityMapper {
 
     CustomerEntity toEntity(CustomerDomain input);
 
+    @Mapping(target = "password", ignore = true)
     CustomerDomain toDomain(CustomerEntity input);
 }

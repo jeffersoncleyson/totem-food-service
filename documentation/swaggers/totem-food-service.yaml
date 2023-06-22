@@ -23,7 +23,7 @@ tags:
   - name: Payment Gateway
     description: Access to payment
 paths:
-  /customer:
+  /totem/customer:
     post:
       tags:
         - Customers
@@ -44,7 +44,7 @@ paths:
                 $ref: '#/components/schemas/CustomerDto'
         '405':
           description: Invalid input
-  /order:
+  /totem/order:
     post:
       tags:
         - Order
@@ -65,7 +65,7 @@ paths:
                 $ref: '#/components/schemas/OrderDto'
         '405':
           description: Invalid input
-  /order/{orderId}:
+  /totem/order/{orderId}:
     put:
       tags:
         - Order
@@ -94,7 +94,7 @@ paths:
                 $ref: '#/components/schemas/OrderDto'
         '405':
           description: Invalid input
-  /order/{orderId}/status/{statusName}:
+  /totem/order/{orderId}/status/{statusName}:
     put:
       tags:
         - Order
@@ -129,7 +129,7 @@ paths:
                 $ref: '#/components/schemas/OrderDto'
         '405':
           description: Invalid input
-  /payment:
+  /totem/payment:
     post:
       tags:
         - Payment Gateway
@@ -150,7 +150,7 @@ paths:
                 $ref: '#/components/schemas/PaymentQRCodeDto'
         '405':
           description: Invalid input
-  /payment/callback:
+  /totem/payment/callback:
     get:
       tags:
         - Payment Gateway
@@ -202,6 +202,10 @@ components:
           type: string
           description: Mobile number
           example: '5535989483811'
+        password:
+          type: string
+          description: Password
+          example: 'x!iu#112'
     CustomerDto:
       type: object
       properties:

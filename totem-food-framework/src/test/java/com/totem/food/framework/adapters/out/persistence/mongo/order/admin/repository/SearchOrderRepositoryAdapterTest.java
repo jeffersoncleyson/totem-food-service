@@ -26,7 +26,9 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class SearchOrderRepositoryAdapterTest {
@@ -59,6 +61,7 @@ class SearchOrderRepositoryAdapterTest {
         final var customerCpf = "14354529689";
         final var customerEmail = "customer@email.com";
         final var customerMobile = "5535944345655";
+        final var customerPassword= "%#AjOBF%w.<K";
         final var customerModifiedAt = ZonedDateTime.now(ZoneOffset.UTC).minusDays(10);
         final var customerCreateAt = ZonedDateTime.now(ZoneOffset.UTC).minusDays(10);
         final var customer = new CustomerEntity(
@@ -67,6 +70,7 @@ class SearchOrderRepositoryAdapterTest {
                 customerCpf,
                 customerEmail,
                 customerMobile,
+                customerPassword,
                 customerModifiedAt,
                 customerCreateAt
         );
