@@ -8,6 +8,8 @@ import com.totem.food.domain.product.ProductDomain;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
@@ -81,7 +83,9 @@ public class OrderDomain {
         final var comboPrice = Optional.ofNullable(this.combos)
                 .map(c -> c.stream().mapToDouble(ComboDomain::getPrice).sum()).orElse(0D);
 
-        this.price = productsPrice + comboPrice;
+        this.price = BigDecimal.valueOf(productsPrice + comboPrice)
+                .setScale(2, RoundingMode.FLOOR)
+                .doubleValue();
     }
 
     private enum StatusTransition {
