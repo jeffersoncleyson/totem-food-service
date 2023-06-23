@@ -1,14 +1,12 @@
 package com.totem.food.domain.order.admin;
 
 import com.totem.food.domain.customer.CustomerDomain;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.math.BigDecimal;
+import java.time.Duration;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -18,10 +16,19 @@ import java.time.ZonedDateTime;
 public class OrderAdminDomain {
 
     //########### Main Fields
-    private String orderId;
-    private Integer showNumber;
-    private BigDecimal amount;
+    private String id;
+    private double price;
     private CustomerDomain customer;
+    private String status;
     private ZonedDateTime createAt;
+    private ZonedDateTime modifiedAt;
+    private long waitTime;
+
+    public void calcWaitTime(){
+        if(Objects.nonNull(createAt)){
+            final var duration = Duration.between( createAt , ZonedDateTime.now(ZoneOffset.UTC));
+            this.waitTime = duration.toMinutes();
+        }
+    }
 
 }

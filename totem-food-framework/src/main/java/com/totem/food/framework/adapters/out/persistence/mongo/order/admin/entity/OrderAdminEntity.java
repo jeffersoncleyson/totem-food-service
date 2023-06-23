@@ -19,13 +19,11 @@ public class OrderAdminEntity {
 
     @Id
     private String id;
-    private String orderId;
-    private Integer showNumber;
-    private BigDecimal amount;
-
+    private double price;
     @DBRef
     private CustomerEntity customer;
-
+    private String status;
     private ZonedDateTime createAt;
+    private ZonedDateTime modifiedAt;
 
 }

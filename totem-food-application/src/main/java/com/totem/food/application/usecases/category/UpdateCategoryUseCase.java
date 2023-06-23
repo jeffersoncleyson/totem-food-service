@@ -1,5 +1,6 @@
 package com.totem.food.application.usecases.category;
 
+import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.ports.in.dtos.category.CategoryCreateDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
 import com.totem.food.application.ports.in.mappers.category.ICategoryMapper;
@@ -32,8 +33,7 @@ public class UpdateCategoryUseCase implements IUpdateUseCase<CategoryCreateDto, 
             return iCategoryMapper.toDto(categoryDomainUpdated);
         }
 
-        //#### Implementar tratamento de erro.
-        return null;
+        throw new ElementNotFoundException(String.format("Category [%s] not found", id));
     }
 
 }

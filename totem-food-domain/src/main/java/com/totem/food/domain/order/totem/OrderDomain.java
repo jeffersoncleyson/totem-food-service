@@ -93,6 +93,12 @@ public class OrderDomain {
         NEW("NEW") {
             @Override
             public Set<OrderStatusEnumDomain> allowedTransitions() {
+                return Set.of(OrderStatusEnumDomain.CANCELED, OrderStatusEnumDomain.WAITING_PAYMENT);
+            }
+        },
+        WAITING_PAYMENT("WAITING_PAYMENT") {
+            @Override
+            public Set<OrderStatusEnumDomain> allowedTransitions() {
                 return Set.of(OrderStatusEnumDomain.CANCELED, OrderStatusEnumDomain.RECEIVED);
             }
         },

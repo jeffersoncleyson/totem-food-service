@@ -4,6 +4,14 @@ server:
 logging:
   level:
     root: ${LOGGING_LEVEL:info}
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: INFO
+            repository:
+                query: INFO
     "[com.totem.food]": ${APP_LOGGING_LEVEL:debug}
     "[org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping]": ${SHOW_ENDPOINTS_LOGGING_LEVEL:info}
   pattern:

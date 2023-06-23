@@ -24,6 +24,10 @@ public class SearchOrderAdminUseCase implements ISearchUseCase<OrderAdminFilterD
     public List<OrderAdminDto> items(OrderAdminFilterDto filter) {
         return iSearchOrderRepositoryPort.findAll(filter)
                 .stream()
+                .map(domain -> {
+                    domain.calcWaitTime();
+                    return domain;
+                })
                 .map(iOrderAdminMapper::toDto)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
