@@ -1,5 +1,6 @@
 package com.totem.food.application.usecases.category;
 
+import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.ports.in.dtos.category.CategoryCreateDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryFilterDto;
@@ -22,8 +23,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -81,7 +81,7 @@ class UpdateCategoryUseCaseTest {
         when(iSearchUniqueRepositoryPort.findById(anyString())).thenReturn(Optional.empty());
 
         //## Then
-        assertDoesNotThrow(() -> iUpdateUseCase.updateItem(categoryCreateDto, "123"));
+        assertThrows(ElementNotFoundException.class, () -> iUpdateUseCase.updateItem(categoryCreateDto, "123"));
 
     }
 }

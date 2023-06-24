@@ -55,7 +55,7 @@ class TotemLoginRestApiAdapterTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = "/totem/login")
+    @ValueSource(strings = "/v1/totem/login")
     void findById(String endpoint) throws Exception {
 
         //### Given - Objects and Values

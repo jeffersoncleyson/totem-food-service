@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -31,6 +32,8 @@ class SearchProductRepositoryAdapterTest {
     private SearchProductRepositoryAdapter.ProductRepositoryMongoDB repository;
     @Spy
     private IProductEntityMapper iProductEntityMapper = Mappers.getMapper(IProductEntityMapper.class);
+    @Mock
+    private MongoTemplate mongoTemplate;
 
     private ISearchRepositoryPort<ProductFilterDto, List<ProductDomain>> iSearchRepositoryPort;
     private AutoCloseable closeable;
@@ -38,7 +41,7 @@ class SearchProductRepositoryAdapterTest {
     @BeforeEach
     private void beforeEach() {
         closeable = MockitoAnnotations.openMocks(this);
-        iSearchRepositoryPort = new SearchProductRepositoryAdapter(repository, iProductEntityMapper);
+        iSearchRepositoryPort = new SearchProductRepositoryAdapter(repository, mongoTemplate, iProductEntityMapper);
     }
 
     @AfterEach

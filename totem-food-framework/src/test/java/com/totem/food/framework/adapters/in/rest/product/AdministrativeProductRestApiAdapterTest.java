@@ -71,7 +71,7 @@ class AdministrativeProductRestApiAdapterTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = "/administrative/product")
+    @ValueSource(strings = "/v1/administrative/product")
     void createItem(String endpoint) throws Exception {
 
         //### Given - Objects and Values
@@ -136,7 +136,7 @@ class AdministrativeProductRestApiAdapterTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = "/administrative/product")
+    @ValueSource(strings = "/v1/administrative/product")
     void listAll(String endpoint) throws Exception {
 
         //### Given - Objects and Values
@@ -196,7 +196,7 @@ class AdministrativeProductRestApiAdapterTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = "/administrative/product/{productId}")
+    @ValueSource(strings = "/v1/administrative/product/{productId}")
     void getById(String endpoint) throws Exception {
 
         //### Given - Objects and Values
@@ -251,7 +251,7 @@ class AdministrativeProductRestApiAdapterTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = "/administrative/product/{productId}")
+    @ValueSource(strings = "/v1/administrative/product/{productId}")
     void deleteById(String endpoint) throws Exception {
 
         //### Given - Objects and Values
@@ -295,7 +295,7 @@ class AdministrativeProductRestApiAdapterTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = "/administrative/product/{productId}")
+    @ValueSource(strings = "/v1/administrative/product/{productId}")
     void update(String endpoint) throws Exception {
 
         //### Given - Objects and Values

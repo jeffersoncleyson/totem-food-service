@@ -57,7 +57,7 @@ class TotemCustomerRestApiAdapterTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = "/totem/customer")
+    @ValueSource(strings = "/v1/totem/customer")
     void createCustomer(String endpoint) throws Exception {
 
         //### Given - Objects and Values
