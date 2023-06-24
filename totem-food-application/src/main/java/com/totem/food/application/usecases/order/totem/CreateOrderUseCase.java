@@ -1,6 +1,7 @@
 package com.totem.food.application.usecases.order.totem;
 
 import com.totem.food.application.exceptions.ElementNotFoundException;
+import com.totem.food.application.exceptions.InvalidInput;
 import com.totem.food.application.ports.in.dtos.combo.ComboFilterDto;
 import com.totem.food.application.ports.in.dtos.order.totem.OrderCreateDto;
 import com.totem.food.application.ports.in.dtos.order.totem.OrderDto;
@@ -35,6 +36,9 @@ public class CreateOrderUseCase implements ICreateUseCase<OrderCreateDto, OrderD
 
     @Override
     public OrderDto createItem(OrderCreateDto item) {
+
+        if(!item.isOrderValid())
+            throw new InvalidInput("Order is invalid");
 
         final var domain = new OrderDomain();
 

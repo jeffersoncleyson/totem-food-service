@@ -25,5 +25,6 @@ public class OrderAdminEntity {
     private String status;
     private ZonedDateTime createAt;
     private ZonedDateTime modifiedAt;
+    private ZonedDateTime receivedAt;
 
 }

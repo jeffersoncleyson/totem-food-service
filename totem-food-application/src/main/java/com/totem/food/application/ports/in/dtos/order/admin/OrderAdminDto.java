@@ -20,5 +20,6 @@ public class OrderAdminDto {
     private String status;
     private ZonedDateTime createAt;
     private ZonedDateTime modifiedAt;
+    private ZonedDateTime receivedAt;
     private long waitTime;
 }
