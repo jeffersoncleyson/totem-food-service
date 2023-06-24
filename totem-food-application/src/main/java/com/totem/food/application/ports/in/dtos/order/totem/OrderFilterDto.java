@@ -8,5 +8,6 @@ import lombok.Getter;
 public class OrderFilterDto {
 
     private String customerId;
+    private String orderId;
 
 }

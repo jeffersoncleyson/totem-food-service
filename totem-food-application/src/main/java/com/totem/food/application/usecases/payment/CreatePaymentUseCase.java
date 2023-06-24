@@ -14,6 +14,7 @@ import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import com.totem.food.domain.order.totem.OrderDomain;
 import com.totem.food.domain.payment.PaymentDomain;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -32,17 +33,25 @@ public class CreatePaymentUseCase implements ICreateUseCase<PaymentCreateDto, Pa
 
         final var orderDomain = iSearchUniqueOrderRepositoryPort.findById(item.getOrderId())
                 .orElseThrow(() -> new ElementNotFoundException(String.format("Order [%s] not found", item.getOrderId())));
-        final var customerDomain = iSearchUniqueCustomerRepositoryPort.findById(item.getCustomerId())
-                .orElseThrow(() -> new ElementNotFoundException(String.format("Customer [%s] not found", item.getCustomerId())));
 
         if(orderDomain.getStatus().equals(OrderStatusEnumDomain.WAITING_PAYMENT)) {
-            final var paymentDomain = PaymentDomain.builder()
-                    .order(orderDomain)
-                    .customer(customerDomain)
-                    .price(orderDomain.getPrice())
-                    .token(UUID.randomUUID().toString())
-                    .status(PaymentDomain.PaymentStatus.PENDING)
-                    .build();
+            final var paymentDomainBuilder = PaymentDomain.builder();
+
+            Optional.ofNullable(item.getCustomerId())
+                    .filter(StringUtils::isNotEmpty)
+                    .ifPresent(customerId -> {
+                        final var customerDomain = iSearchUniqueCustomerRepositoryPort.findById(customerId)
+                                .orElseThrow(() -> new ElementNotFoundException(String.format("Customer [%s] not found", customerId)));
+                        paymentDomainBuilder.customer(customerDomain);
+                    });
+
+            paymentDomainBuilder.order(orderDomain);
+            paymentDomainBuilder.price(orderDomain.getPrice());
+            paymentDomainBuilder.token(UUID.randomUUID().toString());
+            paymentDomainBuilder.status(PaymentDomain.PaymentStatus.PENDING);
+
+
+            final var paymentDomain = paymentDomainBuilder.build();
             paymentDomain.fillDates();
 
             final var paymentDomainSaved = iCreateRepositoryPort.saveItem(paymentDomain);

@@ -49,9 +49,8 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
         }
 
         throw new ElementNotFoundException(
-                String.format("Payment with filters orderId: [%s] customerId: [%s] token: [%s] not found",
+                String.format("Payment with filters orderId: [%s] token: [%s] not found",
                         item.getOrderId(),
-                        item.getCustomerId(),
                         item.getToken()
                 )
         );

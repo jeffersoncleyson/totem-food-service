@@ -18,8 +18,8 @@ public class SearchPaymentRepositoryAdapter implements ISearchRepositoryPort<Pay
 
 	@Repository
 	protected interface PaymentRepositoryMongoDB extends BaseRepository<PaymentEntity, String> {
-		@Query("{'order' :{'$ref' : 'order' , '$id' : ?0}, 'customer' :{'$ref' : 'customer' , '$id' : ?1}, 'token' : ?2}")
-		PaymentEntity findByFilter(ObjectId order, ObjectId customer, String token);
+		@Query("{'order' :{'$ref' : 'order' , '$id' : ?0}, 'token' : ?1}")
+		PaymentEntity findByFilter(ObjectId order, String token);
 	}
 
 	private final PaymentRepositoryMongoDB repository;
@@ -27,7 +27,7 @@ public class SearchPaymentRepositoryAdapter implements ISearchRepositoryPort<Pay
 
 	@Override
 	public PaymentDomain findAll(PaymentFilterDto item) {
-		final var entity = repository.findByFilter(new ObjectId(item.getOrderId()), new ObjectId(item.getCustomerId()), item.getToken());
+		final var entity = repository.findByFilter(new ObjectId(item.getOrderId()), item.getToken());
 		return iPaymentMapper.toDomain(entity);
 	}
 

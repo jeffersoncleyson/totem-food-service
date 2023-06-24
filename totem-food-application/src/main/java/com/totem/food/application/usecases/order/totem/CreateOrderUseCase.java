@@ -18,6 +18,7 @@ import com.totem.food.domain.order.totem.OrderDomain;
 import com.totem.food.domain.product.ProductDomain;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -51,10 +52,12 @@ public class CreateOrderUseCase implements ICreateUseCase<OrderCreateDto, OrderD
 
     private void setCustomer(OrderCreateDto item, OrderDomain domain) {
 
-        final var customerDomain = iSearchUniqueCustomerRepositoryPort.findById(item.getCustomerId())
-                .orElseThrow(() -> new ElementNotFoundException(String.format("Customer [%s] not found", item.getCustomerId())));
+        if(StringUtils.isNotEmpty(item.getCustomerId())) {
+            final var customerDomain = iSearchUniqueCustomerRepositoryPort.findById(item.getCustomerId())
+                    .orElseThrow(() -> new ElementNotFoundException(String.format("Customer [%s] not found", item.getCustomerId())));
 
-        domain.setCustomer(customerDomain);
+            domain.setCustomer(customerDomain);
+        }
     }
 
     private void setCombosToDomain(OrderCreateDto item, OrderDomain domain) {

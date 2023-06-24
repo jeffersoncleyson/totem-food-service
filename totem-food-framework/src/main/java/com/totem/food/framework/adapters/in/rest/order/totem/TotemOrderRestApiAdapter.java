@@ -10,13 +10,13 @@ import com.totem.food.application.usecases.commons.ISearchUseCase;
 import com.totem.food.application.usecases.commons.IUpdateStatusUseCase;
 import com.totem.food.application.usecases.commons.IUpdateUseCase;
 import lombok.AllArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -43,8 +43,10 @@ public class TotemOrderRestApiAdapter implements ICreateRestApiPort<OrderCreateD
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @Override
     public ResponseEntity<List<OrderDto>> listAll(OrderFilterDto filter) {
-        final var items = iSearchProductUseCase.items(filter);
-        return ResponseEntity.status(HttpStatus.OK).body(items);
+        return Optional.ofNullable(iSearchProductUseCase.items(filter))
+                .filter(CollectionUtils::isNotEmpty)
+                .map(items -> ResponseEntity.status(HttpStatus.OK).body(items))
+                .orElse(ResponseEntity.noContent().build());
     }
 
     @PutMapping(value = "/{orderId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

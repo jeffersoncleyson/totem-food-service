@@ -16,12 +16,11 @@ public class TotemPaymentCallbackRestApiAdapter {
 
     private final IUpdateUseCase<PaymentFilterDto, Boolean> iUpdateUseCase;
 
-    @PutMapping(value = "/order/{orderId}/customer/{customerId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/order/{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> getItem(
             @PathVariable(name = "orderId") String orderId,
-            @PathVariable(name = "customerId") String customerId,
             @RequestHeader String token) {
-        final var processed = iUpdateUseCase.updateItem(new PaymentFilterDto(orderId, customerId, token), "");
+        final var processed = iUpdateUseCase.updateItem(new PaymentFilterDto(orderId, token), "");
         if(Boolean.TRUE.equals(processed)) return ResponseEntity.noContent().build();
         return ResponseEntity.badRequest().build();
     }

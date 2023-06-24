@@ -12,6 +12,5 @@ import lombok.Setter;
 public class PaymentFilterDto {
 
     private String orderId;
-    private String customerId;
     private String token;
 }
