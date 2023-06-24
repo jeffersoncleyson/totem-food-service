@@ -4,6 +4,7 @@ import com.totem.food.application.ports.in.dtos.combo.ComboCreateDto;
 import com.totem.food.application.ports.in.dtos.combo.ComboDto;
 import com.totem.food.application.ports.in.rest.ICreateRestApiPort;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
+import com.totem.food.framework.adapters.in.rest.constants.Routes;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/administrative/combo")
+@RequestMapping(value = Routes.VERSION_1 + Routes.ADM_COMBO)
 @AllArgsConstructor
 public class AdministrativeComboRestApiAdapter implements ICreateRestApiPort<ComboCreateDto, ResponseEntity<ComboDto>> {
 

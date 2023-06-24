@@ -9,6 +9,7 @@ import com.totem.food.application.usecases.commons.ICreateUseCase;
 import com.totem.food.application.usecases.commons.ISearchUseCase;
 import com.totem.food.application.usecases.commons.IUpdateStatusUseCase;
 import com.totem.food.application.usecases.commons.IUpdateUseCase;
+import com.totem.food.framework.adapters.in.rest.constants.Routes;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/totem/order")
+@RequestMapping(value = Routes.VERSION_1 + Routes.TOTEM_ORDER)
 @AllArgsConstructor
 public class TotemOrderRestApiAdapter implements ICreateRestApiPort<OrderCreateDto, ResponseEntity<OrderDto>>,
         ISearchRestApiPort<OrderFilterDto, ResponseEntity<List<OrderDto>>>,
@@ -49,7 +50,7 @@ public class TotemOrderRestApiAdapter implements ICreateRestApiPort<OrderCreateD
                 .orElse(ResponseEntity.noContent().build());
     }
 
-    @PutMapping(value = "/{orderId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = Routes.ORDER_ID, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Override
     public ResponseEntity<OrderDto> update(@RequestBody OrderUpdateDto item, @PathVariable String orderId) {
         return Optional.ofNullable(iUpdateUseCase.updateItem(item, orderId))
@@ -57,7 +58,7 @@ public class TotemOrderRestApiAdapter implements ICreateRestApiPort<OrderCreateD
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping(value = "/{orderId}/status/{statusName}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = Routes.ORDER_ID_AND_STATUS, produces = MediaType.APPLICATION_JSON_VALUE)
     @Override
     public ResponseEntity<OrderDto> update(@PathVariable(name = "orderId") String id, @PathVariable(name = "statusName") String status) {
         final var orderDto = iUpdateStatusUseCase.updateStatus(id, status);

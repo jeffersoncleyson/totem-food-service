@@ -5,6 +5,7 @@ import com.totem.food.application.ports.in.dtos.product.ProductDto;
 import com.totem.food.application.ports.in.dtos.product.ProductFilterDto;
 import com.totem.food.application.ports.in.rest.*;
 import com.totem.food.application.usecases.commons.*;
+import com.totem.food.framework.adapters.in.rest.constants.Routes;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/administrative/product")
+@RequestMapping(value = Routes.VERSION_1 + Routes.ADM_PRODUCT)
 @AllArgsConstructor
 public class AdministrativeProductRestApiAdapter implements
         ICreateRestApiPort<ProductCreateDto, ResponseEntity<ProductDto>>,
@@ -46,7 +47,7 @@ public class AdministrativeProductRestApiAdapter implements
 
 
     @Override
-    @GetMapping("/{productId}")
+    @GetMapping(Routes.PRODUCT_ID)
     public ResponseEntity<ProductDto> getById(@PathVariable String productId) {
         return Optional.ofNullable(iSearchUniqueUseCase.item(productId))
                 .map(productDto -> ResponseEntity.status(HttpStatus.OK).body(productDto))
@@ -54,14 +55,14 @@ public class AdministrativeProductRestApiAdapter implements
     }
 
     @Override
-    @DeleteMapping("/{productId}")
+    @DeleteMapping(Routes.PRODUCT_ID)
     public ResponseEntity<Void> deleteById(@PathVariable String productId) {
         iDeleteUseCase.removeItem(productId);
         return ResponseEntity.noContent().build();
     }
 
     @Override
-    @PutMapping(value = "/{productId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = Routes.PRODUCT_ID, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProductDto> update(@RequestBody ProductCreateDto item, @PathVariable String productId) {
         return Optional.ofNullable(iUpdateUseCase.updateItem(item, productId))
                 .map( productDto -> ResponseEntity.status(HttpStatus.ACCEPTED).body(productDto))
