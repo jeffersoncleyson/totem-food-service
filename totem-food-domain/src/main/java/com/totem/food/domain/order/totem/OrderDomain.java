@@ -52,9 +52,11 @@ public class OrderDomain {
         final var statusTransition = StatusTransition.from(this.status)
                 .orElseThrow(() -> new InvalidStatusTransition(this.status.key, status.key, OrderStatusEnumDomain.getKeys()));
 
-        if(statusTransition.allowedTransitions().contains(status)){
-            this.status = status;
+        if(!statusTransition.allowedTransitions().contains(status)  && !status.equals(OrderStatusEnumDomain.NEW)){
+            throw new InvalidStatusTransition(this.status.key, status.key, OrderStatusEnumDomain.getKeys());
         }
+
+        this.status = status;
     }
 
     public void updateModifiedAt(){

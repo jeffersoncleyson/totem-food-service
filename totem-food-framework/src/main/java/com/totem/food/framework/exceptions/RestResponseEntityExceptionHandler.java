@@ -5,7 +5,9 @@ import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.exceptions.ExternalCommunicationInvalid;
 import com.totem.food.application.exceptions.response.ResponseError;
 import com.totem.food.application.exceptions.response.ResponseWrapper;
+import com.totem.food.domain.exceptions.InvalidEnum;
 import com.totem.food.domain.exceptions.InvalidStatusException;
+import com.totem.food.domain.exceptions.InvalidStatusTransition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +50,17 @@ public class RestResponseEntityExceptionHandler
                 new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
+    @ExceptionHandler(value = InvalidStatusTransition.class )
+    protected ResponseEntity<Object> handleConflict(
+            InvalidStatusTransition ex, WebRequest request) {
+        final var responseError = ResponseError.builder()
+                .title("Invalid Status Transition")
+                .description(ex.getMessage()).build();
+        return handleExceptionInternal(ex, new ResponseWrapper<ResponseError>(responseError),
+                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+
     @ExceptionHandler(value = ExternalCommunicationInvalid.class )
     protected ResponseEntity<Object> handleConflict(
             ExternalCommunicationInvalid ex, WebRequest request) {
@@ -57,5 +70,17 @@ public class RestResponseEntityExceptionHandler
         return handleExceptionInternal(ex, new ResponseWrapper<ResponseError>(responseError),
                 new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
+
+    @ExceptionHandler(value = InvalidEnum.class )
+    protected ResponseEntity<Object> handleConflict(
+            InvalidEnum ex, WebRequest request) {
+        final var responseError = ResponseError.builder()
+                .title("Invalid Enum")
+                .description(ex.getMessage()).build();
+        return handleExceptionInternal(ex, new ResponseWrapper<ResponseError>(responseError),
+                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+
 
 }

@@ -41,10 +41,12 @@ public class UpdateStatusOrderUseCase implements IUpdateStatusUseCase<OrderDto> 
         final var domainSaved = iProductRepositoryPort.updateItem(domain);
 
         if(domainSaved.getStatus().equals(OrderStatusEnumDomain.READY)){
-            final var email = Optional.of(domainSaved).map(OrderDomain::getCustomer).map(CustomerDomain::getEmail).orElse("");
-            final var subject = String.format("[%s] Pedido %s", "Totem Food Service", id );
-            final var message = String.format("Pedido %s acabou de ser finalizado pela cozinha, em instantes o atendente ira chama-lo!", id);
-            iSendEmailPort.sendEmail(new EmailNotificationDto(email, subject, message));
+            Optional.of(domainSaved).map(OrderDomain::getCustomer).map(CustomerDomain::getEmail)
+                    .ifPresent(email -> {
+                        final var subject = String.format("[%s] Pedido %s", "Totem Food Service", id );
+                        final var message = String.format("Pedido %s acabou de ser finalizado pela cozinha, em instantes o atendente ira chama-lo!", id);
+                        iSendEmailPort.sendEmail(new EmailNotificationDto(email, subject, message));
+                    });
         }
 
         return iOrderMapper.toDto(domainSaved);

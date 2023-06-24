@@ -12,6 +12,7 @@ import java.util.Map;
 public class OrderAdminFilterDto {
 
     private String orderId;
+    private String status;
 
     public Map<String, String> getFilters(){
         final var map = new HashMap<String, String>();
