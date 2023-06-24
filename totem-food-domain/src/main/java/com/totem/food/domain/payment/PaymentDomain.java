@@ -2,7 +2,10 @@ package com.totem.food.domain.payment;
 
 import com.totem.food.domain.customer.CustomerDomain;
 import com.totem.food.domain.order.totem.OrderDomain;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.ZoneOffset;

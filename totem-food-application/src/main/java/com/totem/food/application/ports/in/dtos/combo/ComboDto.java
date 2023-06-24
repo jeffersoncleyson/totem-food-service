@@ -19,7 +19,6 @@ public class ComboDto {
     private String name;
     private BigDecimal price;
     private List<ProductDto> products;
-    private String status;
     private ZonedDateTime modifiedAt;
     private ZonedDateTime createAt;
 

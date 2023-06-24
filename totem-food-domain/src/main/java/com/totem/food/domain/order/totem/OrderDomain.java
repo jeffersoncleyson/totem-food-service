@@ -5,7 +5,11 @@ import com.totem.food.domain.customer.CustomerDomain;
 import com.totem.food.domain.exceptions.InvalidStatusTransition;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import com.totem.food.domain.product.ProductDomain;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
@@ -47,18 +51,31 @@ public class OrderDomain {
     @Getter @Setter
     private ZonedDateTime createAt;
 
+    @Getter @Setter
+    private ZonedDateTime orderReceivedAt;
+
     public void updateOrderStatus(OrderStatusEnumDomain status){
 
         final var statusTransition = StatusTransition.from(this.status)
                 .orElseThrow(() -> new InvalidStatusTransition(this.status.key, status.key, OrderStatusEnumDomain.getKeys()));
 
-        if(statusTransition.allowedTransitions().contains(status)){
-            this.status = status;
+        if(!statusTransition.allowedTransitions().contains(status)  && !status.equals(OrderStatusEnumDomain.NEW)){
+            throw new InvalidStatusTransition(this.status.key, status.key, OrderStatusEnumDomain.getKeys());
         }
+
+        if(this.status.equals(OrderStatusEnumDomain.RECEIVED)){
+            updateOrderReceivedAt();
+        }
+
+        this.status = status;
     }
 
     public void updateModifiedAt(){
         this.modifiedAt = ZonedDateTime.now(ZoneOffset.UTC);
+    }
+
+    private void updateOrderReceivedAt(){
+        this.orderReceivedAt = ZonedDateTime.now(ZoneOffset.UTC);
     }
 
     public void fillDates(){
@@ -91,6 +108,12 @@ public class OrderDomain {
     private enum StatusTransition {
 
         NEW("NEW") {
+            @Override
+            public Set<OrderStatusEnumDomain> allowedTransitions() {
+                return Set.of(OrderStatusEnumDomain.CANCELED, OrderStatusEnumDomain.WAITING_PAYMENT);
+            }
+        },
+        WAITING_PAYMENT("WAITING_PAYMENT") {
             @Override
             public Set<OrderStatusEnumDomain> allowedTransitions() {
                 return Set.of(OrderStatusEnumDomain.CANCELED, OrderStatusEnumDomain.RECEIVED);

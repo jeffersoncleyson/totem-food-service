@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
 @Getter
@@ -15,9 +14,12 @@ import java.time.ZonedDateTime;
 @NoArgsConstructor
 public class OrderAdminDto {
 
-    private String orderId;
-    private Integer showNumber;
-    private BigDecimal amount;
+    private String id;
+    private double price;
     private CustomerDto customer;
+    private String status;
     private ZonedDateTime createAt;
+    private ZonedDateTime modifiedAt;
+    private ZonedDateTime receivedAt;
+    private long waitTime;
 }

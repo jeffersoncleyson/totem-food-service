@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.ADM_COMBO;
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.API_VERSION_1;
+
 @RestController
-@RequestMapping(value = "/administrative/combo")
+@RequestMapping(value = API_VERSION_1 + ADM_COMBO)
 @AllArgsConstructor
 public class AdministrativeComboRestApiAdapter implements ICreateRestApiPort<ComboCreateDto, ResponseEntity<ComboDto>> {
 

@@ -2,7 +2,7 @@ package com.totem.food.framework.adapters.out.web.payment.request;
 
 import com.totem.food.application.exceptions.ExternalCommunicationInvalid;
 import com.totem.food.application.ports.in.dtos.payment.PaymentQRCodeDto;
-import com.totem.food.application.ports.out.web.ISendRequest;
+import com.totem.food.application.ports.out.web.ISendRequestPort;
 import com.totem.food.domain.payment.PaymentDomain;
 import com.totem.food.framework.adapters.out.web.payment.entity.PaymentResponseEntity;
 import com.totem.food.framework.adapters.out.web.payment.mapper.IPaymentRequestMapper;
@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,7 +20,7 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @Component
-public class SendPaymentExternalRequest implements ISendRequest<PaymentDomain, PaymentQRCodeDto> {
+public class SendPaymentExternalRequestAdapter implements ISendRequestPort<PaymentDomain, PaymentQRCodeDto> {
 
     private final RestTemplate restTemplate;
     private final IPaymentRequestMapper iPaymentRequestMapper;
@@ -35,7 +36,13 @@ public class SendPaymentExternalRequest implements ISendRequest<PaymentDomain, P
         HttpEntity<Object> body = new HttpEntity<>(entity, headers);
 
         final var uri = URI.create("http://localhost:3000/online-payment");
-        final var responseEntity = restTemplate.postForEntity(uri, body, PaymentResponseEntity.class);
+        ResponseEntity<PaymentResponseEntity> responseEntity;
+        try {
+            responseEntity = restTemplate.postForEntity(uri, body, PaymentResponseEntity.class);
+        }catch (Exception ex){
+            throw new ExternalCommunicationInvalid("Payment system is unavailable");
+        }
+
 
         if(responseEntity.getStatusCode().is2xxSuccessful()){
             return iPaymentResponseMapper.toDto(responseEntity.getBody());

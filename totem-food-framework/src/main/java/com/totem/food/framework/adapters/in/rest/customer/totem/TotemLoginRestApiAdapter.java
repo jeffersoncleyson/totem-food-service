@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.API_VERSION_1;
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.TOTEM_LOGIN;
+
 @RestController
-@RequestMapping(value = "/totem/login")
+@RequestMapping(value = API_VERSION_1 + TOTEM_LOGIN)
 @AllArgsConstructor
 public class TotemLoginRestApiAdapter {
 

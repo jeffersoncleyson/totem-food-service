@@ -27,8 +27,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.ADM_CATEGORY;
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.API_VERSION_1;
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.CATEGORY_ID;
+
 @RestController
-@RequestMapping(value = "/administrative/category")
+@RequestMapping(value = API_VERSION_1 + ADM_CATEGORY)
 @AllArgsConstructor
 public class AdministrativeCategoriesRestApiAdapter implements
         ICreateRestApiPort<CategoryCreateDto, ResponseEntity<CategoryDto>>,
@@ -56,20 +60,20 @@ public class AdministrativeCategoriesRestApiAdapter implements
         return new ResponseEntity<>(iSearchCategoryUseCase.items(filter), HttpStatus.OK);
     }
 
-    @GetMapping("/{categoryId}")
+    @GetMapping(CATEGORY_ID)
     @Override
     public ResponseEntity<CategoryDto> getById(@PathVariable String categoryId) {
         return new ResponseEntity<>(iSearchUniqueCategoryUseCase.item(categoryId), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{categoryId}")
+    @DeleteMapping(CATEGORY_ID)
     @Override
     public ResponseEntity<Void> deleteById(@PathVariable String categoryId) {
         iDeleteCategoryUseCase.removeItem(categoryId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/{categoryId}")
+    @PutMapping(CATEGORY_ID)
     @Override
     public ResponseEntity<CategoryDto> update(@RequestBody CategoryCreateDto item, @PathVariable String categoryId) {
         return new ResponseEntity<>(iUpdateCategoryUseCase.updateItem(item, categoryId), HttpStatus.ACCEPTED);

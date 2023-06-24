@@ -11,7 +11,6 @@ import lombok.AllArgsConstructor;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @UseCase
@@ -24,7 +23,7 @@ public class SearchProductUseCase implements ISearchUseCase<ProductFilterDto, Li
     public List<ProductDto> items(ProductFilterDto filter) {
         return Optional.ofNullable(iSearchProductRepositoryPort.findAll(filter))
                 .map(productsDomain ->
-                        productsDomain.stream().map(iProductMapper::toDto).collect(Collectors.toList()))
+                        productsDomain.stream().map(iProductMapper::toDto).toList())
                 .orElse(List.of());
     }
 }

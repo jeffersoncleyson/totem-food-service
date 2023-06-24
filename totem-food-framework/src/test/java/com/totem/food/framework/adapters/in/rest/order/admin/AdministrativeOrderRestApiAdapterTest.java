@@ -29,7 +29,9 @@ import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -58,7 +60,7 @@ class AdministrativeOrderRestApiAdapterTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = "/administrative/orders")
+    @ValueSource(strings = "/v1/administrative/orders")
     void listAll(String endpoint)  throws Exception {
 
         //### Given - Objects and Values
@@ -80,16 +82,18 @@ class AdministrativeOrderRestApiAdapterTest {
         );
 
         final var orderId = UUID.randomUUID().toString();
-        final var showNumber = 12;
-        final var amount = new BigDecimal("59.90");
+        final var price = new BigDecimal("59.90").doubleValue();
         final var createAt = ZonedDateTime.now(ZoneOffset.UTC);
 
         final var order = new OrderAdminDto(
                 orderId,
-                showNumber,
-                amount,
+                price,
                 customer,
-                createAt
+                "NEW",
+                createAt,
+                null,
+                null,
+                0
         );
 
         final var orders = List.of(order);

@@ -6,6 +6,7 @@ import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepos
 import com.totem.food.framework.adapters.out.persistence.mongo.customer.entity.CustomerEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.customer.mapper.ICustomerEntityMapper;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
@@ -25,7 +26,9 @@ public class SearchUniqueCustomerRepositoryAdapter implements ISearchUniqueRepos
 
     @Override
     public Optional<CustomerDomain> findById(String id) {
-        return repository.findById(id).map(iCustomerEntityMapper::toDomain);
+        if(StringUtils.isNotEmpty(id))
+            return repository.findById(id).map(iCustomerEntityMapper::toDomain);
+        return Optional.empty();
     }
 
 }

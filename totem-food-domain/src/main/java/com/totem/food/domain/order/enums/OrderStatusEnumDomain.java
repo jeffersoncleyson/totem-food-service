@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 public enum OrderStatusEnumDomain {
 
     NEW("NEW"),
+    WAITING_PAYMENT("WAITING_PAYMENT"),
     RECEIVED("RECEIVED"),
     IN_PREPARATION("IN_PREPARATION"),
     READY("READY"),

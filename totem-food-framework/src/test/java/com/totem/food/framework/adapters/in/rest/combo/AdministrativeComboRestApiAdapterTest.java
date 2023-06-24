@@ -60,7 +60,7 @@ class AdministrativeComboRestApiAdapterTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = "/administrative/combo")
+    @ValueSource(strings = "/v1/administrative/combo")
     void createCombo(String endpoint) throws Exception {
 
         var comboCreateDto = ComboCreateDtoMock.getMock();

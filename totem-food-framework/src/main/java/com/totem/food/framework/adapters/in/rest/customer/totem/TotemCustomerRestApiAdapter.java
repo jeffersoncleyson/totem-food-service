@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.API_VERSION_1;
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.TOTEM_CUSTOMER;
+
 @RestController
-@RequestMapping(value = "/totem/customer")
+@RequestMapping(value = API_VERSION_1 + TOTEM_CUSTOMER)
 @AllArgsConstructor
 public class TotemCustomerRestApiAdapter implements ICreateRestApiPort<CustomerCreateDto, ResponseEntity<CustomerDto>> {
 

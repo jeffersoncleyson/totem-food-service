@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -22,8 +23,10 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class SearchProductRepositoryAdapterTest {
 
@@ -31,6 +34,8 @@ class SearchProductRepositoryAdapterTest {
     private SearchProductRepositoryAdapter.ProductRepositoryMongoDB repository;
     @Spy
     private IProductEntityMapper iProductEntityMapper = Mappers.getMapper(IProductEntityMapper.class);
+    @Mock
+    private MongoTemplate mongoTemplate;
 
     private ISearchRepositoryPort<ProductFilterDto, List<ProductDomain>> iSearchRepositoryPort;
     private AutoCloseable closeable;
@@ -38,7 +43,7 @@ class SearchProductRepositoryAdapterTest {
     @BeforeEach
     private void beforeEach() {
         closeable = MockitoAnnotations.openMocks(this);
-        iSearchRepositoryPort = new SearchProductRepositoryAdapter(repository, iProductEntityMapper);
+        iSearchRepositoryPort = new SearchProductRepositoryAdapter(repository, mongoTemplate, iProductEntityMapper);
     }
 
     @AfterEach

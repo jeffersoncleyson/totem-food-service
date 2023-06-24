@@ -7,6 +7,7 @@ import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepos
 import com.totem.food.framework.adapters.out.persistence.mongo.order.admin.entity.OrderAdminEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.order.admin.mapper.IOrderAdminEntityMapper;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
@@ -23,6 +24,8 @@ public class SearchOrderAdminRepositoryAdapter implements ISearchRepositoryPort<
         @Query("{'name': ?0}")
         List<OrderAdminEntity> findByFilter(String name);
 
+        List<OrderAdminEntity> findByStatus(String status);
+
         List<OrderAdminEntity> findAll();
     }
 
@@ -31,6 +34,8 @@ public class SearchOrderAdminRepositoryAdapter implements ISearchRepositoryPort<
 
     @Override
     public List<OrderAdminDomain> findAll(OrderAdminFilterDto filter) {
+        if(StringUtils.isNotEmpty(filter.getStatus()))
+            return repository.findByStatus(filter.getStatus()).stream().map(iOrderEntityMapper::toDomain).toList();
         return repository.findAll().stream().map(iOrderEntityMapper::toDomain).toList();
     }
 }

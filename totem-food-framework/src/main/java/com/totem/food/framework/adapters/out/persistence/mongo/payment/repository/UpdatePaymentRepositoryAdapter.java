@@ -3,8 +3,6 @@ package com.totem.food.framework.adapters.out.persistence.mongo.payment.reposito
 import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
 import com.totem.food.domain.payment.PaymentDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepository;
-import com.totem.food.framework.adapters.out.persistence.mongo.order.totem.entity.OrderEntity;
-import com.totem.food.framework.adapters.out.persistence.mongo.order.totem.mapper.IOrderEntityMapper;
 import com.totem.food.framework.adapters.out.persistence.mongo.payment.entity.PaymentEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.payment.mapper.IPaymentEntityMapper;
 import lombok.AllArgsConstructor;

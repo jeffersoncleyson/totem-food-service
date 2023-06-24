@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.ADM_ORDER;
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.API_VERSION_1;
+
 @RestController
-@RequestMapping(value = "/administrative/orders")
+@RequestMapping(value = API_VERSION_1 + ADM_ORDER)
 @AllArgsConstructor
 public class AdministrativeOrderRestApiAdapter implements ISearchRestApiPort<OrderAdminFilterDto, ResponseEntity<List<OrderAdminDto>>> {
 

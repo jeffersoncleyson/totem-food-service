@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.ADM_CUSTOMER;
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.API_VERSION_1;
+
 @RestController
-@RequestMapping(value = "/administrative/customer")
+@RequestMapping(value = API_VERSION_1 + ADM_CUSTOMER)
 @AllArgsConstructor
 public class AdministrativeCustomerRestApiAdapter implements ISearchRestApiPort<CustomerFilterDto, ResponseEntity<List<CustomerDto>>> {
 

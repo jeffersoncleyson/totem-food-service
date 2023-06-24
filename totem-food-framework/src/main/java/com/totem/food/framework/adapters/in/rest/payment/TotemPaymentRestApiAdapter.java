@@ -11,12 +11,21 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.API_VERSION_1;
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.PAYMENT_ID;
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.TOTEM_PAYMENT;
+
 @RestController
-@RequestMapping(value = "/totem/payment")
+@RequestMapping(value = API_VERSION_1 + TOTEM_PAYMENT)
 @AllArgsConstructor
 public class TotemPaymentRestApiAdapter implements ICreateRestApiPort<PaymentCreateDto, ResponseEntity<PaymentQRCodeDto>>,
         ISearchUniqueRestApiPort<String, ResponseEntity<PaymentDto>> {
@@ -31,7 +40,7 @@ public class TotemPaymentRestApiAdapter implements ICreateRestApiPort<PaymentCre
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    @GetMapping(value = "/{paymentId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = PAYMENT_ID, produces = MediaType.APPLICATION_JSON_VALUE)
     @Override
     public ResponseEntity<PaymentDto> getById(@PathVariable String paymentId) {
         return iSearchUniqueUseCase.item(paymentId).map(payment -> ResponseEntity.status(HttpStatus.OK).body(payment))

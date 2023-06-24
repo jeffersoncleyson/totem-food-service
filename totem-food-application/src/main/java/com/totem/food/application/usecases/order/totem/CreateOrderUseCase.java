@@ -1,6 +1,7 @@
 package com.totem.food.application.usecases.order.totem;
 
 import com.totem.food.application.exceptions.ElementNotFoundException;
+import com.totem.food.application.exceptions.InvalidInput;
 import com.totem.food.application.ports.in.dtos.combo.ComboFilterDto;
 import com.totem.food.application.ports.in.dtos.order.totem.OrderCreateDto;
 import com.totem.food.application.ports.in.dtos.order.totem.OrderDto;
@@ -18,6 +19,7 @@ import com.totem.food.domain.order.totem.OrderDomain;
 import com.totem.food.domain.product.ProductDomain;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +37,9 @@ public class CreateOrderUseCase implements ICreateUseCase<OrderCreateDto, OrderD
     @Override
     public OrderDto createItem(OrderCreateDto item) {
 
+        if(!item.isOrderValid())
+            throw new InvalidInput("Order is invalid");
+
         final var domain = new OrderDomain();
 
         setCustomer(item, domain);
@@ -51,10 +56,12 @@ public class CreateOrderUseCase implements ICreateUseCase<OrderCreateDto, OrderD
 
     private void setCustomer(OrderCreateDto item, OrderDomain domain) {
 
-        final var customerDomain = iSearchUniqueCustomerRepositoryPort.findById(item.getCustomerId())
-                .orElseThrow(() -> new ElementNotFoundException(String.format("Customer [%s] not found", item.getCustomerId())));
+        if(StringUtils.isNotEmpty(item.getCustomerId())) {
+            final var customerDomain = iSearchUniqueCustomerRepositoryPort.findById(item.getCustomerId())
+                    .orElseThrow(() -> new ElementNotFoundException(String.format("Customer [%s] not found", item.getCustomerId())));
 
-        domain.setCustomer(customerDomain);
+            domain.setCustomer(customerDomain);
+        }
     }
 
     private void setCombosToDomain(OrderCreateDto item, OrderDomain domain) {
