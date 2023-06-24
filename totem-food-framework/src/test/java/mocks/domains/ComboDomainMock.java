@@ -3,7 +3,6 @@ package mocks.domains;
 import com.totem.food.domain.combo.ComboDomain;
 import com.totem.food.domain.product.ProductDomain;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public class ComboDomainMock {

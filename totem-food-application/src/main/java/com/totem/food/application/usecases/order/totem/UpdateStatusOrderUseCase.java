@@ -30,20 +30,20 @@ public class UpdateStatusOrderUseCase implements IUpdateStatusUseCase<OrderDto> 
 
         final var orderDomainOpt = iSearchUniqueRepositoryPort.findById(id);
 
-        final var domain = orderDomainOpt
-                .orElseThrow(() -> new ElementNotFoundException(String.format("Order [%s] not found", id)));
+        final var domain = orderDomainOpt.orElseThrow(() -> new ElementNotFoundException(String.format("Order [%s] not found", id)));
 
-        if(domain.getStatus().equals(OrderStatusEnumDomain.from(status)))
+        if (domain.getStatus().equals(OrderStatusEnumDomain.from(status))) {
             return iOrderMapper.toDto(domain);
+        }
 
         domain.updateOrderStatus(OrderStatusEnumDomain.from(status));
         domain.updateModifiedAt();
         final var domainSaved = iProductRepositoryPort.updateItem(domain);
 
-        if(domainSaved.getStatus().equals(OrderStatusEnumDomain.READY)){
+        if (domainSaved.getStatus().equals(OrderStatusEnumDomain.READY)) {
             Optional.of(domainSaved).map(OrderDomain::getCustomer).map(CustomerDomain::getEmail)
                     .ifPresent(email -> {
-                        final var subject = String.format("[%s] Pedido %s", "Totem Food Service", id );
+                        final var subject = String.format("[%s] Pedido %s", "Totem Food Service", id);
                         final var message = String.format("Pedido %s acabou de ser finalizado pela cozinha, em instantes o atendente ira chama-lo!", id);
                         iSendEmailPort.sendEmail(new EmailNotificationDto(email, subject, message));
                     });

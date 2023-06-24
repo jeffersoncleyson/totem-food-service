@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 public class Routes {
 
     //######## VERSIONS
-    public static final String VERSION_1 = "/v1";
+    public static final String API_VERSION_1 = "/v1";
 
     //######## CATEGORY
     public static final String ADM_CATEGORY = "/administrative/category";

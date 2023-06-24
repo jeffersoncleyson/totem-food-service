@@ -4,7 +4,6 @@ import com.totem.food.application.ports.in.dtos.customer.CustomerCreateDto;
 import com.totem.food.application.ports.in.dtos.customer.CustomerDto;
 import com.totem.food.application.ports.in.rest.ICreateRestApiPort;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
-import com.totem.food.framework.adapters.in.rest.constants.Routes;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,8 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.API_VERSION_1;
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.TOTEM_CUSTOMER;
+
 @RestController
-@RequestMapping(value = Routes.VERSION_1 + Routes.TOTEM_CUSTOMER)
+@RequestMapping(value = API_VERSION_1 + TOTEM_CUSTOMER)
 @AllArgsConstructor
 public class TotemCustomerRestApiAdapter implements ICreateRestApiPort<CustomerCreateDto, ResponseEntity<CustomerDto>> {
 

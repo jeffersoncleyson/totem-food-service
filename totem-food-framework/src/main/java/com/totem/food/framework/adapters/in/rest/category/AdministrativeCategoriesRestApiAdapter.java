@@ -13,7 +13,6 @@ import com.totem.food.application.usecases.commons.IDeleteUseCase;
 import com.totem.food.application.usecases.commons.ISearchUniqueUseCase;
 import com.totem.food.application.usecases.commons.ISearchUseCase;
 import com.totem.food.application.usecases.commons.IUpdateUseCase;
-import com.totem.food.framework.adapters.in.rest.constants.Routes;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +27,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.ADM_CATEGORY;
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.API_VERSION_1;
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.CATEGORY_ID;
+
 @RestController
-@RequestMapping(value = Routes.VERSION_1 + Routes.ADM_CATEGORY)
+@RequestMapping(value = API_VERSION_1 + ADM_CATEGORY)
 @AllArgsConstructor
 public class AdministrativeCategoriesRestApiAdapter implements
         ICreateRestApiPort<CategoryCreateDto, ResponseEntity<CategoryDto>>,
@@ -57,20 +60,20 @@ public class AdministrativeCategoriesRestApiAdapter implements
         return new ResponseEntity<>(iSearchCategoryUseCase.items(filter), HttpStatus.OK);
     }
 
-    @GetMapping(Routes.CATEGORY_ID)
+    @GetMapping(CATEGORY_ID)
     @Override
     public ResponseEntity<CategoryDto> getById(@PathVariable String categoryId) {
         return new ResponseEntity<>(iSearchUniqueCategoryUseCase.item(categoryId), HttpStatus.OK);
     }
 
-    @DeleteMapping(Routes.CATEGORY_ID)
+    @DeleteMapping(CATEGORY_ID)
     @Override
     public ResponseEntity<Void> deleteById(@PathVariable String categoryId) {
         iDeleteCategoryUseCase.removeItem(categoryId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping(Routes.CATEGORY_ID)
+    @PutMapping(CATEGORY_ID)
     @Override
     public ResponseEntity<CategoryDto> update(@RequestBody CategoryCreateDto item, @PathVariable String categoryId) {
         return new ResponseEntity<>(iUpdateCategoryUseCase.updateItem(item, categoryId), HttpStatus.ACCEPTED);

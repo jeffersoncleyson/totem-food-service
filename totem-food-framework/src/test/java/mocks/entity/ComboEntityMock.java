@@ -1,10 +1,8 @@
 package mocks.entity;
 
-import com.totem.food.domain.product.ProductDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.combo.entity.ComboEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.product.entity.ProductEntity;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public class ComboEntityMock {
