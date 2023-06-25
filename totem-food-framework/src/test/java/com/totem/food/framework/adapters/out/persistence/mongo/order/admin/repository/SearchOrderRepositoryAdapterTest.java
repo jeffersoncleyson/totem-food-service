@@ -26,6 +26,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -42,7 +43,7 @@ class SearchOrderRepositoryAdapterTest {
     private AutoCloseable closeable;
 
     @BeforeEach
-    private void beforeEach() {
+    void beforeEach() {
         closeable = MockitoAnnotations.openMocks(this);
         iSearchRepositoryPort = new SearchOrderAdminRepositoryAdapter(repository, iOrderEntityMapper);
     }
@@ -61,7 +62,7 @@ class SearchOrderRepositoryAdapterTest {
         final var customerCpf = "14354529689";
         final var customerEmail = "customer@email.com";
         final var customerMobile = "5535944345655";
-        final var customerPassword= "%#AjOBF%w.<K";
+        final var customerPassword = "%#AjOBF%w.<K";
         final var customerModifiedAt = ZonedDateTime.now(ZoneOffset.UTC).minusDays(10);
         final var customerCreateAt = ZonedDateTime.now(ZoneOffset.UTC).minusDays(10);
         final var customer = new CustomerEntity(
@@ -94,7 +95,6 @@ class SearchOrderRepositoryAdapterTest {
         //### Given - Mocks
         when(repository.findAll()).thenReturn(orderAdminEntityList);
 
-
         //### When
         final var orderAdminDtoList = iSearchRepositoryPort.findAll(orderFilterDto);
 
@@ -103,6 +103,63 @@ class SearchOrderRepositoryAdapterTest {
         verify(iOrderEntityMapper, times(1)).toDomain(Mockito.any(OrderAdminEntity.class));
         verify(repository, times(1)).findAll();
 
+
+        final var orderDomain = iOrderEntityMapper.toDomain(order);
+        final var orderDomainList = List.of(orderDomain);
+
+        assertTrue(CollectionUtils.isNotEmpty(orderAdminDtoList));
+        assertThat(orderAdminDtoList)
+                .usingRecursiveComparison()
+                .isEqualTo(orderDomainList);
+    }
+
+    @Test
+    void findAllWhenStatusNotEmpty() {
+
+        //### Given - Objects and Values
+        final var customerId = UUID.randomUUID().toString();
+        final var customerName = "Customer Name";
+        final var customerCpf = "14354529689";
+        final var customerEmail = "customer@email.com";
+        final var customerMobile = "5535944345655";
+        final var customerPassword = "%#AjOBF%w.<K";
+        final var customerModifiedAt = ZonedDateTime.now(ZoneOffset.UTC).minusDays(10);
+        final var customerCreateAt = ZonedDateTime.now(ZoneOffset.UTC).minusDays(10);
+        final var customer = new CustomerEntity(
+                customerId,
+                customerName,
+                customerCpf,
+                customerEmail,
+                customerMobile,
+                customerPassword,
+                customerModifiedAt,
+                customerCreateAt
+        );
+
+        final var orderId = UUID.randomUUID().toString();
+        final var price = new BigDecimal("59.90").doubleValue();
+        final var createAt = ZonedDateTime.now(ZoneOffset.UTC);
+
+        final var order = new OrderAdminEntity(
+                orderId,
+                price,
+                customer,
+                "NEW",
+                createAt,
+                null,
+                null
+        );
+        final var orderAdminEntityList = List.of(order);
+        final var orderFilterDto = OrderAdminFilterDto.builder().orderId(orderId).status("NEW").build();
+
+        //### Given - Mocks
+        when(repository.findByStatus(anyString())).thenReturn(orderAdminEntityList);
+
+        //### When
+        final var orderAdminDtoList = iSearchRepositoryPort.findAll(orderFilterDto);
+
+        //### Then
+        verify(iOrderEntityMapper, times(1)).toDomain(Mockito.any(OrderAdminEntity.class));
 
         final var orderDomain = iOrderEntityMapper.toDomain(order);
         final var orderDomainList = List.of(orderDomain);

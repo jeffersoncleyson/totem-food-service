@@ -34,8 +34,12 @@ public class SearchOrderAdminRepositoryAdapter implements ISearchRepositoryPort<
 
     @Override
     public List<OrderAdminDomain> findAll(OrderAdminFilterDto filter) {
-        if(StringUtils.isNotEmpty(filter.getStatus()))
-            return repository.findByStatus(filter.getStatus()).stream().map(iOrderEntityMapper::toDomain).toList();
+        if (StringUtils.isNotEmpty(filter.getStatus())) {
+            return repository.findByStatus(filter.getStatus())
+                    .stream()
+                    .map(iOrderEntityMapper::toDomain)
+                    .toList();
+        }
         return repository.findAll().stream().map(iOrderEntityMapper::toDomain).toList();
     }
 }

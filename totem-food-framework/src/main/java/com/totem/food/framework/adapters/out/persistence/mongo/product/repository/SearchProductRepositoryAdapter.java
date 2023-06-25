@@ -18,43 +18,46 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @AllArgsConstructor
 @Component
 public class SearchProductRepositoryAdapter implements ISearchRepositoryPort<ProductFilterDto, List<ProductDomain>> {
 
-	@Repository
-	protected interface ProductRepositoryMongoDB extends BaseRepository<ProductEntity, String> {
+    @Repository
+    protected interface ProductRepositoryMongoDB extends BaseRepository<ProductEntity, String> {
 
-		@org.springframework.data.mongodb.repository.Query("{'name': ?0}")
-		List<ProductEntity> findByFilter(String name);
+        @org.springframework.data.mongodb.repository.Query("{'name': ?0}")
+        List<ProductEntity> findByFilter(String name);
 
-		@org.springframework.data.mongodb.repository.Query("{ '_id': { $in: ?0 } }")
-		List<ProductEntity> findAllByIds(List<String> ids);
+        @org.springframework.data.mongodb.repository.Query("{ '_id': { $in: ?0 } }")
+        List<ProductEntity> findAllByIds(List<String> ids);
 
-		List<ProductEntity> findAll();
-	}
+        List<ProductEntity> findAll();
+    }
 
-	private final ProductRepositoryMongoDB repository;
-	private final MongoTemplate mongoTemplate;
-	private final IProductEntityMapper iProductEntityMapper;
+    private final ProductRepositoryMongoDB repository;
+    private final MongoTemplate mongoTemplate;
+    private final IProductEntityMapper iProductEntityMapper;
 
-	@Override
-	public List<ProductDomain> findAll(ProductFilterDto filter) {
-		var query = new Query();
+    @Override
+    public List<ProductDomain> findAll(ProductFilterDto filter) {
+        var query = new Query();
 
-		if(CollectionUtils.isNotEmpty(filter.getIds()))
-			return repository.findAllByIds(filter.getIds()).stream().map(iProductEntityMapper::toDomain).toList();
-		if(StringUtils.isNotEmpty(filter.getName()))
-			return repository.findByFilter(filter.getName()).stream().map(iProductEntityMapper::toDomain).toList();
+        if (CollectionUtils.isNotEmpty(filter.getIds()))
+            return repository.findAllByIds(filter.getIds()).stream().map(iProductEntityMapper::toDomain).toList();
 
-		if(CollectionUtils.isNotEmpty(filter.getCategoryId())){
-			final var objectIds = filter.getCategoryId().stream().map(id -> new DBRef("category", new ObjectId(id))).toList();
-			query = Query.query(Criteria.where("category").in(objectIds));
-		}
+        if (StringUtils.isNotEmpty(filter.getName()))
+            return repository.findByFilter(filter.getName()).stream().map(iProductEntityMapper::toDomain).toList();
 
-		return Optional.of(mongoTemplate.find(query, ProductEntity.class))
-				.map( products -> products.stream().map(iProductEntityMapper::toDomain).toList()).orElse(List.of());
-	}
+        if (CollectionUtils.isNotEmpty(filter.getCategoryId())) {
+            final var objectIds = filter.getCategoryId()
+                    .stream()
+                    .map(id -> new DBRef("category", new ObjectId(id)))
+                    .toList();
+            query = Query.query(Criteria.where("category").in(objectIds));
+        }
+
+        List<ProductEntity> products = mongoTemplate.find(query, ProductEntity.class);
+        return products.stream().map(iProductEntityMapper::toDomain).toList();
+    }
 }

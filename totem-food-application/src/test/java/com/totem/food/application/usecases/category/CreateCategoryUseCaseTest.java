@@ -1,5 +1,6 @@
 package com.totem.food.application.usecases.category;
 
+import com.totem.food.application.exceptions.ElementExistsException;
 import com.totem.food.application.ports.in.dtos.category.CategoryCreateDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
 import com.totem.food.application.ports.in.mappers.category.ICategoryMapper;
@@ -22,6 +23,8 @@ import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -58,5 +61,21 @@ class CreateCategoryUseCaseTest {
         //## Then
         assertEquals(categoryCreateDto.getName(), categoryDto.getName());
         assertThat(categoryDomain).usingRecursiveComparison().isEqualTo(categoryDto);
+    }
+
+    @Test
+    void ElementExistsException() {
+
+        //## Given
+        final var categoryCreateDto = new CategoryCreateDto("Name");
+        when(iSearchRepositoryPort.exists(any())).thenReturn(true);
+
+        //## When
+        var exception = assertThrows(ElementExistsException.class,
+                () -> iCreateUseCase.createItem(categoryCreateDto));
+
+        //## Then
+        assertEquals(exception.getMessage(), String.format("Category [%s] already registered", categoryCreateDto.getName()));
+
     }
 }

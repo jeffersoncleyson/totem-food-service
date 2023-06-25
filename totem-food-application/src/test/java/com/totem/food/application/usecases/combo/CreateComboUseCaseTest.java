@@ -1,5 +1,7 @@
 package com.totem.food.application.usecases.combo;
 
+import com.totem.food.application.exceptions.ElementExistsException;
+import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.ports.in.dtos.combo.ComboCreateDto;
 import com.totem.food.application.ports.in.dtos.combo.ComboDto;
 import com.totem.food.application.ports.in.dtos.product.ProductFilterDto;
@@ -15,7 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -28,13 +29,15 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CreateComboUseCaseTest {
 
     @Spy
-    private IComboMapper iCategoryMapper = Mappers.getMapper(IComboMapper.class);
+    private IComboMapper iComboMapper = Mappers.getMapper(IComboMapper.class);
     @Mock
     private ICreateRepositoryPort<ComboDomain> iCreateRepositoryPort;
 
@@ -49,7 +52,7 @@ class CreateComboUseCaseTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        this.iCreateUseCase = new CreateComboUseCase(iCategoryMapper, iCreateRepositoryPort, iSearchRepositoryPort, iSearchProductRepositoryPort);
+        this.iCreateUseCase = new CreateComboUseCase(iComboMapper, iCreateRepositoryPort, iSearchRepositoryPort, iSearchProductRepositoryPort);
     }
 
     @Test
@@ -61,8 +64,8 @@ class CreateComboUseCaseTest {
         final var comboDomain = new ComboDomain("1", "Combo da casa", Double.MAX_VALUE, List.of(productDomain), ZonedDateTime.now(ZoneOffset.UTC), ZonedDateTime.now(ZoneOffset.UTC));
 
         //### Given - Mocks
-        when(iSearchProductRepositoryPort.findAll(Mockito.any(ProductFilterDto.class))).thenReturn(List.of(productDomain));
-        when(iCreateRepositoryPort.saveItem(Mockito.any(ComboDomain.class))).thenReturn(comboDomain);
+        when(iSearchProductRepositoryPort.findAll(any(ProductFilterDto.class))).thenReturn(List.of(productDomain));
+        when(iCreateRepositoryPort.saveItem(any(ComboDomain.class))).thenReturn(comboDomain);
 
         //## When
         final var comboCreateDto = new ComboCreateDto("Combo da casa", BigDecimal.TEN, List.of(productId));
@@ -71,5 +74,39 @@ class CreateComboUseCaseTest {
         //## Then
         assertNotNull(comboDto);
         assertEquals(comboCreateDto.getName(), comboDto.getName());
+    }
+
+    @Test
+    void elementExistsException() {
+
+        //## Given
+        final var productId = UUID.randomUUID().toString();
+        final var productDomain = ProductDomain.builder().id(productId).name("Fanta").build();
+        final var comboCreateDto = new ComboCreateDto("Combo da casa", BigDecimal.TEN, List.of(productId));
+
+
+        when(iSearchRepositoryPort.exists(any())).thenReturn(true);
+
+        //## When
+        var exception = assertThrows(ElementExistsException.class,
+                () -> iCreateUseCase.createItem(comboCreateDto));
+
+        //## Then
+        assertEquals(exception.getMessage(), String.format("Combo [%s] already registered", comboCreateDto.getName()));
+    }
+
+    @Test
+    void ElementNotFoundException() {
+
+        //## Given
+        final var productId = UUID.randomUUID().toString();
+        final var comboCreateDto = new ComboCreateDto("Combo da casa", BigDecimal.TEN, List.of(productId));
+
+        //## When
+        var exception = assertThrows(ElementNotFoundException.class,
+                () -> iCreateUseCase.createItem(comboCreateDto));
+
+        //## Then
+        assertEquals(exception.getMessage(), String.format("Products [%s] some products are invalid", comboCreateDto.getProducts()));
     }
 }
