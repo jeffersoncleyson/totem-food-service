@@ -10,11 +10,13 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.time.ZoneOffset;
@@ -28,6 +30,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class SearchProductRepositoryAdapterTest {
 
     @Mock
@@ -41,7 +44,7 @@ class SearchProductRepositoryAdapterTest {
     private AutoCloseable closeable;
 
     @BeforeEach
-    private void beforeEach() {
+    void beforeEach() {
         closeable = MockitoAnnotations.openMocks(this);
         iSearchRepositoryPort = new SearchProductRepositoryAdapter(repository, mongoTemplate, iProductEntityMapper);
     }

@@ -26,8 +26,9 @@ public class SearchUniqueCustomerRepositoryAdapter implements ISearchUniqueRepos
 
     @Override
     public Optional<CustomerDomain> findById(String id) {
-        if(StringUtils.isNotEmpty(id))
+        if (StringUtils.isNotEmpty(id)) {
             return repository.findById(id).map(iCustomerEntityMapper::toDomain);
+        }
         return Optional.empty();
     }
 

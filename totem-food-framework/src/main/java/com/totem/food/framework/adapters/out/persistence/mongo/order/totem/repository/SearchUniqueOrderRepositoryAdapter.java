@@ -15,15 +15,15 @@ import java.util.Optional;
 @Component
 public class SearchUniqueOrderRepositoryAdapter implements ISearchUniqueRepositoryPort<Optional<OrderDomain>> {
 
-	@Repository
-	protected interface ProductRepositoryMongoDB extends BaseRepository<OrderEntity, String> {
-	}
+    @Repository
+    protected interface ProductRepositoryMongoDB extends BaseRepository<OrderEntity, String> {
+    }
 
-	private final ProductRepositoryMongoDB repository;
-	private final IOrderEntityMapper iOrderEntityMapper;
+    private final ProductRepositoryMongoDB repository;
+    private final IOrderEntityMapper iOrderEntityMapper;
 
-	@Override
-	public Optional<OrderDomain> findById(String id) {
-		return repository.findById(id).map(iOrderEntityMapper::toDomain);
-	}
+    @Override
+    public Optional<OrderDomain> findById(String id) {
+        return repository.findById(id).map(iOrderEntityMapper::toDomain);
+    }
 }
