@@ -42,7 +42,7 @@ class CreateCategoryUseCaseTest {
 
 
     @BeforeEach
-    public void beforeEach() {
+    void beforeEach() {
         MockitoAnnotations.openMocks(this);
         this.iCreateUseCase = new CreateCategoryUseCase(iCategoryMapper, iCreateRepositoryPort, iSearchRepositoryPort);
     }

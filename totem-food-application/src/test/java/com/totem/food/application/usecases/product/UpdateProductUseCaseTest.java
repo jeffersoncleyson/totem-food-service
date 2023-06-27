@@ -45,7 +45,7 @@ class UpdateProductUseCaseTest {
     private AutoCloseable closeable;
 
     @BeforeEach
-    private void beforeEach() {
+    void beforeEach() {
         closeable = MockitoAnnotations.openMocks(this);
         iUpdateUseCase = new UpdateProductUseCase(iProductMapper, iProductRepositoryPort, iSearchUniqueRepositoryPort, iSearchUniqueCategoryRepositoryPort);
     }

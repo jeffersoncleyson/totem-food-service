@@ -1,4 +1,4 @@
-package mock;
+package mock.domain;
 
 import com.totem.food.domain.payment.PaymentDomain;
 
@@ -9,7 +9,7 @@ public class PaymentDomainMock {
     public static PaymentDomain getMock() {
         var paymentDomain = new PaymentDomain();
         paymentDomain.setId("1");
-        paymentDomain.setOrder(OrderDomainMock.getMock());
+        paymentDomain.setOrder(OrderDomainMock.getStatusNewMock());
         paymentDomain.setCustomer(CustomerDomainMock.getMock());
         paymentDomain.setPrice(49.99);
         paymentDomain.setToken("token");

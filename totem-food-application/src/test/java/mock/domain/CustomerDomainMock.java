@@ -1,4 +1,4 @@
-package mock;
+package mock.domain;
 
 import com.totem.food.domain.customer.CustomerDomain;
 

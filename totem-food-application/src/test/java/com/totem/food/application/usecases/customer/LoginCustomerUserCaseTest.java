@@ -7,6 +7,7 @@ import com.totem.food.application.ports.out.persistence.commons.ILoginRepository
 import com.totem.food.domain.customer.CustomerDomain;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -112,10 +113,12 @@ class LoginCustomerUserCaseTest {
         when(iSearchUniqueRepositoryPort.findByCadastre(anyString(), anyString())).thenReturn(Optional.empty());
 
         //### When
-        assertThrows(ElementNotFoundException.class, () -> loginCustomerUserCase.login(anyString(), anyString()));
+        var exception = assertThrows(ElementNotFoundException.class,
+                () -> loginCustomerUserCase.login(anyString(), anyString()));
 
         //### Then
+        Assertions.assertEquals(exception.getMessage(), "Incorrect user or password");
         verify(iCustomerMapper, never()).toDto(any(CustomerDomain.class));
-        
+
     }
 }
