@@ -37,8 +37,9 @@ public class CreateOrderUseCase implements ICreateUseCase<OrderCreateDto, OrderD
     @Override
     public OrderDto createItem(OrderCreateDto item) {
 
-        if(!item.isOrderValid())
+        if(!item.isOrderValid()) {
             throw new InvalidInput("Order is invalid");
+        }
 
         final var domain = new OrderDomain();
 
