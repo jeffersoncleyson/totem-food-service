@@ -72,7 +72,7 @@ class CreatePaymentUseCaseTest {
         var customerDomain = CustomerDomainMock.getMock();
         var paymentQRCodeDto = PaymentQRCodeDtoMock.getStatusPendingMock();
         var paymentCreateDto = PaymentCreateDtoMock.getMock();
-        var paymentDomain = PaymentDomainMock.getMock();
+        var paymentDomain = PaymentDomainMock.getPaymentStatusPendingMock();
 
         //## Give
         when(iSearchUniqueOrderRepositoryPort.findById(anyString())).thenReturn(Optional.ofNullable(orderDomain));
