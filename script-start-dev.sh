@@ -4,6 +4,6 @@ then
   docker-compose -f docker-compose.yaml up -d mongo-dev
 else
   echo Starting MongoDB and Totem Food Service
-  docker-compose -f docker-compose.yaml up -d
+  docker-compose -f docker-compose.yaml up -d --build
 fi
 

@@ -15,8 +15,8 @@ import java.util.List;
 public class OrderCreateDto {
 
     private String customerId;
-    private List<String> products;
-    private List<String> combos;
+    private List<ItemQuantityDto> products;
+    private List<ItemQuantityDto> combos;
 
     public boolean isOrderValid(){
         return CollectionUtils.isNotEmpty(products) || CollectionUtils.isNotEmpty(combos);
