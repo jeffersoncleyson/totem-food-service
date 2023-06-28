@@ -4,12 +4,13 @@ import com.totem.food.domain.combo.ComboDomain;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.UUID;
 
 public class ComboDomainMock {
 
     public static ComboDomain getMock() {
         var comboDomain = new ComboDomain();
-        comboDomain.setId("1");
+        comboDomain.setId(UUID.randomUUID().toString());
         comboDomain.setName("Combo da casa");
         comboDomain.setPrice(49.99);
         comboDomain.setProducts(List.of(ProductDomainMock.getMock()));

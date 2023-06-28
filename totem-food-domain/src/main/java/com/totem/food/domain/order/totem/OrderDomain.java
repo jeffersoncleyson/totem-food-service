@@ -10,16 +10,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Builder
@@ -96,8 +94,10 @@ public class OrderDomain {
     public void calculatePrice() {
 
         final var productsPrice = Optional.ofNullable(this.products)
+                .filter(CollectionUtils::isNotEmpty)
                 .map(p -> p.stream().mapToDouble(ProductDomain::getPrice).sum()).orElse(0D);
         final var comboPrice = Optional.ofNullable(this.combos)
+                .filter(CollectionUtils::isNotEmpty)
                 .map(c -> c.stream().mapToDouble(ComboDomain::getPrice).sum()).orElse(0D);
 
         this.price = BigDecimal.valueOf(productsPrice + comboPrice)

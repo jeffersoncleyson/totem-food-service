@@ -75,7 +75,7 @@ class CreateOrderUseCaseTest {
     void invalidInputWhenCreateItem() {
 
         //## Given - Mock - Objects
-        var orderCreateDto = OrderCreateDtoMock.getMock();
+        var orderCreateDto = OrderCreateDtoMock.getMock("", "");
         orderCreateDto.setProducts(List.of());
         orderCreateDto.setCombos(List.of());
 
@@ -91,7 +91,7 @@ class CreateOrderUseCaseTest {
     @Test
     void elementNotFoundExceptionWhenProductToDomain() {
         //## Mock - Objects
-        var orderCreateDto = OrderCreateDtoMock.getMock();
+        var orderCreateDto = OrderCreateDtoMock.getMock("", "");
         var customerDomain = CustomerDomainMock.getMock();
         var productDomain = ProductDomainMock.getMock();
 
@@ -105,24 +105,25 @@ class CreateOrderUseCaseTest {
         );
 
         //## Then
-        assertEquals(exception.getMessage(), "Products [[123, 456]] some products are invalid");
+        assertEquals(exception.getMessage(), "Combos [[]] some combos are invalid");
         verify(iOrderMapper, never()).toDto(any());
     }
 
     @Test
     void createItem() {
         //## Mock - Objects
-        var orderCreateDto = OrderCreateDtoMock.getMock();
+
         var orderDomain = OrderDomainMock.getStatusNewMock();
         var customerDomain = CustomerDomainMock.getMock();
         var productDomain = ProductDomainMock.getMock();
         var comboDomain = ComboDomainMock.getMock();
+        var orderCreateDto = OrderCreateDtoMock.getMock(productDomain.getId(), comboDomain.getId());
 
         //## Given
         when(iCreateRepositoryPort.saveItem(any(OrderDomain.class))).thenReturn(orderDomain);
         when(iSearchUniqueCustomerRepositoryPort.findById(anyString())).thenReturn(Optional.of(customerDomain));
-        when(iSearchProductRepositoryPort.findAll(any(ProductFilterDto.class))).thenReturn(List.of(productDomain, productDomain));
-        when(iSearchDomainRepositoryPort.findAll(any(ComboFilterDto.class))).thenReturn(List.of(comboDomain, comboDomain));
+        when(iSearchProductRepositoryPort.findAll(any(ProductFilterDto.class))).thenReturn(List.of(productDomain));
+        when(iSearchDomainRepositoryPort.findAll(any(ComboFilterDto.class))).thenReturn(List.of(comboDomain));
 
         //## When
         var orderDto = createOrderUseCase.createItem(orderCreateDto);

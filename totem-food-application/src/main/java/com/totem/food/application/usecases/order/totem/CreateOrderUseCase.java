@@ -77,7 +77,7 @@ public class CreateOrderUseCase implements ICreateUseCase<OrderCreateDto, OrderD
             final var combos = iSearchDomainRepositoryPort.findAll(productFilterDto);
 
             if(CollectionUtils.size(item.getCombos()) != CollectionUtils.size(combos)){
-                throw new ElementNotFoundException(String.format("Combos [%s] some combos are invalid", item.getProducts()));
+                throw new ElementNotFoundException(String.format("Combos [%s] some combos are invalid", ids));
             }
 
             final var comboDomainToAdd = getComboDomains(item, combos);
@@ -91,7 +91,7 @@ public class CreateOrderUseCase implements ICreateUseCase<OrderCreateDto, OrderD
         final var comboDomainMap = combos.stream().collect(Collectors.toMap(ComboDomain::getId, Function.identity()));
         final var comboDomainToAdd = new ArrayList<ComboDomain>();
 
-        for (ItemQuantityDto itemX : item.getProducts()) {
+        for (ItemQuantityDto itemX : item.getCombos()) {
             for (int i = 0; i < itemX.getQtd(); i++) {
                 comboDomainToAdd.add(comboDomainMap.get(itemX.getId()));
             }
@@ -107,7 +107,7 @@ public class CreateOrderUseCase implements ICreateUseCase<OrderCreateDto, OrderD
             final var products = iSearchProductRepositoryPort.findAll(productFilterDto);
 
             if(CollectionUtils.size(item.getProducts()) != CollectionUtils.size(products)){
-                throw new ElementNotFoundException(String.format("Products [%s] some products are invalid", item.getProducts()));
+                throw new ElementNotFoundException(String.format("Products [%s] some products are invalid", ids));
             }
 
             final var productsDomainToAdd = getProductDomains(item, products);
