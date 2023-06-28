@@ -8,6 +8,8 @@ import com.totem.food.framework.adapters.out.web.payment.entity.PaymentResponseE
 import com.totem.food.framework.adapters.out.web.payment.mapper.IPaymentRequestMapper;
 import com.totem.food.framework.adapters.out.web.payment.mapper.IPaymentResponseMapper;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -18,13 +20,16 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URI;
 import java.util.Optional;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Component
 public class SendPaymentExternalRequestAdapter implements ISendRequestPort<PaymentDomain, PaymentQRCodeDto> {
 
     private final RestTemplate restTemplate;
     private final IPaymentRequestMapper iPaymentRequestMapper;
     private final IPaymentResponseMapper iPaymentResponseMapper;
+
+    @Value("${payment.url}")
+    private String paymentGatewayURL;
 
     @Override
     public PaymentQRCodeDto sendRequest(PaymentDomain item) {
@@ -35,7 +40,7 @@ public class SendPaymentExternalRequestAdapter implements ISendRequestPort<Payme
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Object> body = new HttpEntity<>(entity, headers);
 
-        final var uri = URI.create("http://localhost:3000/online-payment");
+        final var uri = URI.create(paymentGatewayURL);
         ResponseEntity<PaymentResponseEntity> responseEntity;
         try {
             responseEntity = restTemplate.postForEntity(uri, body, PaymentResponseEntity.class);

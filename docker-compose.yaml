@@ -14,10 +14,10 @@ services:
     ports:
       - "${MY_MONGO_PORT}:27017"
     volumes:
-      - ${MY_MONGO_DATA}:/data/db
+      - ${MY_VOLUME_DATA}/mongo/data:/data/db
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongo mongo-dev:27017/test --quiet
-      interval: 2s
+      interval: 30s
       timeout: 2s
       retries: 5
       start_period: 5s
@@ -36,10 +36,23 @@ services:
       SPRING.DATA.MONGODB.USERNAME: root
       SPRING.DATA.MONGODB.PASSWORD: qwe123
       SPRING.DATA.MONGODB.AUTHENTICATION_DATABASE: admin
+      PAYMENT_GATEWAY_URL: http://payment-gateway:5000/v1/online-payment
     ports:
       - "8080:8080"
     depends_on:
       mongo-dev:
         condition: service_healthy
+    networks:
+      - developer-network
+
+  payment-gateway:
+    container_name: payment-gateway
+    build:
+      context: ./mock-payment-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./mock-payment-gateway/mocks:/app/mocks
     networks:
       - developer-network
