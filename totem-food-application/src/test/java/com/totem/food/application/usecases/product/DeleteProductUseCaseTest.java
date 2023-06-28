@@ -26,7 +26,7 @@ class DeleteProductUseCaseTest {
     private AutoCloseable closeable;
 
     @BeforeEach
-    private void beforeEach() {
+    void beforeEach() {
         closeable = MockitoAnnotations.openMocks(this);
         this.iDeleteUseCase = new DeleteProductUseCase(iSearchUniqueRepositoryPort);
     }

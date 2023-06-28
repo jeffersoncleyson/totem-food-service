@@ -10,94 +10,94 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderDomain {
 
-    @Getter @Setter
+    @Setter
     private String id;
 
-    @Getter @Setter
+    @Setter
     private CustomerDomain customer;
 
-    @Getter @Setter
+    @Setter
     private List<ProductDomain> products;
 
-    @Getter @Setter
+    @Setter
     private List<ComboDomain> combos;
 
-    @Getter
     @Builder.Default
     private OrderStatusEnumDomain status = OrderStatusEnumDomain.NEW;
 
-    @Getter @Setter
+    @Setter
     private double price;
 
-    @Getter @Setter
+    @Setter
     private ZonedDateTime modifiedAt;
 
-    @Getter @Setter
+    @Setter
     private ZonedDateTime createAt;
 
-    @Getter @Setter
+    @Setter
     private ZonedDateTime orderReceivedAt;
 
-    public void updateOrderStatus(OrderStatusEnumDomain status){
+    public void updateOrderStatus(OrderStatusEnumDomain status) {
 
         final var statusTransition = StatusTransition.from(this.status)
                 .orElseThrow(() -> new InvalidStatusTransition(this.status.key, status.key, OrderStatusEnumDomain.getKeys()));
 
-        if(!statusTransition.allowedTransitions().contains(status)  && !status.equals(OrderStatusEnumDomain.NEW)){
+        if (!statusTransition.allowedTransitions().contains(status) && !status.equals(OrderStatusEnumDomain.NEW)) {
             throw new InvalidStatusTransition(this.status.key, status.key, OrderStatusEnumDomain.getKeys());
         }
 
-        if(this.status.equals(OrderStatusEnumDomain.RECEIVED)){
+        if (this.status.equals(OrderStatusEnumDomain.RECEIVED)) {
             updateOrderReceivedAt();
         }
 
         this.status = status;
     }
 
-    public void updateModifiedAt(){
+    public void updateModifiedAt() {
         this.modifiedAt = ZonedDateTime.now(ZoneOffset.UTC);
     }
 
-    private void updateOrderReceivedAt(){
+    private void updateOrderReceivedAt() {
         this.orderReceivedAt = ZonedDateTime.now(ZoneOffset.UTC);
     }
 
-    public void fillDates(){
-        if(StringUtils.isEmpty(this.id)){
+    public void fillDates() {
+        if (StringUtils.isEmpty(this.id)) {
             this.createAt = ZonedDateTime.now(ZoneOffset.UTC);
             this.modifiedAt = ZonedDateTime.now(ZoneOffset.UTC);
         }
     }
 
-    public void clearProducts(){
+    public void clearProducts() {
         this.products = null;
     }
 
-    public void clearCombos(){
+    public void clearCombos() {
         this.combos = null;
     }
 
-    public void calculatePrice(){
+    public void calculatePrice() {
 
         final var productsPrice = Optional.ofNullable(this.products)
+                .filter(CollectionUtils::isNotEmpty)
                 .map(p -> p.stream().mapToDouble(ProductDomain::getPrice).sum()).orElse(0D);
         final var comboPrice = Optional.ofNullable(this.combos)
+                .filter(CollectionUtils::isNotEmpty)
                 .map(c -> c.stream().mapToDouble(ComboDomain::getPrice).sum()).orElse(0D);
 
         this.price = BigDecimal.valueOf(productsPrice + comboPrice)
@@ -146,14 +146,14 @@ public class OrderDomain {
 
         public final String key;
 
-        StatusTransition(String key){
+        StatusTransition(String key) {
             this.key = key;
         }
 
 
         public abstract Set<OrderStatusEnumDomain> allowedTransitions();
 
-        public static Optional<StatusTransition> from(final OrderStatusEnumDomain source){
+        public static Optional<StatusTransition> from(final OrderStatusEnumDomain source) {
             return Arrays.stream(StatusTransition.values()).filter(e -> source.name().equals(e.name())).findFirst();
         }
 

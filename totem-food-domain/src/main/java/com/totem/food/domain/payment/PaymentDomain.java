@@ -28,19 +28,19 @@ public class PaymentDomain {
     private ZonedDateTime modifiedAt;
     private ZonedDateTime createAt;
 
-    public void updateModifiedAt(){
+    public void updateModifiedAt() {
         this.modifiedAt = ZonedDateTime.now(ZoneOffset.UTC);
     }
 
-    public void fillDates(){
-        if(StringUtils.isEmpty(this.id)){
+    public void fillDates() {
+        if (StringUtils.isEmpty(this.id)) {
             this.createAt = ZonedDateTime.now(ZoneOffset.UTC);
             this.modifiedAt = ZonedDateTime.now(ZoneOffset.UTC);
         }
     }
 
-    public void updateStatus(PaymentStatus status){
-        if(PaymentStatus.COMPLETED.equals(status)){
+    public void updateStatus(PaymentStatus status) {
+        if (PaymentStatus.COMPLETED.equals(status)) {
             this.status = status;
         }
     }
@@ -52,7 +52,7 @@ public class PaymentDomain {
 
         public final String key;
 
-        PaymentStatus(String key){
+        PaymentStatus(String key) {
             this.key = key;
         }
     }

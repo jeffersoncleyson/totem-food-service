@@ -39,7 +39,7 @@ class SearchProductUseCaseTest {
     private AutoCloseable closeable;
 
     @BeforeEach
-    private void beforeEach() {
+    void beforeEach() {
         closeable = MockitoAnnotations.openMocks(this);
         iSearchUseCase = new SearchProductUseCase(iProductMapper, iSearchProductRepositoryPort);
     }
