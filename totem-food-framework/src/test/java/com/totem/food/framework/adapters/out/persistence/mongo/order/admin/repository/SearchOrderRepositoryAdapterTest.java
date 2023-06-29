@@ -22,10 +22,12 @@ import java.math.BigDecimal;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -150,10 +152,10 @@ class SearchOrderRepositoryAdapterTest {
                 null
         );
         final var orderAdminEntityList = List.of(order);
-        final var orderFilterDto = OrderAdminFilterDto.builder().orderId(orderId).status("NEW").build();
+        final var orderFilterDto = OrderAdminFilterDto.builder().orderId(orderId).status(Set.of("NEW")).build();
 
         //### Given - Mocks
-        when(repository.findByStatus(anyString())).thenReturn(orderAdminEntityList);
+        when(repository.findByStatus(anySet())).thenReturn(orderAdminEntityList);
 
         //### When
         final var orderAdminDtoList = iSearchRepositoryPort.findAll(orderFilterDto);

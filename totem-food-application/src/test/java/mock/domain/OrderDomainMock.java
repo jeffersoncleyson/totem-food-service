@@ -20,7 +20,7 @@ public class OrderDomainMock {
                 .status(OrderStatusEnumDomain.NEW)
                 .modifiedAt(ZonedDateTime.parse("2023-04-03T13:28:20.606-03:00"))
                 .createAt(ZonedDateTime.parse("2023-04-03T13:28:20.606-03:00"))
-                .orderReceivedAt(ZonedDateTime.parse("2023-04-03T13:28:20.606-03:00"))
+                .receivedAt(ZonedDateTime.parse("2023-04-03T13:28:20.606-03:00"))
                 .build();
     }
 
@@ -34,7 +34,7 @@ public class OrderDomainMock {
                 .status(OrderStatusEnumDomain.WAITING_PAYMENT)
                 .modifiedAt(ZonedDateTime.parse("2023-04-03T13:28:20.606-03:00"))
                 .createAt(ZonedDateTime.parse("2023-04-03T13:28:20.606-03:00"))
-                .orderReceivedAt(ZonedDateTime.parse("2023-04-03T13:28:20.606-03:00"))
+                .receivedAt(ZonedDateTime.parse("2023-04-03T13:28:20.606-03:00"))
                 .build();
     }
 }
