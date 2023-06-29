@@ -19,6 +19,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 class SearchOrderUseCaseTest {
 
@@ -30,6 +34,7 @@ class SearchOrderUseCaseTest {
 
     private SearchOrderUseCase searchOrderUseCase;
 
+    @Mock
     private AutoCloseable closeable;
 
     @BeforeEach
@@ -52,6 +57,16 @@ class SearchOrderUseCaseTest {
         var orderDomain = OrderDomainMock.getStatusNewMock();
         var orderDto = OrderDtoMock.getMock();
 
+        //## Given
+        when(iSearchOrderRepositoryPort.findAll(any())).thenReturn(List.of(orderDomain));
+
+        //## When
+        var result = searchOrderUseCase.items(orderFilterDto);
+
+        //## Then
+        assertNotNull(result);
+        assertEquals(result.get(0).getStatus(), orderDto.getStatus());
+        verify(iOrderMapper, times(1)).toDto(any(OrderDomain.class));
 
     }
 }
