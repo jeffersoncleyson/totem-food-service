@@ -10,7 +10,7 @@ public class CategoryEntityMock {
     public static CategoryEntity getMock() {
         var entity = new CategoryEntity();
         entity.setId("123");
-        entity.setName("Name");
+        entity.setName("Refrigerante");
         entity.setModifiedAt(ZonedDateTime.now(ZoneOffset.UTC));
         entity.setCreateAt(ZonedDateTime.now(ZoneOffset.UTC));
         return entity;
