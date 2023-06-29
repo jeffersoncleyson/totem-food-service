@@ -25,12 +25,12 @@ public class SearchComboRepositoryAdapter implements ISearchRepositoryPort<Combo
     }
 
     private final ComboRepositoryMongoDB repository;
-    private final IComboEntityMapper iCategoryEntityMapper;
+    private final IComboEntityMapper iComboEntityMapper;
 
     @Override
     public List<ComboDomain> findAll(ComboFilterDto item) {
         if(CollectionUtils.isNotEmpty(item.getIds()))
-            return repository.findAllByIds(item.getIds()).stream().map(iCategoryEntityMapper::toDomain).toList();
+            return repository.findAllByIds(item.getIds()).stream().map(iComboEntityMapper::toDomain).toList();
         return List.of();
     }
 
