@@ -5,6 +5,86 @@
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=totem-food-service-4787bf24ba181ac258cb520837a657896a92044c&metric=bugs)](https://sonarcloud.io/summary/new_code?id=totem-food-service-4787bf24ba181ac258cb520837a657896a92044c)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=totem-food-service-4787bf24ba181ac258cb520837a657896a92044c&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=totem-food-service-4787bf24ba181ac258cb520837a657896a92044c)
 
+## Postman da Aplicação
+
+Importar o arquivo abaixo no Postman:
+
+- [collection_postman](./documentation/postman-collections/Entrega%20Fase%201.postman_collection.json)
+
+## Swagger da Aplicação
+
+Para visualizar o swagger copiar o conteúdo do arquivo
+- [Swagger Totem](./documentation/swaggers/totem-food-service.yaml)
+
+após copiar cole no site do [swagger editor](https://editor.swagger.io/).
+
+### Swagger Totem
+
+![Swagger](./documentation/swaggers/totem-food-service-swagger_customers.png)
+![Swagger](./documentation/swaggers/totem-food-service-swagger_order.png)
+![Swagger](./documentation/swaggers/totem-food-service-swagger_payment.png)
+![Swagger](./documentation/swaggers/totem-food-service-swagger_category.png)
+![Swagger](./documentation/swaggers/totem-food-service-swagger_products.png)
+![Swagger](./documentation/swaggers/totem-food-service-swagger_combo.png)
+
+## Visão Geral da Aplicação
+
+Visão global da aplicação em funcionamento
+
+![Swagger](./documentation/diagrams/GeneralVision.png)
+
+## Máquinas de Estado
+
+- Order
+
+![state-machine-order](./documentation/diagrams/state-machine-order.png)
+
+- Payment
+
+![state-machine-payment](./documentation/diagrams/state-machine-payment.png)
+
+## Jornada dos Atores
+
+* Administrador
+
+![actors_journey-admin](./documentation/diagrams/actors_journey-admin.png)
+
+* Cliente
+
+![actors_journey-customer](./documentation/diagrams/actors_journey-customer.png)
+
+* Cozinha x Atendente
+
+![actors_journey-cozinha-atendente](./documentation/diagrams/actors_journey-coz-atend.png)
+
+* Monitor
+
+![actors_journey-monitor](./documentation/diagrams/actors_journey-monitor.png)
+
+## Executar docker-compose
+
+executar o commando na raiz do pasta do projeto
+
+Iniciar somente a infraestrutura e executar o Totem Food Service pela IDE
+```
+./script-start-dev.sh dev
+```
+Iniciar a infraestrutura e backend do `totem-food-service`
+```
+./script-start-dev.sh
+```
+Parar a infraestrutura e backend do `totem-food-service`
+```
+./script-stop-dev.sh
+```
+Ver os logs da aplicação: `mongo` ou `totem-food-service`
+```
+./script-logs-dev.sh mongo
+```
+```
+./script-logs-dev.sh totem-food-service
+```
+
 ## Projeto
 
 Para execução do projeto esta sendo utilzado as seguintes bibliotecas e ferramentas abaixo.
@@ -66,7 +146,7 @@ Todos os commits devem contem uma das seguintes tags abaixo:
 
 * *feat*: implementação de uma funcionalidade nova
 * *fix*: correção de bugs
-* *chore*: ajustes simples no código sem comprometer uma feature 
+* *chore*: ajustes simples no código sem comprometer uma feature
 * *style*: ajustes de identação, nome de variável ou remoção de imports não utilizados
 * *docs*: alteração ou inclusão de documentação
 * *ci*: alteração de pipelines
@@ -82,52 +162,6 @@ TAG_COMMIT: mensagem descrevendo o que foi feito no commit
 Exemplo
 ```
 feat: Foi criado novo endpoint na implementação de Y
-```
-
-## Swagger da Aplicação
-
-Para visualizar o swagger copiar o conteúdo do arquivo
-- [Swagger Totem](./documentation/swaggers/totem-food-service.yaml)
-
-após copiar cole no site do [swagger editor](https://editor.swagger.io/).
-
-### Swagger Totem
-
-![Swagger](./documentation/swaggers/totem-food-service-swagger_customers.png)
-![Swagger](./documentation/swaggers/totem-food-service-swagger_order.png)
-![Swagger](./documentation/swaggers/totem-food-service-swagger_payment.png)
-![Swagger](./documentation/swaggers/totem-food-service-swagger_category.png)
-![Swagger](./documentation/swaggers/totem-food-service-swagger_products.png)
-![Swagger](./documentation/swaggers/totem-food-service-swagger_combo.png)
-
-## Visão Geral da Aplicação
-
-Visão global da aplicação em funcionamento
-
-![Swagger](./documentation/diagrams/GeneralVision.png)
-
-## Executar docker-compose
-
-executar o commando na raiz do pasta do projeto
-
-Iniciar somente o MongoDB e executar o Totem Food Service pela IDE
-```
-./script-start-dev.sh dev
-```
-Iniciar a infraestrutura e backend do `totem-food-service`
-```
-./script-start-dev.sh
-```
-Parar a infraestrutura e backend do `totem-food-service`
-```
-./script-stop-dev.sh
-```
-Ver os logs da aplicação: `mongo` ou `totem-food-service`
-```
-./script-logs-dev.sh mongo
-```
-```
-./script-logs-dev.sh totem-food-service
 ```
 
 ## Gerar docker build

@@ -150,7 +150,7 @@
 					"response": []
 				},
 				{
-					"name": "/administrative/category Copy",
+					"name": "/administrative/category",
 					"request": {
 						"method": "DELETE",
 						"header": [],
@@ -186,7 +186,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"X-TUDO\",\n    \"description\": \"Pão com gergilim, hamburger 200g, tomate\",\n    \"image\": \"https://s2.glbimg.com/x4W3eb8dGwiiv6MEzxk6qMeukSs=/smart/e.glbimg.com/og/ed/f/original/2021/05/28/receitas-para-acompanhar-batata-frita.jpg\",\n    \"price\": 25,\n    \"category\": \"6496644c5b5ed22abab6615c\"\n}",
+							"raw": "{\n    \"name\": \"X-TUDO\",\n    \"description\": \"Pão com gergilim, hamburger 200g, tomate\",\n    \"image\": \"https://s2.glbimg.com/x4W3eb8dGwiiv6MEzxk6qMeukSs=/smart/e.glbimg.com/og/ed/f/original/2021/05/28/receitas-para-acompanhar-batata-frita.jpg\",\n    \"price\": 25,\n    \"category\": \"649ba3992ac1382377bd0440\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -262,7 +262,7 @@
 								},
 								{
 									"key": "categoryId",
-									"value": "6494c70d1f3ffa4175e155b2",
+									"value": "649b6799f28cf303b08ebb95",
 									"disabled": true
 								}
 							]
@@ -307,7 +307,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"products\": [\n        \"649666305b5ed22abab66160\",\n        \"6496f0a026e09a01c307a480\",\n        \"6496f12626e09a01c307a481\"\n    ],\n    \"combos\": []\n}",
+							"raw": "{\n    \"products\": [\n        {\"id\": \"649ba39f2ac1382377bd0441\", \"qtd\": 2}\n    ],\n    \"combos\": []\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -367,7 +367,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{backend}}/totem/order?orderId=6496f21126e09a01c307a482",
+							"raw": "{{backend}}/totem/order?status=RECEIVED&status=WAITING_PAYMENT",
 							"host": [
 								"{{backend}}"
 							],
@@ -378,7 +378,16 @@
 							"query": [
 								{
 									"key": "orderId",
-									"value": "6496f21126e09a01c307a482"
+									"value": "649cdabfb76e142c8b405916",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "RECEIVED"
+								},
+								{
+									"key": "status",
+									"value": "WAITING_PAYMENT"
 								}
 							]
 						}
@@ -405,11 +414,11 @@
 							"variable": [
 								{
 									"key": "orderId",
-									"value": "6496f21126e09a01c307a482"
+									"value": "649ceca16bfb285e95b39fd4"
 								},
 								{
 									"key": "statusName",
-									"value": "FINALIZED"
+									"value": "WAITING_PAYMENT"
 								}
 							]
 						}
@@ -428,7 +437,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"orderId\": \"6496f21126e09a01c307a482\"\n}",
+							"raw": "{\n    \"orderId\": \"649ceca16bfb285e95b39fd4\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -466,7 +475,7 @@
 							"variable": [
 								{
 									"key": "paymentId",
-									"value": "6496f5af1f02b033390b21f1"
+									"value": "649cdbab6a4b740c65e326d0"
 								}
 							]
 						}
@@ -480,7 +489,7 @@
 						"header": [
 							{
 								"key": "token",
-								"value": "b1ea0c9f-46f1-4b55-8755-3554a0516ecc",
+								"value": "b52f31dd-0373-4dcb-a206-0f68b77f002b",
 								"type": "text"
 							}
 						],
@@ -499,7 +508,7 @@
 							"variable": [
 								{
 									"key": "orderId",
-									"value": "6496f21126e09a01c307a482"
+									"value": "649ceca16bfb285e95b39fd4"
 								}
 							]
 						}
@@ -529,7 +538,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{backend}}/totem/order?orderId=6496f21126e09a01c307a482",
+							"raw": "{{backend}}/totem/order",
 							"host": [
 								"{{backend}}"
 							],
@@ -545,7 +554,18 @@
 								},
 								{
 									"key": "orderId",
-									"value": "6496f21126e09a01c307a482"
+									"value": "6496f21126e09a01c307a482",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "RECEIVED",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "WAITING_PAYMENT",
+									"disabled": true
 								}
 							]
 						}
@@ -586,7 +606,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{backend}}/administrative/orders",
+							"raw": "{{backend}}/administrative/orders?status=RECEIVED",
 							"host": [
 								"{{backend}}"
 							],
@@ -597,7 +617,11 @@
 							"query": [
 								{
 									"key": "status",
-									"value": "NEW",
+									"value": "RECEIVED"
+								},
+								{
+									"key": "status",
+									"value": "WAITING_PAYMENT",
 									"disabled": true
 								}
 							]
