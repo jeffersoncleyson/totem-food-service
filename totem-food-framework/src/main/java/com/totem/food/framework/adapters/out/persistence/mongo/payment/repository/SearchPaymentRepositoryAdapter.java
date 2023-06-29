@@ -7,6 +7,7 @@ import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepos
 import com.totem.food.framework.adapters.out.persistence.mongo.payment.entity.PaymentEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.payment.mapper.IPaymentEntityMapper;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,9 @@ public class SearchPaymentRepositoryAdapter implements ISearchRepositoryPort<Pay
 	protected interface PaymentRepositoryMongoDB extends BaseRepository<PaymentEntity, String> {
 		@Query("{'order' :{'$ref' : 'order' , '$id' : ?0}, 'token' : ?1}")
 		PaymentEntity findByFilter(ObjectId order, String token);
+
+		@Query("{'order' :{'$ref' : 'order' , '$id' : ?0}, 'status' : ?1}")
+		PaymentEntity findPaymentByOrderAndStatus(ObjectId order, String status);
 	}
 
 	private final PaymentRepositoryMongoDB repository;
@@ -27,8 +31,14 @@ public class SearchPaymentRepositoryAdapter implements ISearchRepositoryPort<Pay
 
 	@Override
 	public PaymentDomain findAll(PaymentFilterDto item) {
-		final var entity = repository.findByFilter(new ObjectId(item.getOrderId()), item.getToken());
-		return iPaymentMapper.toDomain(entity);
+		if(StringUtils.isNotEmpty(item.getOrderId()) && StringUtils.isNotEmpty(item.getToken())) {
+			final var entity = repository.findByFilter(new ObjectId(item.getOrderId()), item.getToken());
+			return iPaymentMapper.toDomain(entity);
+		} else if(StringUtils.isNotEmpty(item.getOrderId()) && StringUtils.isNotEmpty(item.getStatus())){
+			final var entity = repository.findPaymentByOrderAndStatus(new ObjectId(item.getOrderId()), item.getStatus());
+			return iPaymentMapper.toDomain(entity);
+		}
+		return null;
 	}
 
 }

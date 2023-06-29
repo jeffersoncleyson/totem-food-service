@@ -26,7 +26,7 @@ public class TotemPaymentCallbackRestApiAdapter {
     public ResponseEntity<Void> getItem(
             @PathVariable(name = "orderId") String orderId,
             @RequestHeader String token) {
-        final var processed = iUpdateUseCase.updateItem(new PaymentFilterDto(orderId, token), "");
+        final var processed = iUpdateUseCase.updateItem(PaymentFilterDto.builder().orderId(orderId).token(token).build(), "");
         if(Boolean.TRUE.equals(processed)) return ResponseEntity.noContent().build();
         return ResponseEntity.badRequest().build();
     }
