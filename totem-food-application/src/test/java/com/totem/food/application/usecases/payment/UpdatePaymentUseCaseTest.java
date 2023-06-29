@@ -68,7 +68,7 @@ class UpdatePaymentUseCaseTest {
 
         //## Mock - Objects
         var paymentDomain = PaymentDomainMock.getPaymentStatusCompletedMock();
-        var paymentFilterDto = new PaymentFilterDto("1", "token");
+        var paymentFilterDto = PaymentFilterDto.builder().orderId("1").token("token").build();
 
         //## Given
         when(iSearchRepositoryPort.findAll(any())).thenReturn(paymentDomain);
@@ -86,7 +86,7 @@ class UpdatePaymentUseCaseTest {
 
         //## Mock - Objects
         var paymentDomain = PaymentDomainMock.getPaymentStatusPendingMock();
-        var paymentFilterDto = new PaymentFilterDto("1", "token");
+        var paymentFilterDto = PaymentFilterDto.builder().orderId("1").token("token").build();
         var orderDomain = OrderDomainMock.getStatusWaitingPaymentMock();
 
         //## Given
@@ -108,7 +108,7 @@ class UpdatePaymentUseCaseTest {
 
         //## Mock - Objects
         var paymentDomain = PaymentDomainMock.getPaymentStatusPendingMock();
-        var paymentFilterDto = new PaymentFilterDto("1", "token");
+        var paymentFilterDto = PaymentFilterDto.builder().orderId("1").token("token").build();
         var orderDomain = OrderDomainMock.getStatusWaitingPaymentMock();
 
         //## Given
@@ -130,7 +130,7 @@ class UpdatePaymentUseCaseTest {
     void elementNotFoundExceptionWhenPaymentDomainIsNull() {
 
         //## Mock - Objects
-        var paymentFilterDto = new PaymentFilterDto("1", "token");
+        var paymentFilterDto = PaymentFilterDto.builder().orderId("1").token("token").build();
 
         //## Given
         when(iSearchRepositoryPort.findAll(any())).thenReturn(null);
