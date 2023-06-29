@@ -29,6 +29,9 @@ spring:
       password: qwe123
       authentication-database: admin
 
+payment:
+  url: ${PAYMENT_GATEWAY_URL:http://localhost:5000/v1/online-payment}
+
 app:
   version: ^project.version^
   name: ^project.name^
