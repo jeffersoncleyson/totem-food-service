@@ -50,7 +50,7 @@ public class OrderDomain {
     private ZonedDateTime createAt;
 
     @Setter
-    private ZonedDateTime orderReceivedAt;
+    private ZonedDateTime receivedAt;
 
     public void updateOrderStatus(OrderStatusEnumDomain status) {
 
@@ -61,11 +61,11 @@ public class OrderDomain {
             throw new InvalidStatusTransition(this.status.key, status.key, OrderStatusEnumDomain.getKeys());
         }
 
+        this.status = status;
+
         if (this.status.equals(OrderStatusEnumDomain.RECEIVED)) {
             updateOrderReceivedAt();
         }
-
-        this.status = status;
     }
 
     public void updateModifiedAt() {
@@ -73,7 +73,7 @@ public class OrderDomain {
     }
 
     private void updateOrderReceivedAt() {
-        this.orderReceivedAt = ZonedDateTime.now(ZoneOffset.UTC);
+        this.receivedAt = ZonedDateTime.now(ZoneOffset.UTC);
     }
 
     public void fillDates() {

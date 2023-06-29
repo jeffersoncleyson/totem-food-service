@@ -41,4 +41,5 @@ public class OrderEntity {
 
     private ZonedDateTime modifiedAt;
     private ZonedDateTime createAt;
+    private ZonedDateTime receivedAt;
 }
