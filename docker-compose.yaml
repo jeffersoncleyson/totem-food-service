@@ -4,6 +4,9 @@ networks:
   developer-network:
     driver: bridge
 
+volumes:
+  mongo_data:
+
 services:
   mongo-dev:
     image: mongo:latest
@@ -14,7 +17,7 @@ services:
     ports:
       - "${MY_MONGO_PORT}:27017"
     volumes:
-      - ${MY_VOLUME_DATA}/mongo/data:/data/db
+      - mongo_data:/data/db
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongo mongo-dev:27017/test --quiet
       interval: 30s
