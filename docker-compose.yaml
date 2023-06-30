@@ -10,7 +10,7 @@ volumes:
 services:
   mongo-dev:
     image: mongo:latest
-    container_name: mongo-dev
+    hostname: mongo-dev
     environment:
       MONGO_INITDB_ROOT_USERNAME: "${MY_MONGO_INITDB_ROOT_USERNAME}"
       MONGO_INITDB_ROOT_PASSWORD: "${MY_MONGO_INITDB_ROOT_PASSWORD}"
@@ -28,7 +28,7 @@ services:
       - developer-network
 
   totem-food-service:
-    container_name: totem-food-service
+    hostname: totem-food-service
     build:
       context: .
       dockerfile: Dockerfile
@@ -43,8 +43,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      mongo-dev:
-        condition: service_healthy
+      - mongo-dev
     networks:
       - developer-network
 
