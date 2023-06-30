@@ -10,6 +10,7 @@ volumes:
 services:
   mongo-dev:
     image: mongo:latest
+    container_name: mongo-dev
     hostname: mongo-dev
     environment:
       MONGO_INITDB_ROOT_USERNAME: "${MY_MONGO_INITDB_ROOT_USERNAME}"
@@ -28,6 +29,7 @@ services:
       - developer-network
 
   totem-food-service:
+    container_name: totem-food-service
     hostname: totem-food-service
     build:
       context: .
