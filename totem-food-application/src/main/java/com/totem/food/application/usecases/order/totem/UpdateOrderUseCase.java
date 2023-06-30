@@ -54,13 +54,13 @@ public class UpdateOrderUseCase implements IUpdateUseCase<OrderUpdateDto, OrderD
     }
 
     private void setCombosToDomain(OrderUpdateDto item, OrderDomain domain) {
-        if(CollectionUtils.isNotEmpty(item.getCombos())){
+        if (CollectionUtils.isNotEmpty(item.getCombos())) {
 
             final var ids = item.getCombos().stream().map(ItemQuantityDto::getId).toList();
-            final var productFilterDto = ComboFilterDto.builder().ids(ids).build();
-            final var combos = iSearchComboDomainRepositoryPort.findAll(productFilterDto);
+            final var comoboFilterDto = ComboFilterDto.builder().ids(ids).build();
+            final var combos = iSearchComboDomainRepositoryPort.findAll(comoboFilterDto);
 
-            if(CollectionUtils.size(item.getCombos()) != CollectionUtils.size(combos)){
+            if (CollectionUtils.size(item.getCombos()) != CollectionUtils.size(combos)) {
                 throw new ElementNotFoundException(String.format("Combos [%s] some combos are invalid", ids));
             }
 
@@ -74,7 +74,8 @@ public class UpdateOrderUseCase implements IUpdateUseCase<OrderUpdateDto, OrderD
 
     // TODO - Refatorar este método
     private static List<ComboDomain> getComboDomains(OrderUpdateDto item, List<ComboDomain> combos) {
-        final var comboDomainMap = combos.stream().collect(Collectors.toMap(ComboDomain::getId, Function.identity()));
+        final var comboDomainMap = combos.stream()
+                .collect(Collectors.toMap(ComboDomain::getId, Function.identity()));
         final var comboDomainToAdd = new ArrayList<ComboDomain>();
 
         for (ItemQuantityDto itemX : item.getCombos()) {
@@ -86,13 +87,13 @@ public class UpdateOrderUseCase implements IUpdateUseCase<OrderUpdateDto, OrderD
     }
 
     private void setProductsToDomain(OrderUpdateDto item, OrderDomain domain) {
-        if(CollectionUtils.isNotEmpty(item.getProducts())){
+        if (CollectionUtils.isNotEmpty(item.getProducts())) {
 
             final var ids = item.getProducts().stream().map(ItemQuantityDto::getId).toList();
             final var productFilterDto = ProductFilterDto.builder().ids(ids).build();
             final var products = iSearchProductRepositoryPort.findAll(productFilterDto);
 
-            if(CollectionUtils.size(item.getProducts()) != CollectionUtils.size(products)){
+            if (CollectionUtils.size(item.getProducts()) != CollectionUtils.size(products)) {
                 throw new ElementNotFoundException(String.format("Products [%s] some products are invalid", ids));
             }
 
@@ -105,7 +106,8 @@ public class UpdateOrderUseCase implements IUpdateUseCase<OrderUpdateDto, OrderD
 
     // TODO - Refatorar este método
     private List<ProductDomain> getProductDomains(OrderUpdateDto item, List<ProductDomain> products) {
-        final var productDomainMap = products.stream().collect(Collectors.toMap(ProductDomain::getId, product -> product));
+        final var productDomainMap = products.stream()
+                .collect(Collectors.toMap(ProductDomain::getId, Function.identity()));
         final var productsDomainToAdd = new ArrayList<ProductDomain>();
 
         for (ItemQuantityDto itemX : item.getProducts()) {
