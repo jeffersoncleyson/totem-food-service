@@ -12,11 +12,11 @@ import com.totem.food.domain.combo.ComboDomain;
 import com.totem.food.domain.order.totem.OrderDomain;
 import com.totem.food.domain.product.ProductDomain;
 import lombok.SneakyThrows;
+import mock.domain.ComboDomainMock;
 import mock.domain.OrderDomainMock;
 import mock.domain.ProductDomainMock;
 import mock.ports.in.dto.OrderUpdateDtoMock;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,10 +30,11 @@ import java.io.Closeable;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UpdateOrderUseCaseTest {
@@ -82,7 +83,7 @@ class UpdateOrderUseCaseTest {
                 () -> updateOrderUseCase.updateItem(new OrderUpdateDto(), anyString()));
 
         //## Then
-        Assertions.assertEquals(exception.getMessage(), "Order [] not found");
+        assertEquals(exception.getMessage(), "Order [] not found");
 
     }
 
@@ -90,25 +91,33 @@ class UpdateOrderUseCaseTest {
     void updateItem() {
 
         //## Mock - Object
-        var orderUpdateDto = OrderUpdateDtoMock.getMock();
-        var orderDomainOpt = OrderDomainMock.getStatusNewMock();
-        var productFilterDto = ProductFilterDto.builder().build();
         var productDomain = ProductDomainMock.getMock();
-        productDomain.setId("7518d878-6cd4-4d74-bf76-c21345f2f7da");
+        var comboDomain = ComboDomainMock.getMock();
+        var orderUpdateDto = OrderUpdateDtoMock.getMock(productDomain.getId(), comboDomain.getId());
 
+        var orderDomainOpt = OrderDomainMock.getStatusNewMock();
+        orderDomainOpt.setCombos(List.of(comboDomain));
+        orderDomainOpt.setProducts(List.of(productDomain));
 
         //## Given
         when(iSearchUniqueRepositoryPort.findById(anyString()))
                 .thenReturn(Optional.of(orderDomainOpt));
         when(iSearchProductRepositoryPort.findAll(any(ProductFilterDto.class)))
                 .thenReturn(List.of(productDomain));
+        when(iSearchComboDomainRepositoryPort.findAll(any(ComboFilterDto.class)))
+                .thenReturn(List.of(comboDomain));
 
+        orderDomainOpt.calculatePrice();
+        orderDomainOpt.updateModifiedAt();
+
+        when(iProductRepositoryPort.updateItem(any(OrderDomain.class))).thenReturn(orderDomainOpt);
 
         //## When
-        var orderDto = updateOrderUseCase.updateItem(orderUpdateDto, "1");
+        var orderDto = updateOrderUseCase.updateItem(orderUpdateDto, anyString());
 
         //## Then
-        Assertions.assertNotNull(orderDto);
+        assertThat(orderDto).usingRecursiveComparison().isNotNull();
+        verify(iOrderMapper, times(1)).toDto(any(OrderDomain.class));
 
     }
 }
