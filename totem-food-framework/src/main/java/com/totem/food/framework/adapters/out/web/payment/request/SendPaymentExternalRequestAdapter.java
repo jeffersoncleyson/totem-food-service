@@ -9,11 +9,9 @@ import com.totem.food.framework.adapters.out.web.payment.entity.PaymentResponseE
 import com.totem.food.framework.adapters.out.web.payment.mapper.IPaymentRequestMapper;
 import com.totem.food.framework.adapters.out.web.payment.mapper.IPaymentResponseMapper;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -41,7 +39,13 @@ public class SendPaymentExternalRequestAdapter implements ISendRequestPort<Payme
         ResponseEntity<PaymentResponseEntity> responseEntity;
         try {
             responseEntity = restTemplate.postForEntity(uri, body, PaymentResponseEntity.class);
-        }catch (Exception ex){
+        } catch (HttpClientErrorException clientError){
+            responseEntity = new ResponseEntity<>(
+                    new PaymentResponseEntity(),
+                    clientError.getResponseHeaders(),
+                    clientError.getStatusCode()
+            );
+        } catch (Exception ex){
             throw new ExternalCommunicationInvalid("Payment system is unavailable");
         }
 
