@@ -25,11 +25,14 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -125,15 +128,58 @@ class TotemOrderRestApiAdapterTest {
     }
 
 
-    @Test
-    void listAll() {
+    @ParameterizedTest
+    @ValueSource(strings = ENDPOINT)
+    void listAll(String endpoint) throws Exception {
+
+        //## Mock - Object
+        var comboDto = new ComboDto();
+        comboDto.setName("Casa");
+        comboDto.setPrice(BigDecimal.valueOf(25.0));
+
+        var orderDto = new OrderDto();
+        orderDto.setId("1");
+        orderDto.setCustomerId("123");
+        orderDto.setProducts(List.of(ProductDto.builder().id("1").build()));
+        orderDto.setCombos(List.of(comboDto));
+        orderDto.setStatus("NEW");
+        orderDto.setPrice(25.0);
+
+        var orderFilterDto = OrderFilterDto.builder()
+                .customerId("123")
+                .orderId("1")
+                .status(Set.of("NEW"))
+                .build();
+
+        //## Given
+        when(iSearchProductUseCase.items(any(OrderFilterDto.class))).thenReturn(Collections.singletonList(orderDto));
+
+        final var httpServletRequest = get(endpoint)
+                .queryParam("customerId", orderFilterDto.getCustomerId());
+
+        //### When
+        final var resultActions = mockMvc.perform(httpServletRequest);
+
+        //### Then
+        resultActions.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        final var result = resultActions.andReturn();
+        final var responseJson = result.getResponse().getContentAsString();
+        final var orderDtoResponseOpt = TestUtils.toObject(responseJson, OrderDto.class);
+        final var orderDtoResponse = orderDtoResponseOpt.orElseThrow();
+
+        assertThat(orderDto)
+                .usingRecursiveComparison()
+                .ignoringFieldsOfTypes(ZonedDateTime.class)
+                .isNotNull();
+
+        verify(iSearchProductUseCase, times(1)).items(any(OrderFilterDto.class));
     }
 
     @Test
     void update() {
     }
 
-    @Test
-    void testUpdate() {
-    }
 }
