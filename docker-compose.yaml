@@ -51,6 +51,7 @@ services:
 
   payment-gateway:
     container_name: payment-gateway
+    hostname: payment-gateway
     build:
       context: ./mock-payment-gateway
       dockerfile: Dockerfile
@@ -60,3 +61,12 @@ services:
       - ./mock-payment-gateway/mocks:/app/mocks
     networks:
       - developer-network
+
+  mailhog:
+    container_name: mailhog
+    hostname: mailhog
+    image: mailhog/mailhog:latest
+    restart: always
+    ports:
+      - 1025:1025
+      - 8025:8025

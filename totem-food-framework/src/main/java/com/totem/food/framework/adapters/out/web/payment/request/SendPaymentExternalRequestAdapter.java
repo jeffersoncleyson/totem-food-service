@@ -4,12 +4,11 @@ import com.totem.food.application.exceptions.ExternalCommunicationInvalid;
 import com.totem.food.application.ports.in.dtos.payment.PaymentQRCodeDto;
 import com.totem.food.application.ports.out.web.ISendRequestPort;
 import com.totem.food.domain.payment.PaymentDomain;
+import com.totem.food.framework.adapters.out.web.payment.config.PaymentConfigs;
 import com.totem.food.framework.adapters.out.web.payment.entity.PaymentResponseEntity;
 import com.totem.food.framework.adapters.out.web.payment.mapper.IPaymentRequestMapper;
 import com.totem.food.framework.adapters.out.web.payment.mapper.IPaymentResponseMapper;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -20,16 +19,14 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URI;
 import java.util.Optional;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Component
 public class SendPaymentExternalRequestAdapter implements ISendRequestPort<PaymentDomain, PaymentQRCodeDto> {
 
     private final RestTemplate restTemplate;
     private final IPaymentRequestMapper iPaymentRequestMapper;
     private final IPaymentResponseMapper iPaymentResponseMapper;
-
-    @Value("${payment.url}")
-    private String paymentGatewayURL;
+    private final PaymentConfigs paymentConfigs;
 
     @Override
     public PaymentQRCodeDto sendRequest(PaymentDomain item) {
@@ -40,7 +37,7 @@ public class SendPaymentExternalRequestAdapter implements ISendRequestPort<Payme
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Object> body = new HttpEntity<>(entity, headers);
 
-        final var uri = URI.create(paymentGatewayURL);
+        final var uri = URI.create(paymentConfigs.getUrl());
         ResponseEntity<PaymentResponseEntity> responseEntity;
         try {
             responseEntity = restTemplate.postForEntity(uri, body, PaymentResponseEntity.class);

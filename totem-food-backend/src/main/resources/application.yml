@@ -32,6 +32,16 @@ spring:
 payment:
   url: ${PAYMENT_GATEWAY_URL:http://localhost:5000/v1/online-payment}
 
+mail:
+  smtp:
+    host: "localhost"
+    port: 1025
+    username: "username"
+    password: "password"
+    auth: false
+    tls: false
+    email: contato@totem.food.service.com.br
+
 app:
   version: ^project.version^
   name: ^project.name^
