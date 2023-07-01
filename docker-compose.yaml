@@ -42,6 +42,13 @@ services:
       SPRING.DATA.MONGODB.PASSWORD: qwe123
       SPRING.DATA.MONGODB.AUTHENTICATION_DATABASE: admin
       PAYMENT_GATEWAY_URL: http://payment-gateway:5000/v1/online-payment
+      SMTP_HOST: mailhog
+      SMTP_PORT: 1025
+      SMTP_USERNAME: username
+      SMTP_PASSWORD: password
+      SMTP_AUTH_ENABLED: false
+      SMTP_TLS_ENABLED: false
+      SMTP_EMAIL: contato@totem.food.service.com.br
     ports:
       - "8080:8080"
     depends_on:

@@ -34,13 +34,13 @@ payment:
 
 mail:
   smtp:
-    host: "localhost"
-    port: 1025
-    username: "username"
-    password: "password"
-    auth: false
-    tls: false
-    email: contato@totem.food.service.com.br
+    host: ${SMTP_HOST:localhost}
+    port: ${SMTP_PORT:1025}
+    username: ${SMTP_USERNAME:username}
+    password: ${SMTP_PASSWORD:password}
+    auth: ${SMTP_AUTH_ENABLED:false}
+    tls: ${SMTP_TLS_ENABLED:false}
+    email: ${SMTP_EMAIL:contato@totem.food.service.com.br}
 
 app:
   version: ^project.version^
