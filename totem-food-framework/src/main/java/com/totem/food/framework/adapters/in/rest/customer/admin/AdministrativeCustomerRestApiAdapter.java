@@ -6,6 +6,7 @@ import com.totem.food.application.ports.in.rest.ISearchRestApiPort;
 import com.totem.food.application.usecases.commons.ISearchUseCase;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,9 +25,10 @@ public class AdministrativeCustomerRestApiAdapter implements ISearchRestApiPort<
 
     private final ISearchUseCase<CustomerFilterDto, List<CustomerDto>> iSearchCustomerUseCase;
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @Override
     public ResponseEntity<List<CustomerDto>> listAll(@RequestBody(required = false) CustomerFilterDto customerFilterDto) {
-        return new ResponseEntity<>(iSearchCustomerUseCase.items(customerFilterDto), HttpStatus.OK);
+        final var customersDto = iSearchCustomerUseCase.items(customerFilterDto);
+        return ResponseEntity.status(HttpStatus.OK).body(customersDto);
     }
 }
