@@ -38,19 +38,30 @@ public class SearchOrderRepositoryAdapter implements ISearchRepositoryPort<Order
 
     @Override
     public List<OrderDomain> findAll(OrderFilterDto filter) {
-        if(StringUtils.isNotEmpty(filter.getCustomerId()))
-            return repository.findByFilter(new ObjectId(filter.getCustomerId())).stream().map(iOrderEntityMapper::toDomain).toList();
-        if(StringUtils.isNotEmpty(filter.getOrderId())){
+
+        if (StringUtils.isNotEmpty(filter.getCustomerId()))
+            return repository.findByFilter(new ObjectId(filter.getCustomerId()))
+                    .stream()
+                    .map(iOrderEntityMapper::toDomain)
+                    .toList();
+
+        if (StringUtils.isNotEmpty(filter.getOrderId())) {
             return repository.findById(filter.getOrderId()).map(iOrderEntityMapper::toDomain)
                     .map(List::of)
                     .orElse(List.of());
         }
-        if(CollectionUtils.isNotEmpty(filter.getStatus())){
-            final var status = filter.getStatus().stream().map(OrderStatusEnumDomain::from)
+
+        if (CollectionUtils.isNotEmpty(filter.getStatus())) {
+            final var status = filter.getStatus()
+                    .stream()
+                    .map(OrderStatusEnumDomain::from)
                     .map(s -> s.key)
                     .collect(Collectors.toSet());
-            return repository.findByStatus(status).stream().map(iOrderEntityMapper::toDomain).toList();
+            return repository.findByStatus(status)
+                    .stream()
+                    .map(iOrderEntityMapper::toDomain).toList();
         }
+
         return List.of();
     }
 }
