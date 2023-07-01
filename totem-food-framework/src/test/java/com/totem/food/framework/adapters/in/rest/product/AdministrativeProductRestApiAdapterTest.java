@@ -6,11 +6,7 @@ import com.totem.food.application.ports.in.dtos.category.CategoryDto;
 import com.totem.food.application.ports.in.dtos.product.ProductCreateDto;
 import com.totem.food.application.ports.in.dtos.product.ProductDto;
 import com.totem.food.application.ports.in.dtos.product.ProductFilterDto;
-import com.totem.food.application.usecases.commons.ICreateUseCase;
-import com.totem.food.application.usecases.commons.IDeleteUseCase;
-import com.totem.food.application.usecases.commons.ISearchUniqueUseCase;
-import com.totem.food.application.usecases.commons.ISearchUseCase;
-import com.totem.food.application.usecases.commons.IUpdateUseCase;
+import com.totem.food.application.usecases.commons.*;
 import com.totem.food.framework.test.utils.TestUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -36,13 +32,8 @@ import java.util.UUID;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -64,13 +55,15 @@ class AdministrativeProductRestApiAdapterTest {
     @Mock
     private IUpdateUseCase<ProductCreateDto, ProductDto> iUpdateUseCase;
 
+    private AdministrativeProductRestApiAdapter administrativeProductRestApiAdapter;
+
     private MockMvc mockMvc;
     private AutoCloseable autoCloseable;
 
     @BeforeEach
     void setup() {
         autoCloseable = MockitoAnnotations.openMocks(this);
-        final var administrativeProductRestApiAdapter = new AdministrativeProductRestApiAdapter(createProductUseCase, iSearchProductUseCase, iSearchUniqueUseCase, iDeleteUseCase, iUpdateUseCase);
+        this.administrativeProductRestApiAdapter = new AdministrativeProductRestApiAdapter(createProductUseCase, iSearchProductUseCase, iSearchUniqueUseCase, iDeleteUseCase, iUpdateUseCase);
         mockMvc = MockMvcBuilders.standaloneSetup(administrativeProductRestApiAdapter).build();
     }
 

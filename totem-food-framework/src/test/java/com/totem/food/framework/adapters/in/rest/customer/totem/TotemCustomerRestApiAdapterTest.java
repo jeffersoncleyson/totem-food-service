@@ -20,13 +20,12 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.io.Closeable;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -41,11 +40,13 @@ class TotemCustomerRestApiAdapterTest {
     private ICreateUseCase<CustomerCreateDto, CustomerDto> createCustomerUseCase;
 
     private MockMvc mockMvc;
-    private AutoCloseable autoCloseable;
+
+    @Mock
+    private Closeable closeable;
 
     @BeforeEach
     void setUp() {
-        autoCloseable = MockitoAnnotations.openMocks(this);
+        MockitoAnnotations.openMocks(this);
         final var totemCustomerRestApiAdapter = new TotemCustomerRestApiAdapter(createCustomerUseCase);
         mockMvc = MockMvcBuilders.standaloneSetup(totemCustomerRestApiAdapter).build();
     }
@@ -53,7 +54,7 @@ class TotemCustomerRestApiAdapterTest {
     @SneakyThrows
     @AfterEach
     void tearDown() {
-        autoCloseable.close();
+        closeable.close();
     }
 
     @ParameterizedTest

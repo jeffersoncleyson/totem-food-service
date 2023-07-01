@@ -11,7 +11,7 @@ public class ProductEntityMock {
         return ProductEntity.builder()
                 .id("1")
                 .name("Coca")
-                .description("Sabo cola")
+                .description("Sabor Cola")
                 .image("URL")
                 .price(4.99)
                 .category(new CategoryEntity())

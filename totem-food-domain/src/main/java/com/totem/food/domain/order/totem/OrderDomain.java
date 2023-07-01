@@ -17,7 +17,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Getter
 @Builder
@@ -72,7 +75,7 @@ public class OrderDomain {
         this.modifiedAt = ZonedDateTime.now(ZoneOffset.UTC);
     }
 
-    private void updateOrderReceivedAt() {
+    public void updateOrderReceivedAt() {
         this.receivedAt = ZonedDateTime.now(ZoneOffset.UTC);
     }
 
