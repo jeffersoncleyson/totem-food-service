@@ -1,6 +1,7 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.category.repository;
 
 import com.totem.food.application.ports.in.dtos.category.CategoryFilterDto;
+import com.totem.food.application.ports.out.category.CategoryModel;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.domain.category.CategoryDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.category.entity.CategoryEntity;
@@ -17,7 +18,7 @@ import java.util.Objects;
 
 @AllArgsConstructor
 @Component
-public class SearchCategoryRepositoryAdapter implements ISearchRepositoryPort<CategoryFilterDto, List<CategoryDomain>> {
+public class SearchCategoryRepositoryAdapter implements ISearchRepositoryPort<CategoryFilterDto, List<CategoryModel>> {
 
     @Repository
     protected interface CategoryRepositoryMongoDB extends BaseRepository<CategoryEntity, String> {
@@ -30,12 +31,12 @@ public class SearchCategoryRepositoryAdapter implements ISearchRepositoryPort<Ca
 
 
     @Override
-    public List<CategoryDomain> findAll(CategoryFilterDto categoryFilterDto) {
-        final var categorysDomain = new ArrayList<CategoryDomain>();
+    public List<CategoryModel> findAll(CategoryFilterDto categoryFilterDto) {
+        final var categoriesModel = new ArrayList<CategoryModel>();
         if (Objects.nonNull(categoryFilterDto)) {
-            repository.findByFilter(categoryFilterDto.getCategoryName()).forEach(entity -> categorysDomain.add(iCategoryEntityMapper.toDomain(entity)));
+            repository.findByFilter(categoryFilterDto.getCategoryName()).forEach(entity -> categoriesModel.add(iCategoryEntityMapper.toModel(entity)));
         }
-        repository.findAll().forEach(entity -> categorysDomain.add(iCategoryEntityMapper.toDomain(entity)));
-        return categorysDomain;
+        repository.findAll().forEach(entity -> categoriesModel.add(iCategoryEntityMapper.toModel(entity)));
+        return categoriesModel;
     }
 }

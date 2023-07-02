@@ -1,6 +1,7 @@
 package com.totem.food.application.usecases.category;
 
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
+import com.totem.food.application.ports.out.category.CategoryModel;
 import com.totem.food.application.ports.out.persistence.commons.IDeleteRepositoryPort;
 import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.IDeleteUseCase;
@@ -11,7 +12,7 @@ import lombok.AllArgsConstructor;
 @UseCase
 public class DeleteCategoryUseCase implements IDeleteUseCase<String, CategoryDto> {
 
-    private final IDeleteRepositoryPort<String, CategoryDomain> iDeleteRepositoryPort;
+    private final IDeleteRepositoryPort<String, CategoryModel> iDeleteRepositoryPort;
 
     @Override
     public CategoryDto removeItem(String id) {
