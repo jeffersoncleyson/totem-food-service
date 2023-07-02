@@ -28,22 +28,22 @@ import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
-class LoginCustomerRespositoryAdapterTest {
+class LoginCustomerRepositoryAdapterTest {
 
     @Mock
-    private LoginCustomerRespositoryAdapter.CustomerRepositoryMongoDB repository;
+    private LoginCustomerRepositoryAdapter.CustomerRepositoryMongoDB repository;
 
     @Spy
     private ICustomerEntityMapper iCustomerEntityMapper = Mappers.getMapper(ICustomerEntityMapper.class);
 
-    private LoginCustomerRespositoryAdapter loginCustomerRespositoryAdapter;
+    private LoginCustomerRepositoryAdapter loginCustomerRepositoryAdapter;
 
     private AutoCloseable closeable;
 
     @BeforeEach
     void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
-        loginCustomerRespositoryAdapter = new LoginCustomerRespositoryAdapter(repository, iCustomerEntityMapper);
+        loginCustomerRepositoryAdapter = new LoginCustomerRepositoryAdapter(repository, iCustomerEntityMapper);
     }
 
     @SneakyThrows
@@ -89,7 +89,7 @@ class LoginCustomerRespositoryAdapterTest {
         when(repository.findByCpfAndPassword(cpf, password)).thenReturn(customerEntity);
 
         //### When
-        final var customerDomainSaved = loginCustomerRespositoryAdapter.findByCadastre(cpf, password);
+        final var customerDomainSaved = loginCustomerRepositoryAdapter.findByCadastro(cpf, password);
 
         //### Then
         verify(repository, times(1)).findByCpfAndPassword(anyString(), anyString());

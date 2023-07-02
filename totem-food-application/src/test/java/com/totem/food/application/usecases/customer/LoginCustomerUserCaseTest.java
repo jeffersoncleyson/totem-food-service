@@ -91,7 +91,7 @@ class LoginCustomerUserCaseTest {
         customerDomain.setModifiedAt(modifiedAt);
 
         //### Given - Mocks
-        when(iSearchUniqueRepositoryPort.findByCadastre(anyString(), anyString())).thenReturn(Optional.of(customerDomain));
+        when(iSearchUniqueRepositoryPort.findByCadastro(anyString(), anyString())).thenReturn(Optional.of(customerDomain));
 
         //### When
         final var customerDtoUseCas = loginCustomerUserCase.login(cpf, password);
@@ -110,7 +110,7 @@ class LoginCustomerUserCaseTest {
     void loginWhenElementNotFoundException() {
 
         //### Given - Mocks
-        when(iSearchUniqueRepositoryPort.findByCadastre(anyString(), anyString())).thenReturn(Optional.empty());
+        when(iSearchUniqueRepositoryPort.findByCadastro(anyString(), anyString())).thenReturn(Optional.empty());
 
         //### When
         var exception = assertThrows(ElementNotFoundException.class,

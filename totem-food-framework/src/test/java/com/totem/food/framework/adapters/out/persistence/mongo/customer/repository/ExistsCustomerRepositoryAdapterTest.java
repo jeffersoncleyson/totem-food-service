@@ -45,9 +45,10 @@ class ExistsCustomerRepositoryAdapterTest {
 
         final var customerDomain = new CustomerDomain();
         customerDomain.setName(name);
+        customerDomain.setCpf("12432385746");
 
         //### Given - Mocks
-        when(repository.existsByNameIgnoreCase(customerDomain.getName())).thenReturn(true);
+        when(repository.existsByCpfIgnoreCase(customerDomain.getCpf())).thenReturn(true);
 
         //### When
         final var result = existsCustomerRepositoryAdapter.exists(customerDomain);

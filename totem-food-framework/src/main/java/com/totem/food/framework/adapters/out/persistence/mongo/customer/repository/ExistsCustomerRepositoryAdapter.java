@@ -14,13 +14,13 @@ public class ExistsCustomerRepositoryAdapter implements IExistsRepositoryPort<Cu
     @Repository
     protected interface CustomerRepositoryMongoDB extends BaseRepository<CustomerEntity, String> {
 
-        boolean existsByNameIgnoreCase(String name);
+        boolean existsByCpfIgnoreCase(String name);
     }
 
     private final ExistsCustomerRepositoryAdapter.CustomerRepositoryMongoDB repository;
 
     @Override
     public Boolean exists(CustomerDomain item) {
-        return repository.existsByNameIgnoreCase(item.getName());
+        return repository.existsByCpfIgnoreCase(item.getCpf());
     }
 }

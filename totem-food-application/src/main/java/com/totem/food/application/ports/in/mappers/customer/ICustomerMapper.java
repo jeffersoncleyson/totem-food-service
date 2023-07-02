@@ -2,11 +2,9 @@ package com.totem.food.application.ports.in.mappers.customer;
 
 import com.totem.food.application.ports.in.dtos.customer.CustomerCreateDto;
 import com.totem.food.application.ports.in.dtos.customer.CustomerDto;
+import com.totem.food.application.ports.in.utils.Utils;
 import com.totem.food.domain.customer.CustomerDomain;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
         unmappedSourcePolicy = ReportingPolicy.IGNORE,
@@ -15,8 +13,14 @@ public interface ICustomerMapper {
 
     CustomerDomain toDomain(CustomerDto input);
 
-    @Mapping(target = "id", ignore = true)
     CustomerDto toDto(CustomerDomain input);
 
+    @Mapping(source = "password", target = "password", qualifiedByName = "hashingPassword")
     CustomerDomain toDomain(CustomerCreateDto input);
+
+    @Named("hashingPassword")
+    default String hashingPassword(String password) {
+        return Utils.hash256(password);
+    }
+
 }

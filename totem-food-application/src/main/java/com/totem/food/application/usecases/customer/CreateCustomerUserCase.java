@@ -27,7 +27,7 @@ public class CreateCustomerUserCase implements ICreateUseCase<CustomerCreateDto,
         customerDomain.fillDates();
 
         if (Boolean.TRUE.equals(iExistsRepositoryPort.exists(customerDomain))) {
-            throw new ElementExistsException(String.format("Customer [%s] already registered", item.getName()));
+            throw new ElementExistsException(String.format("Customer with cpf [%s] already registered", item.getCpf()));
         }
 
         final var customerDomainSaved = iCreateRepositoryPort.saveItem(customerDomain);
