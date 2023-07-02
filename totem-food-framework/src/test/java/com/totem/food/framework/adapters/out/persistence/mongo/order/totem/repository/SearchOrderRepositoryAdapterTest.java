@@ -73,14 +73,13 @@ class SearchOrderRepositoryAdapterTest {
     }
 
     @Test
-    @Disabled
     void findAllWhenFilterByCustomerId() {
 
         //## Mock - Object
+        var hexString = new ObjectId().toHexString();
         var filter = OrderFilterDto.builder()
-                .customerId("ad852cd2-fd7d-4377-b868-40508b58f384")
+                .customerId(hexString)
                 .build();
-        var hexString = new ObjectId(filter.getCustomerId());
         var orderDomain = OrderDomainMock.getStatusNewMock();
         orderDomain.setId("0aa85a99-82bd-47b6-9f11-74b63f424d72");
         orderDomain.getCustomer().setId("ad852cd2-fd7d-4377-b868-40508b58f384");

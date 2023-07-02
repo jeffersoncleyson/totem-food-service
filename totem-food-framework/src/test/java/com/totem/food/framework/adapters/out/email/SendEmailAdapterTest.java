@@ -57,4 +57,26 @@ class SendEmailAdapterTest {
         Assertions.assertTrue(result);
 
     }
+
+    @Test
+    void sendEmailWithAuthEnabled() {
+
+        //## Given
+        when(emailConfigs.getHost()).thenReturn("host");
+        when(emailConfigs.getPort()).thenReturn(1025);
+        when(emailConfigs.getAuth()).thenReturn(true);
+        when(emailConfigs.getTls()).thenReturn(false);
+        when(emailConfigs.getUsername()).thenReturn("username");
+        when(emailConfigs.getPassword()).thenReturn("password");
+        when(emailConfigs.getEmail()).thenReturn("contato@totem.food.service.com.br");
+
+        var emailNotificationDto = EmailNotificationDtoMock.getMock(UUID.randomUUID().toString());
+
+        //## When
+        Boolean result = sendEmailAdapter.sendEmail(emailNotificationDto);
+
+        //## Then
+        Assertions.assertTrue(result);
+
+    }
 }

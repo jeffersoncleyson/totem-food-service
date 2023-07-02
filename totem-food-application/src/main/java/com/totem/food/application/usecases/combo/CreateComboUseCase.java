@@ -30,7 +30,6 @@ public class CreateComboUseCase implements ICreateUseCase<ComboCreateDto, ComboD
     @Override
     public ComboDto createItem(ComboCreateDto item) {
         final var comboDomain = iComboMapper.toDomain(item);
-        comboDomain.validateCategory();
         comboDomain.fillDates();
 
         if (Boolean.TRUE.equals(iSearchRepositoryPort.exists(comboDomain))) {
