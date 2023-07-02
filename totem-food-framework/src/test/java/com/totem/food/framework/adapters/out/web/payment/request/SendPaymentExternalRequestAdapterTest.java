@@ -4,6 +4,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.totem.food.application.exceptions.ExternalCommunicationInvalid;
 import com.totem.food.application.ports.in.dtos.payment.PaymentQRCodeDto;
+import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.application.ports.out.web.ISendRequestPort;
 import com.totem.food.domain.payment.PaymentDomain;
 import com.totem.food.framework.adapters.out.web.payment.config.PaymentConfigs;
@@ -54,7 +55,7 @@ class SendPaymentExternalRequestAdapterTest {
     @Mock
     private PaymentConfigs paymentConfigs;
 
-    private ISendRequestPort<PaymentDomain, PaymentQRCodeDto> sendRequestPort;
+    private ISendRequestPort<PaymentModel, PaymentQRCodeDto> sendRequestPort;
     private AutoCloseable closeable;
 
     @RegisterExtension
@@ -96,7 +97,7 @@ class SendPaymentExternalRequestAdapterTest {
 
 
         //### Then
-        verify(iPaymentRequestMapper, times(1)).toEntity(Mockito.any(PaymentDomain.class));
+        verify(iPaymentRequestMapper, times(1)).toEntity(Mockito.any(PaymentModel.class));
         verify(paymentConfigs, times(1)).getUrl();
         verify(restTemplate, times(1)).postForEntity(
                 Mockito.any(URI.class),
@@ -130,7 +131,7 @@ class SendPaymentExternalRequestAdapterTest {
 
         //### Then
         assertEquals("Payment system is unavailable", exception.getMessage());
-        verify(iPaymentRequestMapper, times(1)).toEntity(Mockito.any(PaymentDomain.class));
+        verify(iPaymentRequestMapper, times(1)).toEntity(Mockito.any(PaymentModel.class));
         verify(paymentConfigs, times(1)).getUrl();
         verify(restTemplate, times(1)).postForEntity(
                 Mockito.any(URI.class),
@@ -174,7 +175,7 @@ class SendPaymentExternalRequestAdapterTest {
                 "Invalid communication with endpoint [%s] receive status [%s] with idempotence [%s]",
                 paymentGatewayURL, HttpStatus.BAD_REQUEST.value(), uuid
         ), exception.getMessage());
-        verify(iPaymentRequestMapper, times(1)).toEntity(Mockito.any(PaymentDomain.class));
+        verify(iPaymentRequestMapper, times(1)).toEntity(Mockito.any(PaymentModel.class));
         verify(paymentConfigs, times(1)).getUrl();
         verify(restTemplate, times(1)).postForEntity(
                 Mockito.any(URI.class),

@@ -4,9 +4,11 @@ import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.ports.in.dtos.payment.PaymentCreateDto;
 import com.totem.food.application.ports.in.dtos.payment.PaymentQRCodeDto;
 import com.totem.food.application.ports.in.mappers.customer.ICustomerMapper;
+import com.totem.food.application.ports.in.mappers.payment.IPaymentMapper;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
+import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.application.ports.out.web.ISendRequestPort;
 import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
@@ -26,11 +28,12 @@ import java.util.UUID;
 @UseCase
 public class CreatePaymentUseCase implements ICreateUseCase<PaymentCreateDto, PaymentQRCodeDto> {
 
-    private final ICreateRepositoryPort<PaymentDomain> iCreateRepositoryPort;
+    private final ICreateRepositoryPort<PaymentModel> iCreateRepositoryPort;
     private final ICustomerMapper iCustomerMapper;
+    private final IPaymentMapper iPaymentMapper;
     private final ISearchUniqueRepositoryPort<Optional<OrderDomain>> iSearchUniqueOrderRepositoryPort;
     private final ISearchUniqueRepositoryPort<Optional<CustomerModel>> iSearchUniqueCustomerRepositoryPort;
-    private final ISendRequestPort<PaymentDomain, PaymentQRCodeDto> iSendRequest;
+    private final ISendRequestPort<PaymentModel, PaymentQRCodeDto> iSendRequest;
 
     @Override
     public PaymentQRCodeDto createItem(PaymentCreateDto item) {
@@ -59,7 +62,8 @@ public class CreatePaymentUseCase implements ICreateUseCase<PaymentCreateDto, Pa
             final var paymentDomain = paymentDomainBuilder.build();
             paymentDomain.fillDates();
 
-            final var paymentDomainSaved = iCreateRepositoryPort.saveItem(paymentDomain);
+            final var paymentModel = iPaymentMapper.toModel(paymentDomain);
+            final var paymentDomainSaved = iCreateRepositoryPort.saveItem(paymentModel);
             final var paymentDto = iSendRequest.sendRequest(paymentDomainSaved);
             paymentDto.setStatus(PaymentDomain.PaymentStatus.PENDING.key);
             paymentDto.setPaymentId(paymentDomainSaved.getId());

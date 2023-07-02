@@ -9,6 +9,7 @@ import com.totem.food.application.ports.out.email.ISendEmailPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
+import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.application.usecases.commons.IUpdateStatusUseCase;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import com.totem.food.domain.order.totem.OrderDomain;
@@ -16,6 +17,7 @@ import com.totem.food.domain.payment.PaymentDomain;
 import lombok.SneakyThrows;
 import mock.domain.OrderDomainMock;
 import mock.domain.PaymentDomainMock;
+import mock.models.PaymentModelMock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,7 +51,7 @@ class UpdateStatusOrderUseCaseTest {
     @Mock
     private ISendEmailPort<EmailNotificationDto, Boolean> iSendEmailPort;
     @Mock
-    private ISearchRepositoryPort<PaymentFilterDto, PaymentDomain> iSearchPaymentRepositoryPort;
+    private ISearchRepositoryPort<PaymentFilterDto, PaymentModel> iSearchPaymentRepositoryPort;
 
     private IUpdateStatusUseCase<OrderDto> iUpdateStatusUseCase;
     private AutoCloseable closeable;
@@ -119,7 +121,7 @@ class UpdateStatusOrderUseCaseTest {
 
         //## Mock - Objects
         var orderDomain = OrderDomainMock.getOrderDomain(OrderStatusEnumDomain.WAITING_PAYMENT);
-        final var paymentDomain = PaymentDomainMock.getPaymentStatusCompletedMock();
+        final var paymentDomain = PaymentModelMock.getPaymentStatusCompletedMock();
 
         //## Mocks
         when(iSearchUniqueRepositoryPort.findById(Mockito.anyString())).thenReturn(Optional.of(orderDomain));

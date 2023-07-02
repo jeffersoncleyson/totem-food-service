@@ -2,6 +2,7 @@ package com.totem.food.application.ports.in.mappers.payment;
 
 import com.totem.food.application.ports.in.dtos.payment.PaymentCreateDto;
 import com.totem.food.application.ports.in.dtos.payment.PaymentDto;
+import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.domain.payment.PaymentDomain;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
@@ -14,5 +15,9 @@ public interface IPaymentMapper {
 
     PaymentDomain toDomain(PaymentCreateDto input);
 
-    PaymentDto toDto(PaymentDomain input);
+    PaymentDto toDto(PaymentModel input);
+
+    PaymentDomain toDomain(PaymentModel input);
+
+    PaymentModel toModel(PaymentDomain input);
 }

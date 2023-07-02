@@ -1,6 +1,7 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.payment.repository;
 
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
+import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.domain.payment.PaymentDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepository;
 import com.totem.food.framework.adapters.out.persistence.mongo.payment.entity.PaymentEntity;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 @AllArgsConstructor
 @Component
-public class CreatePaymentRepositoryAdapter implements ICreateRepositoryPort<PaymentDomain> {
+public class CreatePaymentRepositoryAdapter implements ICreateRepositoryPort<PaymentModel> {
 
 	@Repository
 	protected interface PaymentRepositoryMongoDB extends BaseRepository<PaymentEntity, String> {
@@ -22,10 +23,10 @@ public class CreatePaymentRepositoryAdapter implements ICreateRepositoryPort<Pay
 	private final IPaymentEntityMapper iPaymentMapper;
 
 	@Override
-	public PaymentDomain saveItem(PaymentDomain item) {
+	public PaymentModel saveItem(PaymentModel item) {
 		final var entity = iPaymentMapper.toEntity(item);
 		final var entitySaved = repository.save(entity);
-		return iPaymentMapper.toDomain(entitySaved);
+		return iPaymentMapper.toModel(entitySaved);
 	}
 
 }

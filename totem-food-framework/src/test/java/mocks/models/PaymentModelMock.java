@@ -1,27 +1,25 @@
-package mocks.adapters.out.web.payment.request;
+package mocks.models;
 
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
-import com.totem.food.domain.order.totem.OrderDomain;
 import com.totem.food.domain.payment.PaymentDomain;
-import lombok.NoArgsConstructor;
 import mocks.domains.CustomerDomainMock;
 import mocks.domains.OrderDomainMock;
+import org.bson.types.ObjectId;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
-@NoArgsConstructor
-public class PaymentRequestMock {
+public class PaymentModelMock {
 
-    public static PaymentModel paymentDomain(){
+    public static PaymentModel getPaymentDomain(PaymentDomain.PaymentStatus paymentStatus){
         return PaymentModel.builder()
-                .id(UUID.randomUUID().toString())
+                .id(new ObjectId().toHexString())
                 .order(OrderDomainMock.getStatusNewMock())
                 .customer(CustomerDomainMock.getMock())
                 .price(50D)
                 .token(UUID.randomUUID().toString())
-                .status(PaymentDomain.PaymentStatus.COMPLETED)
+                .status(paymentStatus)
                 .modifiedAt(ZonedDateTime.now(ZoneOffset.UTC))
                 .createAt(ZonedDateTime.now(ZoneOffset.UTC))
                 .build();

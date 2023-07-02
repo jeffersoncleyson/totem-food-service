@@ -9,6 +9,7 @@ import com.totem.food.application.ports.out.email.ISendEmailPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
+import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.IUpdateStatusUseCase;
 import com.totem.food.domain.customer.CustomerDomain;
@@ -27,7 +28,7 @@ public class UpdateStatusOrderUseCase implements IUpdateStatusUseCase<OrderDto> 
     private final ISearchUniqueRepositoryPort<Optional<OrderDomain>> iSearchUniqueRepositoryPort;
     private final IUpdateRepositoryPort<OrderDomain> iProductRepositoryPort;
     private final ISendEmailPort<EmailNotificationDto, Boolean> iSendEmailPort;
-    private final ISearchRepositoryPort<PaymentFilterDto, PaymentDomain> iSearchPaymentRepositoryPort;
+    private final ISearchRepositoryPort<PaymentFilterDto, PaymentModel> iSearchPaymentRepositoryPort;
 
     @Override
     public OrderDto updateStatus(String id, String status) {
