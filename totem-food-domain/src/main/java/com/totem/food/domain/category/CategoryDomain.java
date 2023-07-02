@@ -28,20 +28,20 @@ public class CategoryDomain {
 	public static final int MAX_CATEGORY_LENGTH = 50;
 
 
-	public void validateCategory(){
+	public void validateCategory() {
 
-		if(StringUtils.isNotEmpty(name) && name.length() > MAX_CATEGORY_LENGTH){
+		if (StringUtils.isNotEmpty(name) && name.length() > MAX_CATEGORY_LENGTH) {
 			throw new InvalidDomainField(CategoryDomain.class, "name", "Max length accepted is ".concat(String.valueOf(MAX_CATEGORY_LENGTH)));
 		}
 
 	}
 
-	public void updateModifiedAt(){
+	public void updateModifiedAt() {
 		this.modifiedAt = ZonedDateTime.now(ZoneOffset.UTC);
 	}
 
-	public void fillDates(){
-		if(StringUtils.isEmpty(this.id)){
+	public void fillDates() {
+		if (StringUtils.isEmpty(this.id)) {
 			this.createAt = ZonedDateTime.now(ZoneOffset.UTC);
 			this.modifiedAt = ZonedDateTime.now(ZoneOffset.UTC);
 		}
