@@ -1,6 +1,7 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.product.repository;
 
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
+import com.totem.food.application.ports.out.persistence.product.ProductModel;
 import com.totem.food.domain.product.ProductDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepository;
 import com.totem.food.framework.adapters.out.persistence.mongo.product.entity.ProductEntity;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 @AllArgsConstructor
 @Component
-public class CreateProductRepositoryAdapter implements ICreateRepositoryPort<ProductDomain> {
+public class CreateProductRepositoryAdapter implements ICreateRepositoryPort<ProductModel> {
 
 	@Repository
 	protected interface ProductRepositoryMongoDB extends BaseRepository<ProductEntity, String> {
@@ -22,10 +23,10 @@ public class CreateProductRepositoryAdapter implements ICreateRepositoryPort<Pro
 	private final IProductEntityMapper iProductEntityMapper;
 
 	@Override
-	public ProductDomain saveItem(ProductDomain item) {
+	public ProductModel saveItem(ProductModel item) {
 		final var entity = iProductEntityMapper.toEntity(item);
 		final var savedEntity = repository.save(entity);
-		return iProductEntityMapper.toDomain(savedEntity);
+		return iProductEntityMapper.toModel(savedEntity);
 	}
 
 }

@@ -6,9 +6,11 @@ import com.totem.food.application.ports.in.dtos.combo.ComboCreateDto;
 import com.totem.food.application.ports.in.dtos.combo.ComboDto;
 import com.totem.food.application.ports.in.dtos.product.ProductFilterDto;
 import com.totem.food.application.ports.in.mappers.combo.IComboMapper;
+import com.totem.food.application.ports.in.mappers.product.IProductMapper;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.IExistsRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
+import com.totem.food.application.ports.out.persistence.product.ProductModel;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
 import com.totem.food.domain.combo.ComboDomain;
 import com.totem.food.domain.product.ProductDomain;
@@ -38,6 +40,8 @@ class CreateComboUseCaseTest {
 
     @Spy
     private IComboMapper iComboMapper = Mappers.getMapper(IComboMapper.class);
+    @Spy
+    private IProductMapper iProductMapper = Mappers.getMapper(IProductMapper.class);
     @Mock
     private ICreateRepositoryPort<ComboDomain> iCreateRepositoryPort;
 
@@ -45,14 +49,14 @@ class CreateComboUseCaseTest {
     private IExistsRepositoryPort<ComboDomain, Boolean> iSearchRepositoryPort;
 
     @Mock
-    private ISearchRepositoryPort<ProductFilterDto, List<ProductDomain>> iSearchProductRepositoryPort;
+    private ISearchRepositoryPort<ProductFilterDto, List<ProductModel>> iSearchProductRepositoryPort;
 
     private ICreateUseCase<ComboCreateDto, ComboDto> iCreateUseCase;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        this.iCreateUseCase = new CreateComboUseCase(iComboMapper, iCreateRepositoryPort, iSearchRepositoryPort, iSearchProductRepositoryPort);
+        this.iCreateUseCase = new CreateComboUseCase(iComboMapper, iProductMapper, iCreateRepositoryPort, iSearchRepositoryPort, iSearchProductRepositoryPort);
     }
 
     @Test
@@ -61,10 +65,11 @@ class CreateComboUseCaseTest {
         //## Given
         final var productId = UUID.randomUUID().toString();
         final var productDomain = ProductDomain.builder().id(productId).build();
+        final var productModel = ProductModel.builder().id(productId).build();
         final var comboDomain = new ComboDomain("1", "Combo da casa", Double.MAX_VALUE, List.of(productDomain), ZonedDateTime.now(ZoneOffset.UTC), ZonedDateTime.now(ZoneOffset.UTC));
 
         //### Given - Mocks
-        when(iSearchProductRepositoryPort.findAll(any(ProductFilterDto.class))).thenReturn(List.of(productDomain));
+        when(iSearchProductRepositoryPort.findAll(any(ProductFilterDto.class))).thenReturn(List.of(productModel));
         when(iCreateRepositoryPort.saveItem(any(ComboDomain.class))).thenReturn(comboDomain);
 
         //## When

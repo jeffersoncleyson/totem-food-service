@@ -7,9 +7,11 @@ import com.totem.food.application.ports.in.dtos.order.totem.OrderDto;
 import com.totem.food.application.ports.in.dtos.order.totem.OrderUpdateDto;
 import com.totem.food.application.ports.in.dtos.product.ProductFilterDto;
 import com.totem.food.application.ports.in.mappers.order.totem.IOrderMapper;
+import com.totem.food.application.ports.in.mappers.product.IProductMapper;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
+import com.totem.food.application.ports.out.persistence.product.ProductModel;
 import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.IUpdateUseCase;
 import com.totem.food.domain.combo.ComboDomain;
@@ -29,9 +31,10 @@ import java.util.stream.Collectors;
 public class UpdateOrderUseCase implements IUpdateUseCase<OrderUpdateDto, OrderDto> {
 
     private final IOrderMapper iOrderMapper;
+    private final IProductMapper iProductMapper;
     private final ISearchUniqueRepositoryPort<Optional<OrderDomain>> iSearchUniqueRepositoryPort;
     private final ISearchRepositoryPort<ComboFilterDto, List<ComboDomain>> iSearchComboDomainRepositoryPort;
-    private final ISearchRepositoryPort<ProductFilterDto, List<ProductDomain>> iSearchProductRepositoryPort;
+    private final ISearchRepositoryPort<ProductFilterDto, List<ProductModel>> iSearchProductRepositoryPort;
     private final IUpdateRepositoryPort<OrderDomain> iProductRepositoryPort;
 
     @Override
@@ -105,9 +108,9 @@ public class UpdateOrderUseCase implements IUpdateUseCase<OrderUpdateDto, OrderD
     }
 
     // TODO - Refatorar este método
-    private List<ProductDomain> getProductDomains(OrderUpdateDto item, List<ProductDomain> products) {
+    private List<ProductDomain> getProductDomains(OrderUpdateDto item, List<ProductModel> products) {
         final var productDomainMap = products.stream()
-                .collect(Collectors.toMap(ProductDomain::getId, Function.identity()));
+                .collect(Collectors.toMap(ProductModel::getId, iProductMapper::toDomain));
         final var productsDomainToAdd = new ArrayList<ProductDomain>();
 
         for (ItemQuantityDto itemX : item.getProducts()) {

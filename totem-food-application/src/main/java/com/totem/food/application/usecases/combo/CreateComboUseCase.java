@@ -6,9 +6,11 @@ import com.totem.food.application.ports.in.dtos.combo.ComboCreateDto;
 import com.totem.food.application.ports.in.dtos.combo.ComboDto;
 import com.totem.food.application.ports.in.dtos.product.ProductFilterDto;
 import com.totem.food.application.ports.in.mappers.combo.IComboMapper;
+import com.totem.food.application.ports.in.mappers.product.IProductMapper;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.IExistsRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
+import com.totem.food.application.ports.out.persistence.product.ProductModel;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
 import com.totem.food.domain.combo.ComboDomain;
 import com.totem.food.domain.product.ProductDomain;
@@ -23,9 +25,10 @@ import java.util.List;
 public class CreateComboUseCase implements ICreateUseCase<ComboCreateDto, ComboDto> {
 
     private final IComboMapper iComboMapper;
+    private final IProductMapper iProductMapper;
     private final ICreateRepositoryPort<ComboDomain> iCreateRepositoryPort;
     private final IExistsRepositoryPort<ComboDomain, Boolean> iSearchRepositoryPort;
-    private final ISearchRepositoryPort<ProductFilterDto, List<ProductDomain>> iSearchProductRepositoryPort;
+    private final ISearchRepositoryPort<ProductFilterDto, List<ProductModel>> iSearchProductRepositoryPort;
 
     @Override
     public ComboDto createItem(ComboCreateDto item) {
@@ -36,13 +39,14 @@ public class CreateComboUseCase implements ICreateUseCase<ComboCreateDto, ComboD
             throw new ElementExistsException(String.format("Combo [%s] already registered", item.getName()));
         }
 
-        final var productsDomainList = iSearchProductRepositoryPort.findAll(ProductFilterDto.builder().ids(item.getProducts()).build());
+        final var productModelList = iSearchProductRepositoryPort.findAll(ProductFilterDto.builder().ids(item.getProducts()).build());
 
-        if(CollectionUtils.size(productsDomainList) != CollectionUtils.size(item.getProducts())){
+        if(CollectionUtils.size(productModelList) != CollectionUtils.size(item.getProducts())){
             throw new ElementNotFoundException(String.format("Products [%s] some products are invalid", item.getProducts()));
         }
 
-        comboDomain.setProducts(productsDomainList);
+        final var productDomainList = productModelList.stream().map(iProductMapper::toDomain).toList();
+        comboDomain.setProducts(productDomainList);
 
         final var comboDomainSaved = iCreateRepositoryPort.saveItem(comboDomain);
         return iComboMapper.toDto(comboDomainSaved);

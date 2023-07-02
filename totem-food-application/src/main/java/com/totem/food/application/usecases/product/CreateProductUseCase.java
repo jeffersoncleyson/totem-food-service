@@ -8,6 +8,7 @@ import com.totem.food.application.ports.in.mappers.product.IProductMapper;
 import com.totem.food.application.ports.out.persistence.category.CategoryModel;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
+import com.totem.food.application.ports.out.persistence.product.ProductModel;
 import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
 import com.totem.food.domain.product.ProductDomain;
@@ -21,7 +22,7 @@ public class CreateProductUseCase implements ICreateUseCase<ProductCreateDto, Pr
 
     private final IProductMapper iProductMapper;
     private final ICategoryMapper iCategoryMapper;
-    private final ICreateRepositoryPort<ProductDomain> iProductRepositoryPort;
+    private final ICreateRepositoryPort<ProductModel> iProductRepositoryPort;
     private final ISearchUniqueRepositoryPort<Optional<CategoryModel>> iSearchRepositoryPort;
 
     public ProductDto createItem(ProductCreateDto item) {
@@ -31,7 +32,8 @@ public class CreateProductUseCase implements ICreateUseCase<ProductCreateDto, Pr
         final var categoryDomain = iCategoryMapper.toDomain(categoryModel);
         domain.setCategory(categoryDomain);
         domain.fillDates();
-        final var domainSaved = iProductRepositoryPort.saveItem(domain);
+        final var model = iProductMapper.toModel(domain);
+        final var domainSaved = iProductRepositoryPort.saveItem(model);
         return iProductMapper.toDto(domainSaved);
     }
 

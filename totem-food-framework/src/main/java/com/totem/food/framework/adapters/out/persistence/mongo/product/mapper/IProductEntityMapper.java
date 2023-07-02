@@ -1,5 +1,6 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.product.mapper;
 
+import com.totem.food.application.ports.out.persistence.product.ProductModel;
 import com.totem.food.domain.product.ProductDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.product.entity.ProductEntity;
 import org.mapstruct.Mapper;
@@ -10,7 +11,7 @@ import org.mapstruct.ReportingPolicy;
 	unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface IProductEntityMapper {
 
-	ProductEntity toEntity(ProductDomain input);
+	ProductEntity toEntity(ProductModel input);
 
-	ProductDomain toDomain(ProductEntity input);
+	ProductModel toModel(ProductEntity input);
 }

@@ -3,6 +3,7 @@ package com.totem.food.framework.adapters.out.persistence.mongo.product.reposito
 import com.mongodb.DBRef;
 import com.totem.food.application.ports.in.dtos.product.ProductFilterDto;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
+import com.totem.food.application.ports.out.persistence.product.ProductModel;
 import com.totem.food.domain.product.ProductDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepository;
 import com.totem.food.framework.adapters.out.persistence.mongo.product.entity.ProductEntity;
@@ -21,7 +22,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Component
-public class SearchProductRepositoryAdapter implements ISearchRepositoryPort<ProductFilterDto, List<ProductDomain>> {
+public class SearchProductRepositoryAdapter implements ISearchRepositoryPort<ProductFilterDto, List<ProductModel>> {
 
     @Repository
     protected interface ProductRepositoryMongoDB extends BaseRepository<ProductEntity, String> {
@@ -40,14 +41,14 @@ public class SearchProductRepositoryAdapter implements ISearchRepositoryPort<Pro
     private final IProductEntityMapper iProductEntityMapper;
 
     @Override
-    public List<ProductDomain> findAll(ProductFilterDto filter) {
+    public List<ProductModel> findAll(ProductFilterDto filter) {
         var query = new Query();
 
         if (CollectionUtils.isNotEmpty(filter.getIds()))
-            return repository.findAllByIds(filter.getIds()).stream().map(iProductEntityMapper::toDomain).toList();
+            return repository.findAllByIds(filter.getIds()).stream().map(iProductEntityMapper::toModel).toList();
 
         if (StringUtils.isNotEmpty(filter.getName()))
-            return repository.findByFilter(filter.getName()).stream().map(iProductEntityMapper::toDomain).toList();
+            return repository.findByFilter(filter.getName()).stream().map(iProductEntityMapper::toModel).toList();
 
         if (CollectionUtils.isNotEmpty(filter.getCategoryId())) {
             final var objectIds = filter.getCategoryId()
@@ -58,6 +59,6 @@ public class SearchProductRepositoryAdapter implements ISearchRepositoryPort<Pro
         }
 
         List<ProductEntity> products = mongoTemplate.find(query, ProductEntity.class);
-        return products.stream().map(iProductEntityMapper::toDomain).toList();
+        return products.stream().map(iProductEntityMapper::toModel).toList();
     }
 }

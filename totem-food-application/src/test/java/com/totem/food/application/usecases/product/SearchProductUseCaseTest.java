@@ -4,6 +4,7 @@ import com.totem.food.application.ports.in.dtos.product.ProductDto;
 import com.totem.food.application.ports.in.dtos.product.ProductFilterDto;
 import com.totem.food.application.ports.in.mappers.product.IProductMapper;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
+import com.totem.food.application.ports.out.persistence.product.ProductModel;
 import com.totem.food.application.usecases.commons.ISearchUseCase;
 import com.totem.food.domain.category.CategoryDomain;
 import com.totem.food.domain.product.ProductDomain;
@@ -34,7 +35,7 @@ class SearchProductUseCaseTest {
     @Spy
     private IProductMapper iProductMapper = Mappers.getMapper(IProductMapper.class);
     @Mock
-    private ISearchRepositoryPort<ProductFilterDto, List<ProductDomain>> iSearchProductRepositoryPort;
+    private ISearchRepositoryPort<ProductFilterDto, List<ProductModel>> iSearchProductRepositoryPort;
     private ISearchUseCase<ProductFilterDto, List<ProductDto>> iSearchUseCase;
     private AutoCloseable closeable;
 
@@ -63,7 +64,7 @@ class SearchProductUseCaseTest {
         final var categoryId = UUID.randomUUID().toString();
         final var categoryDomain = CategoryDomain.builder().id(categoryId).build();
 
-        final var productDomain = ProductDomain.builder()
+        final var productModel = ProductModel.builder()
                 .id(id)
                 .name(name)
                 .description(description)
@@ -74,7 +75,7 @@ class SearchProductUseCaseTest {
                 .modifiedAt(now)
                 .build();
 
-        final var productDomainList = List.of(productDomain);
+        final var productDomainList = List.of(productModel);
         final var productFilterDto = ProductFilterDto.builder().name(name).build();
 
         //### Given - Mocks
@@ -84,7 +85,7 @@ class SearchProductUseCaseTest {
         final var productDtoList = iSearchUseCase.items(productFilterDto);
 
         //### Then
-        verify(iProductMapper, times(1)).toDto(Mockito.any(ProductDomain.class));
+        verify(iProductMapper, times(1)).toDto(Mockito.any(ProductModel.class));
         verify(iSearchProductRepositoryPort, times(1)).findAll(Mockito.any(ProductFilterDto.class));
 
         assertThat(productDtoList)
