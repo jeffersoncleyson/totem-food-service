@@ -3,6 +3,7 @@ package com.totem.food.application.usecases.customer;
 import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.ports.in.dtos.customer.CustomerDto;
 import com.totem.food.application.ports.in.mappers.customer.ICustomerMapper;
+import com.totem.food.application.ports.in.utils.Utils;
 import com.totem.food.application.ports.out.persistence.commons.ILoginRepositoryPort;
 import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.ILoginUseCase;
@@ -20,7 +21,7 @@ public class LoginCustomerUserCase implements ILoginUseCase<CustomerDto> {
 
     @Override
     public CustomerDto login(String id, String password) {
-        var customerDomain = iSearchUniqueRepositoryPort.findByCadastre(id, password)
+        var customerDomain = iSearchUniqueRepositoryPort.findByCadastro(id, Utils.hash256(password))
                 .orElseThrow(() -> new ElementNotFoundException("Incorrect user or password"));
         return iCustomerMapper.toDto(customerDomain);
     }

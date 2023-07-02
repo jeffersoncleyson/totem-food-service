@@ -46,8 +46,8 @@ services:
       SMTP_PORT: 1025
       SMTP_USERNAME: username
       SMTP_PASSWORD: password
-      SMTP_AUTH_ENABLED: false
-      SMTP_TLS_ENABLED: false
+      SMTP_AUTH_ENABLED: "false"
+      SMTP_TLS_ENABLED: "false"
       SMTP_EMAIL: contato@totem.food.service.com.br
     ports:
       - "8080:8080"
