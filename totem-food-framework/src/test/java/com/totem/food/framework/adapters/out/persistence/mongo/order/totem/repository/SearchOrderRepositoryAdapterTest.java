@@ -41,12 +41,11 @@ class SearchOrderRepositoryAdapterTest {
 
     private SearchOrderRepositoryAdapter searchOrderRepositoryAdapter;
 
-    @Mock
     private AutoCloseable autoCloseable;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        autoCloseable = MockitoAnnotations.openMocks(this);
         searchOrderRepositoryAdapter = new SearchOrderRepositoryAdapter(repository, iOrderEntityMapper);
     }
 

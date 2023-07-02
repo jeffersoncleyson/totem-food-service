@@ -1,6 +1,6 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.category.mapper;
 
-import com.totem.food.application.ports.out.category.CategoryModel;
+import com.totem.food.application.ports.out.persistence.category.CategoryModel;
 import com.totem.food.framework.adapters.out.persistence.mongo.category.entity.CategoryEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;

@@ -7,10 +7,12 @@ import com.totem.food.application.ports.in.dtos.order.totem.ItemQuantityDto;
 import com.totem.food.application.ports.in.dtos.order.totem.OrderCreateDto;
 import com.totem.food.application.ports.in.dtos.order.totem.OrderDto;
 import com.totem.food.application.ports.in.dtos.product.ProductFilterDto;
+import com.totem.food.application.ports.in.mappers.customer.ICustomerMapper;
 import com.totem.food.application.ports.in.mappers.order.totem.IOrderMapper;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
+import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
 import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
 import com.totem.food.domain.combo.ComboDomain;
@@ -33,8 +35,9 @@ import java.util.stream.Collectors;
 public class CreateOrderUseCase implements ICreateUseCase<OrderCreateDto, OrderDto> {
 
     private final IOrderMapper iOrderMapper;
+    private final ICustomerMapper iCustomerMapper;
     private final ICreateRepositoryPort<OrderDomain> iCreateRepositoryPort;
-    private final ISearchUniqueRepositoryPort<Optional<CustomerDomain>> iSearchUniqueCustomerRepositoryPort;
+    private final ISearchUniqueRepositoryPort<Optional<CustomerModel>> iSearchUniqueCustomerRepositoryPort;
     private final ISearchRepositoryPort<ProductFilterDto, List<ProductDomain>> iSearchProductRepositoryPort;
     private final ISearchRepositoryPort<ComboFilterDto, List<ComboDomain>> iSearchDomainRepositoryPort;
 
@@ -62,9 +65,9 @@ public class CreateOrderUseCase implements ICreateUseCase<OrderCreateDto, OrderD
     private void setCustomer(OrderCreateDto item, OrderDomain domain) {
 
         if(StringUtils.isNotEmpty(item.getCustomerId())) {
-            final var customerDomain = iSearchUniqueCustomerRepositoryPort.findById(item.getCustomerId())
+            final var customerModel = iSearchUniqueCustomerRepositoryPort.findById(item.getCustomerId())
                     .orElseThrow(() -> new ElementNotFoundException(String.format("Customer [%s] not found", item.getCustomerId())));
-
+            final var customerDomain = iCustomerMapper.toDomain(customerModel);
             domain.setCustomer(customerDomain);
         }
     }

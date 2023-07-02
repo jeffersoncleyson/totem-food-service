@@ -1,12 +1,10 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.category.repository;
 
-import com.totem.food.application.ports.out.category.CategoryModel;
-import com.totem.food.domain.category.CategoryDomain;
+import com.totem.food.application.ports.out.persistence.category.CategoryModel;
 import com.totem.food.framework.adapters.out.persistence.mongo.category.entity.CategoryEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.category.mapper.ICategoryEntityMapper;
 import lombok.SneakyThrows;
 import mocks.adapters.out.persistence.mongo.category.entity.CategoryEntityMock;
-import mocks.domains.CategoryDomainMock;
 import mocks.models.CategoryModelMock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

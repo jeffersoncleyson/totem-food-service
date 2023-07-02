@@ -1,6 +1,6 @@
 package mocks.models;
 
-import com.totem.food.application.ports.out.category.CategoryModel;
+import com.totem.food.application.ports.out.persistence.category.CategoryModel;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;

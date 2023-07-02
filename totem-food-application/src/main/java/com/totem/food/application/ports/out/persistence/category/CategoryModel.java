@@ -1,4 +1,4 @@
-package com.totem.food.application.ports.out.category;
+package com.totem.food.application.ports.out.persistence.category;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -3,8 +3,10 @@ package com.totem.food.application.usecases.payment;
 import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.ports.in.dtos.payment.PaymentCreateDto;
 import com.totem.food.application.ports.in.dtos.payment.PaymentQRCodeDto;
+import com.totem.food.application.ports.in.mappers.customer.ICustomerMapper;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
+import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
 import com.totem.food.application.ports.out.web.ISendRequestPort;
 import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
@@ -15,6 +17,7 @@ import com.totem.food.domain.order.totem.OrderDomain;
 import com.totem.food.domain.payment.PaymentDomain;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.mapstruct.factory.Mappers;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -24,8 +27,9 @@ import java.util.UUID;
 public class CreatePaymentUseCase implements ICreateUseCase<PaymentCreateDto, PaymentQRCodeDto> {
 
     private final ICreateRepositoryPort<PaymentDomain> iCreateRepositoryPort;
+    private final ICustomerMapper iCustomerMapper;
     private final ISearchUniqueRepositoryPort<Optional<OrderDomain>> iSearchUniqueOrderRepositoryPort;
-    private final ISearchUniqueRepositoryPort<Optional<CustomerDomain>> iSearchUniqueCustomerRepositoryPort;
+    private final ISearchUniqueRepositoryPort<Optional<CustomerModel>> iSearchUniqueCustomerRepositoryPort;
     private final ISendRequestPort<PaymentDomain, PaymentQRCodeDto> iSendRequest;
 
     @Override
@@ -40,8 +44,9 @@ public class CreatePaymentUseCase implements ICreateUseCase<PaymentCreateDto, Pa
             Optional.ofNullable(item.getCustomerId())
                     .filter(StringUtils::isNotEmpty)
                     .ifPresent(customerId -> {
-                        final var customerDomain = iSearchUniqueCustomerRepositoryPort.findById(customerId)
+                        final var customerModel = iSearchUniqueCustomerRepositoryPort.findById(customerId)
                                 .orElseThrow(() -> new ElementNotFoundException(String.format("Customer [%s] not found", customerId)));
+                        final var customerDomain = iCustomerMapper.toDomain(customerModel);
                         paymentDomainBuilder.customer(customerDomain);
                     });
 

@@ -1,6 +1,7 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.customer.repository;
 
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
+import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
 import com.totem.food.domain.customer.CustomerDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.customer.entity.CustomerEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.customer.mapper.ICustomerEntityMapper;
@@ -31,7 +32,7 @@ class SearchUniqueCustomerRepositoryAdapterTest {
     @Spy
     private ICustomerEntityMapper iCustomerEntityMapper = Mappers.getMapper(ICustomerEntityMapper.class);
 
-    private ISearchUniqueRepositoryPort<Optional<CustomerDomain>> iSearchUniqueRepositoryPort;
+    private ISearchUniqueRepositoryPort<Optional<CustomerModel>> iSearchUniqueRepositoryPort;
     private AutoCloseable closeable;
 
     @BeforeEach

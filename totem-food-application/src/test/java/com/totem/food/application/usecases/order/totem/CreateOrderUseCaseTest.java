@@ -4,10 +4,12 @@ import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.exceptions.InvalidInput;
 import com.totem.food.application.ports.in.dtos.combo.ComboFilterDto;
 import com.totem.food.application.ports.in.dtos.product.ProductFilterDto;
+import com.totem.food.application.ports.in.mappers.customer.ICustomerMapper;
 import com.totem.food.application.ports.in.mappers.order.totem.IOrderMapper;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
+import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
 import com.totem.food.domain.combo.ComboDomain;
 import com.totem.food.domain.customer.CustomerDomain;
 import com.totem.food.domain.order.totem.OrderDomain;
@@ -17,6 +19,7 @@ import mock.domain.ComboDomainMock;
 import mock.domain.CustomerDomainMock;
 import mock.domain.OrderDomainMock;
 import mock.domain.ProductDomainMock;
+import mock.models.CustomerModelMock;
 import mock.ports.in.dto.OrderCreateDtoMock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,10 +49,12 @@ class CreateOrderUseCaseTest {
 
     @Spy
     private IOrderMapper iOrderMapper = Mappers.getMapper(IOrderMapper.class);
+    @Spy
+    private ICustomerMapper iCustomerMapper = Mappers.getMapper(ICustomerMapper.class);
     @Mock
     private ICreateRepositoryPort<OrderDomain> iCreateRepositoryPort;
     @Mock
-    private ISearchUniqueRepositoryPort<Optional<CustomerDomain>> iSearchUniqueCustomerRepositoryPort;
+    private ISearchUniqueRepositoryPort<Optional<CustomerModel>> iSearchUniqueCustomerRepositoryPort;
     @Mock
     private ISearchRepositoryPort<ProductFilterDto, List<ProductDomain>> iSearchProductRepositoryPort;
     @Mock
@@ -62,7 +67,7 @@ class CreateOrderUseCaseTest {
     @BeforeEach
     void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
-        createOrderUseCase = new CreateOrderUseCase(iOrderMapper, iCreateRepositoryPort, iSearchUniqueCustomerRepositoryPort, iSearchProductRepositoryPort, iSearchDomainRepositoryPort);
+        createOrderUseCase = new CreateOrderUseCase(iOrderMapper, iCustomerMapper, iCreateRepositoryPort, iSearchUniqueCustomerRepositoryPort, iSearchProductRepositoryPort, iSearchDomainRepositoryPort);
     }
 
     @SneakyThrows
@@ -92,11 +97,11 @@ class CreateOrderUseCaseTest {
     void elementNotFoundExceptionWhenProductToDomain() {
         //## Mock - Objects
         var orderCreateDto = OrderCreateDtoMock.getMock("", "");
-        var customerDomain = CustomerDomainMock.getMock();
+        var customerModel = CustomerModelMock.getMock();
         var productDomain = ProductDomainMock.getMock();
 
         //## Given
-        when(iSearchUniqueCustomerRepositoryPort.findById(anyString())).thenReturn(Optional.of(customerDomain));
+        when(iSearchUniqueCustomerRepositoryPort.findById(anyString())).thenReturn(Optional.of(customerModel));
         when(iSearchProductRepositoryPort.findAll(any(ProductFilterDto.class))).thenReturn(List.of(productDomain));
 
         //## When
@@ -114,14 +119,14 @@ class CreateOrderUseCaseTest {
         //## Mock - Objects
 
         var orderDomain = OrderDomainMock.getStatusNewMock();
-        var customerDomain = CustomerDomainMock.getMock();
+        var customerModel = CustomerModelMock.getMock();
         var productDomain = ProductDomainMock.getMock();
         var comboDomain = ComboDomainMock.getMock();
         var orderCreateDto = OrderCreateDtoMock.getMock(productDomain.getId(), comboDomain.getId());
 
         //## Given
         when(iCreateRepositoryPort.saveItem(any(OrderDomain.class))).thenReturn(orderDomain);
-        when(iSearchUniqueCustomerRepositoryPort.findById(anyString())).thenReturn(Optional.of(customerDomain));
+        when(iSearchUniqueCustomerRepositoryPort.findById(anyString())).thenReturn(Optional.of(customerModel));
         when(iSearchProductRepositoryPort.findAll(any(ProductFilterDto.class))).thenReturn(List.of(productDomain));
         when(iSearchDomainRepositoryPort.findAll(any(ComboFilterDto.class))).thenReturn(List.of(comboDomain));
 

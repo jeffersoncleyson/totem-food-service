@@ -93,7 +93,7 @@ class LoginCustomerRepositoryAdapterTest {
 
         //### Then
         verify(repository, times(1)).findByCpfAndPassword(anyString(), anyString());
-        verify(iCustomerEntityMapper, times(1)).toDomain(any(CustomerEntity.class));
+        verify(iCustomerEntityMapper, times(1)).toModel(any(CustomerEntity.class));
 
         assertThat(customerDomainSaved)
                 .usingRecursiveComparison()
