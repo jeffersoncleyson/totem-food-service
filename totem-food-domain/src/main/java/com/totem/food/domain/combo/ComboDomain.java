@@ -1,7 +1,5 @@
 package com.totem.food.domain.combo;
 
-import com.totem.food.domain.category.CategoryDomain;
-import com.totem.food.domain.exceptions.InvalidDomainField;
 import com.totem.food.domain.product.ProductDomain;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
