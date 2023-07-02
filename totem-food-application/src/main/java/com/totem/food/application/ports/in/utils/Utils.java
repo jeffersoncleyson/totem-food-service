@@ -1,12 +1,15 @@
 package com.totem.food.application.ports.in.utils;
 
 import com.totem.food.application.exceptions.InvalidHashingParam;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.bouncycastle.util.encoders.Hex;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Utils {
 
     public static String hash256(String param){

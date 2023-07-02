@@ -1,12 +1,10 @@
 package com.totem.food.application.usecases.customer;
 
 import com.totem.food.application.ports.in.dtos.customer.CustomerDto;
-import com.totem.food.application.ports.in.dtos.product.ProductDto;
 import com.totem.food.application.ports.out.persistence.commons.IRemoveRepositoryPort;
 import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.IDeleteUseCase;
 import com.totem.food.domain.customer.CustomerDomain;
-import com.totem.food.domain.product.ProductDomain;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
