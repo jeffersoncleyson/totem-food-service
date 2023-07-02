@@ -113,14 +113,14 @@ class UpdatePaymentUseCaseTest {
 
         //## Given
         when(iSearchRepositoryPort.findAll(any())).thenReturn(paymentDomain);
-        when(iSearchUniqueRepositoryPort.findById(anyString())).thenThrow(new ElementNotFoundException("Order with orderId: 1 not found"));
+        when(iSearchUniqueRepositoryPort.findById(anyString())).thenReturn(Optional.empty());
 
         //## When
         var exception = assertThrows(ElementNotFoundException.class,
                 () -> updatePaymentUseCase.updateItem(paymentFilterDto, anyString()));
 
         //## Then
-        assertEquals(exception.getMessage(), "Order with orderId: 1 not found");
+        assertEquals(exception.getMessage(), "Order with orderId: [1] not found");
         verify(iUpdateOrderRepositoryPort, never()).updateItem(orderDomain);
         verify(iUpdateRepositoryPort, never()).updateItem(paymentDomain);
 

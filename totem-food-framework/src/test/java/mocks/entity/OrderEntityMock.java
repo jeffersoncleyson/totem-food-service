@@ -1,6 +1,7 @@
 package mocks.entity;
 
 import com.totem.food.framework.adapters.out.persistence.mongo.order.totem.entity.OrderEntity;
+import org.bson.types.ObjectId;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -13,7 +14,7 @@ public class OrderEntityMock {
 
     public static OrderEntity getMock() {
         return OrderEntity.builder()
-                .id(UUID.randomUUID().toString())
+                .id(new ObjectId().toHexString())
                 .customer(CustomerEntityMock.getMock())
                 .products(List.of(ProductEntityMock.getMock()))
                 .combos(List.of(ComboEntityMock.getMock()))
