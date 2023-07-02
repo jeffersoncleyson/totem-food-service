@@ -2,9 +2,12 @@ package com.totem.food.framework.adapters.in.rest.customer.totem;
 
 import com.totem.food.application.ports.in.dtos.customer.CustomerCreateDto;
 import com.totem.food.application.ports.in.dtos.customer.CustomerDto;
+import com.totem.food.application.ports.in.dtos.product.ProductDto;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
+import com.totem.food.application.usecases.commons.IDeleteUseCase;
 import com.totem.food.framework.test.utils.TestUtils;
 import lombok.SneakyThrows;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,12 +23,14 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.io.Closeable;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -38,16 +43,17 @@ class TotemCustomerRestApiAdapterTest {
 
     @Mock
     private ICreateUseCase<CustomerCreateDto, CustomerDto> createCustomerUseCase;
+    @Mock
+    private IDeleteUseCase<String, CustomerDto> iDeleteUseCase;
 
     private MockMvc mockMvc;
 
-    @Mock
-    private Closeable closeable;
+    private AutoCloseable closeable;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        final var totemCustomerRestApiAdapter = new TotemCustomerRestApiAdapter(createCustomerUseCase);
+        closeable = MockitoAnnotations.openMocks(this);
+        final var totemCustomerRestApiAdapter = new TotemCustomerRestApiAdapter(createCustomerUseCase, iDeleteUseCase);
         mockMvc = MockMvcBuilders.standaloneSetup(totemCustomerRestApiAdapter).build();
     }
 
@@ -115,5 +121,27 @@ class TotemCustomerRestApiAdapterTest {
 
         verify(createCustomerUseCase, times(1)).createItem(Mockito.any(CustomerCreateDto.class));
 
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = "/v1/totem/customer/{customerId}")
+    void deleteCustomer(String endpoint) throws Exception {
+
+        //## Given
+        final var id = new ObjectId().toHexString();
+
+        //### Given - Mocks
+        when(iDeleteUseCase.removeItem(Mockito.anyString())).thenReturn(null);
+
+        final var httpServletRequest = delete(endpoint, id);
+
+        //### When
+        final var resultActions = mockMvc.perform(httpServletRequest);
+
+        //### Then
+        resultActions.andDo(print())
+                .andExpect(status().isNoContent());
+
+        verify(iDeleteUseCase, times(1)).removeItem(Mockito.anyString());
     }
 }
