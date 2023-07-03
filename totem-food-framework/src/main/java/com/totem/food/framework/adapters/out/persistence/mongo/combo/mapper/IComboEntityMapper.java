@@ -1,5 +1,6 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.combo.mapper;
 
+import com.totem.food.application.ports.out.persistence.combo.ComboModel;
 import com.totem.food.domain.combo.ComboDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.combo.entity.ComboEntity;
 import org.mapstruct.Mapper;
@@ -11,7 +12,7 @@ import org.mapstruct.ReportingPolicy;
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface IComboEntityMapper {
 
-    ComboEntity toEntity(ComboDomain input);
+    ComboEntity toEntity(ComboModel input);
 
-    ComboDomain toDomain(ComboEntity input);
+    ComboModel toModel(ComboEntity input);
 }

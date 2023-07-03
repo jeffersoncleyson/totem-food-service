@@ -7,6 +7,7 @@ import com.totem.food.application.ports.in.dtos.combo.ComboDto;
 import com.totem.food.application.ports.in.dtos.product.ProductFilterDto;
 import com.totem.food.application.ports.in.mappers.combo.IComboMapper;
 import com.totem.food.application.ports.in.mappers.product.IProductMapper;
+import com.totem.food.application.ports.out.persistence.combo.ComboModel;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.IExistsRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
@@ -26,8 +27,8 @@ public class CreateComboUseCase implements ICreateUseCase<ComboCreateDto, ComboD
 
     private final IComboMapper iComboMapper;
     private final IProductMapper iProductMapper;
-    private final ICreateRepositoryPort<ComboDomain> iCreateRepositoryPort;
-    private final IExistsRepositoryPort<ComboDomain, Boolean> iSearchRepositoryPort;
+    private final ICreateRepositoryPort<ComboModel> iCreateRepositoryPort;
+    private final IExistsRepositoryPort<ComboModel, Boolean> iSearchRepositoryPort;
     private final ISearchRepositoryPort<ProductFilterDto, List<ProductModel>> iSearchProductRepositoryPort;
 
     @Override
@@ -35,7 +36,9 @@ public class CreateComboUseCase implements ICreateUseCase<ComboCreateDto, ComboD
         final var comboDomain = iComboMapper.toDomain(item);
         comboDomain.fillDates();
 
-        if (Boolean.TRUE.equals(iSearchRepositoryPort.exists(comboDomain))) {
+        final var model = iComboMapper.toModel(comboDomain);
+
+        if (Boolean.TRUE.equals(iSearchRepositoryPort.exists(model))) {
             throw new ElementExistsException(String.format("Combo [%s] already registered", item.getName()));
         }
 
@@ -48,7 +51,9 @@ public class CreateComboUseCase implements ICreateUseCase<ComboCreateDto, ComboD
         final var productDomainList = productModelList.stream().map(iProductMapper::toDomain).toList();
         comboDomain.setProducts(productDomainList);
 
-        final var comboDomainSaved = iCreateRepositoryPort.saveItem(comboDomain);
+        final var modelValidated = iComboMapper.toModel(comboDomain);
+
+        final var comboDomainSaved = iCreateRepositoryPort.saveItem(modelValidated);
         return iComboMapper.toDto(comboDomainSaved);
     }
 }

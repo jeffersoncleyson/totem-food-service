@@ -2,6 +2,7 @@ package com.totem.food.application.ports.in.mappers.combo;
 
 import com.totem.food.application.ports.in.dtos.combo.ComboCreateDto;
 import com.totem.food.application.ports.in.dtos.combo.ComboDto;
+import com.totem.food.application.ports.out.persistence.combo.ComboModel;
 import com.totem.food.domain.combo.ComboDomain;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -16,5 +17,9 @@ public interface IComboMapper {
     @Mapping(target = "products", ignore = true)
     ComboDomain toDomain(ComboCreateDto input);
 
-    ComboDto toDto(ComboDomain input);
+    ComboDomain toDomain(ComboModel input);
+
+    ComboModel toModel(ComboDomain input);
+
+    ComboDto toDto(ComboModel input);
 }

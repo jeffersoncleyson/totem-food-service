@@ -2,6 +2,7 @@ package com.totem.food.framework.adapters.out.persistence.mongo.combo.repository
 
 import lombok.SneakyThrows;
 import mocks.domains.ComboDomainMock;
+import mocks.models.ComboModelMock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,7 +45,7 @@ class ExistsComboRepositoryAdapterTest {
     void exists() {
 
         //## Mock - Object
-        var comboDomain = ComboDomainMock.getMock();
+        var comboDomain = ComboModelMock.getMock();
 
         //## Given
         when(repository.existsByNameIgnoreCase(anyString())).thenReturn(true);

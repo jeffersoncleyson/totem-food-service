@@ -73,7 +73,7 @@ class SearchComboRepositoryAdapterTest {
                 .ignoringFieldsOfTypes(ZonedDateTime.class)
                 .isEqualTo(List.of(comboDomain));
 
-        verify(iComboEntityMapper, times(1)).toDomain(comboEntity);
+        verify(iComboEntityMapper, times(1)).toModel(comboEntity);
 
     }
 
@@ -88,7 +88,7 @@ class SearchComboRepositoryAdapterTest {
 
         //## Then
         assertTrue(result.isEmpty());
-        verify(iComboEntityMapper, never()).toDomain(any());
+        verify(iComboEntityMapper, never()).toModel(any());
 
     }
 }

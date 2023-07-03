@@ -1,6 +1,7 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.combo.repository;
 
 import com.totem.food.application.ports.in.dtos.combo.ComboFilterDto;
+import com.totem.food.application.ports.out.persistence.combo.ComboModel;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.domain.combo.ComboDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.combo.entity.ComboEntity;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Component
-public class SearchComboRepositoryAdapter implements ISearchRepositoryPort<ComboFilterDto, List<ComboDomain>> {
+public class SearchComboRepositoryAdapter implements ISearchRepositoryPort<ComboFilterDto, List<ComboModel>> {
 
     @Repository
     protected interface ComboRepositoryMongoDB extends BaseRepository<ComboEntity, String> {
@@ -28,9 +29,9 @@ public class SearchComboRepositoryAdapter implements ISearchRepositoryPort<Combo
     private final IComboEntityMapper iComboEntityMapper;
 
     @Override
-    public List<ComboDomain> findAll(ComboFilterDto item) {
+    public List<ComboModel> findAll(ComboFilterDto item) {
         if(CollectionUtils.isNotEmpty(item.getIds()))
-            return repository.findAllByIds(item.getIds()).stream().map(iComboEntityMapper::toDomain).toList();
+            return repository.findAllByIds(item.getIds()).stream().map(iComboEntityMapper::toModel).toList();
         return List.of();
     }
 

@@ -4,9 +4,11 @@ import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.exceptions.InvalidInput;
 import com.totem.food.application.ports.in.dtos.combo.ComboFilterDto;
 import com.totem.food.application.ports.in.dtos.product.ProductFilterDto;
+import com.totem.food.application.ports.in.mappers.combo.IComboMapper;
 import com.totem.food.application.ports.in.mappers.customer.ICustomerMapper;
 import com.totem.food.application.ports.in.mappers.order.totem.IOrderMapper;
 import com.totem.food.application.ports.in.mappers.product.IProductMapper;
+import com.totem.food.application.ports.out.persistence.combo.ComboModel;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
@@ -21,6 +23,7 @@ import mock.domain.ComboDomainMock;
 import mock.domain.CustomerDomainMock;
 import mock.domain.OrderDomainMock;
 import mock.domain.ProductDomainMock;
+import mock.models.ComboModelMock;
 import mock.models.CustomerModelMock;
 import mock.models.ProductModelMock;
 import mock.ports.in.dto.OrderCreateDtoMock;
@@ -56,6 +59,8 @@ class CreateOrderUseCaseTest {
     private ICustomerMapper iCustomerMapper = Mappers.getMapper(ICustomerMapper.class);
     @Spy
     private IProductMapper iProductMapper = Mappers.getMapper(IProductMapper.class);
+    @Spy
+    private IComboMapper iComboMapper = Mappers.getMapper(IComboMapper.class);
     @Mock
     private ICreateRepositoryPort<OrderDomain> iCreateRepositoryPort;
     @Mock
@@ -63,7 +68,7 @@ class CreateOrderUseCaseTest {
     @Mock
     private ISearchRepositoryPort<ProductFilterDto, List<ProductModel>> iSearchProductRepositoryPort;
     @Mock
-    private ISearchRepositoryPort<ComboFilterDto, List<ComboDomain>> iSearchDomainRepositoryPort;
+    private ISearchRepositoryPort<ComboFilterDto, List<ComboModel>> iSearchDomainRepositoryPort;
 
     private CreateOrderUseCase createOrderUseCase;
 
@@ -72,7 +77,7 @@ class CreateOrderUseCaseTest {
     @BeforeEach
     void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
-        createOrderUseCase = new CreateOrderUseCase(iOrderMapper, iCustomerMapper, iProductMapper, iCreateRepositoryPort, iSearchUniqueCustomerRepositoryPort, iSearchProductRepositoryPort, iSearchDomainRepositoryPort);
+        createOrderUseCase = new CreateOrderUseCase(iOrderMapper, iCustomerMapper, iProductMapper, iComboMapper, iCreateRepositoryPort, iSearchUniqueCustomerRepositoryPort, iSearchProductRepositoryPort, iSearchDomainRepositoryPort);
     }
 
     @SneakyThrows
@@ -126,7 +131,7 @@ class CreateOrderUseCaseTest {
         var orderDomain = OrderDomainMock.getStatusNewMock();
         var customerModel = CustomerModelMock.getMock();
         var productModel = ProductModelMock.getMock();
-        var comboDomain = ComboDomainMock.getMock();
+        var comboDomain = ComboModelMock.getMock();
         var orderCreateDto = OrderCreateDtoMock.getMock(productModel.getId(), comboDomain.getId());
 
         //## Given

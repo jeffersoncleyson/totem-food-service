@@ -4,8 +4,10 @@ import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.ports.in.dtos.combo.ComboFilterDto;
 import com.totem.food.application.ports.in.dtos.order.totem.OrderUpdateDto;
 import com.totem.food.application.ports.in.dtos.product.ProductFilterDto;
+import com.totem.food.application.ports.in.mappers.combo.IComboMapper;
 import com.totem.food.application.ports.in.mappers.order.totem.IOrderMapper;
 import com.totem.food.application.ports.in.mappers.product.IProductMapper;
+import com.totem.food.application.ports.out.persistence.combo.ComboModel;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
@@ -16,6 +18,7 @@ import lombok.SneakyThrows;
 import mock.domain.ComboDomainMock;
 import mock.domain.OrderDomainMock;
 import mock.domain.ProductDomainMock;
+import mock.models.ComboModelMock;
 import mock.models.ProductModelMock;
 import mock.ports.in.dto.OrderUpdateDtoMock;
 import org.junit.jupiter.api.AfterEach;
@@ -49,11 +52,14 @@ class UpdateOrderUseCaseTest {
     @Spy
     private IProductMapper iProductMapper = Mappers.getMapper(IProductMapper.class);
 
+    @Spy
+    private IComboMapper iComboMapper = Mappers.getMapper(IComboMapper.class);
+
     @Mock
     private ISearchUniqueRepositoryPort<Optional<OrderDomain>> iSearchUniqueRepositoryPort;
 
     @Mock
-    private ISearchRepositoryPort<ComboFilterDto, List<ComboDomain>> iSearchComboDomainRepositoryPort;
+    private ISearchRepositoryPort<ComboFilterDto, List<ComboModel>> iSearchComboDomainRepositoryPort;
 
     @Mock
     private ISearchRepositoryPort<ProductFilterDto, List<ProductModel>> iSearchProductRepositoryPort;
@@ -68,7 +74,7 @@ class UpdateOrderUseCaseTest {
     @BeforeEach
     void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
-        updateOrderUseCase = new UpdateOrderUseCase(iOrderMapper, iProductMapper, iSearchUniqueRepositoryPort, iSearchComboDomainRepositoryPort, iSearchProductRepositoryPort, iProductRepositoryPort);
+        updateOrderUseCase = new UpdateOrderUseCase(iOrderMapper, iProductMapper, iComboMapper, iSearchUniqueRepositoryPort, iSearchComboDomainRepositoryPort, iSearchProductRepositoryPort, iProductRepositoryPort);
     }
 
     @SneakyThrows
@@ -101,8 +107,9 @@ class UpdateOrderUseCaseTest {
         var productModel = ProductModelMock.getMock();
         productModel.setId(productDomain.getId());
 
+        var comboModel = ComboModelMock.getMock();
         var comboDomain = ComboDomainMock.getMock();
-        var orderUpdateDto = OrderUpdateDtoMock.getMock(productDomain.getId(), comboDomain.getId());
+        var orderUpdateDto = OrderUpdateDtoMock.getMock(productDomain.getId(), comboModel.getId());
 
         var orderDomainOpt = OrderDomainMock.getStatusNewMock();
         orderDomainOpt.setCombos(List.of(comboDomain));
@@ -114,7 +121,7 @@ class UpdateOrderUseCaseTest {
         when(iSearchProductRepositoryPort.findAll(any(ProductFilterDto.class)))
                 .thenReturn(List.of(productModel));
         when(iSearchComboDomainRepositoryPort.findAll(any(ComboFilterDto.class)))
-                .thenReturn(List.of(comboDomain));
+                .thenReturn(List.of(comboModel));
 
         orderDomainOpt.calculatePrice();
         orderDomainOpt.updateModifiedAt();

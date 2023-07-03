@@ -1,11 +1,13 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.combo.repository;
 
+import com.totem.food.application.ports.out.persistence.combo.ComboModel;
 import com.totem.food.domain.combo.ComboDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.combo.entity.ComboEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.combo.mapper.IComboEntityMapper;
 import lombok.SneakyThrows;
 import mocks.domains.ComboDomainMock;
 import mocks.entity.ComboEntityMock;
+import mocks.models.ComboModelMock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,7 +54,7 @@ class CreateComboRepositoryAdapterTest {
     void saveItem() {
 
         //### Given - Mocks
-        var comboDomain = ComboDomainMock.getMock();
+        var comboDomain = ComboModelMock.getMock();
         var comboEntity = ComboEntityMock.getMock();
         when(repository.save(Mockito.any(ComboEntity.class))).thenReturn(comboEntity);
 
@@ -60,9 +62,9 @@ class CreateComboRepositoryAdapterTest {
         final var comboDomainSaved = comboRepositoryAdapter.saveItem(comboDomain);
 
         //### Then
-        verify(iComboEntityMapper, times(1)).toEntity(Mockito.any(ComboDomain.class));
+        verify(iComboEntityMapper, times(1)).toEntity(Mockito.any(ComboModel.class));
         verify(repository, times(1)).save(Mockito.any(ComboEntity.class));
-        verify(iComboEntityMapper, times(1)).toDomain(Mockito.any(ComboEntity.class));
+        verify(iComboEntityMapper, times(1)).toModel(Mockito.any(ComboEntity.class));
 
         assertThat(comboDomain)
                 .usingRecursiveComparison()

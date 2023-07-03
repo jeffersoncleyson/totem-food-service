@@ -1,5 +1,6 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.combo.repository;
 
+import com.totem.food.application.ports.out.persistence.combo.ComboModel;
 import com.totem.food.application.ports.out.persistence.commons.IExistsRepositoryPort;
 import com.totem.food.domain.combo.ComboDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.combo.entity.ComboEntity;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 @AllArgsConstructor
 @Component
-public class ExistsComboRepositoryAdapter implements IExistsRepositoryPort<ComboDomain, Boolean> {
+public class ExistsComboRepositoryAdapter implements IExistsRepositoryPort<ComboModel, Boolean> {
 
 
     @Repository
@@ -21,7 +22,7 @@ public class ExistsComboRepositoryAdapter implements IExistsRepositoryPort<Combo
     private final ComboRepositoryMongoDB repository;
 
     @Override
-    public Boolean exists(ComboDomain item) {
+    public Boolean exists(ComboModel item) {
         return repository.existsByNameIgnoreCase(item.getName());
     }
 }

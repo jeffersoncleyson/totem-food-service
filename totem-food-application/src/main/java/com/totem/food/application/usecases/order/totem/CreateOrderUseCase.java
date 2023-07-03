@@ -7,9 +7,11 @@ import com.totem.food.application.ports.in.dtos.order.totem.ItemQuantityDto;
 import com.totem.food.application.ports.in.dtos.order.totem.OrderCreateDto;
 import com.totem.food.application.ports.in.dtos.order.totem.OrderDto;
 import com.totem.food.application.ports.in.dtos.product.ProductFilterDto;
+import com.totem.food.application.ports.in.mappers.combo.IComboMapper;
 import com.totem.food.application.ports.in.mappers.customer.ICustomerMapper;
 import com.totem.food.application.ports.in.mappers.order.totem.IOrderMapper;
 import com.totem.food.application.ports.in.mappers.product.IProductMapper;
+import com.totem.food.application.ports.out.persistence.combo.ComboModel;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
@@ -39,10 +41,11 @@ public class CreateOrderUseCase implements ICreateUseCase<OrderCreateDto, OrderD
     private final IOrderMapper iOrderMapper;
     private final ICustomerMapper iCustomerMapper;
     private final IProductMapper iProductMapper;
+    private final IComboMapper iComboMapper;
     private final ICreateRepositoryPort<OrderDomain> iCreateRepositoryPort;
     private final ISearchUniqueRepositoryPort<Optional<CustomerModel>> iSearchUniqueCustomerRepositoryPort;
     private final ISearchRepositoryPort<ProductFilterDto, List<ProductModel>> iSearchProductRepositoryPort;
-    private final ISearchRepositoryPort<ComboFilterDto, List<ComboDomain>> iSearchDomainRepositoryPort;
+    private final ISearchRepositoryPort<ComboFilterDto, List<ComboModel>> iSearchDomainRepositoryPort;
 
     @Override
     public OrderDto createItem(OrderCreateDto item) {
@@ -93,8 +96,8 @@ public class CreateOrderUseCase implements ICreateUseCase<OrderCreateDto, OrderD
     }
 
     // TODO - Refatorar este método
-    private static List<ComboDomain> getComboDomains(OrderCreateDto item, List<ComboDomain> combos) {
-        final var comboDomainMap = combos.stream().collect(Collectors.toMap(ComboDomain::getId, Function.identity()));
+    private List<ComboDomain> getComboDomains(OrderCreateDto item, List<ComboModel> combos) {
+        final var comboDomainMap = combos.stream().collect(Collectors.toMap(ComboModel::getId, iComboMapper::toDomain));
         final var comboDomainToAdd = new ArrayList<ComboDomain>();
 
         for (ItemQuantityDto itemX : item.getCombos()) {

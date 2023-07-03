@@ -7,6 +7,7 @@ import com.totem.food.application.ports.in.dtos.combo.ComboDto;
 import com.totem.food.application.ports.in.dtos.product.ProductFilterDto;
 import com.totem.food.application.ports.in.mappers.combo.IComboMapper;
 import com.totem.food.application.ports.in.mappers.product.IProductMapper;
+import com.totem.food.application.ports.out.persistence.combo.ComboModel;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.IExistsRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
@@ -43,10 +44,10 @@ class CreateComboUseCaseTest {
     @Spy
     private IProductMapper iProductMapper = Mappers.getMapper(IProductMapper.class);
     @Mock
-    private ICreateRepositoryPort<ComboDomain> iCreateRepositoryPort;
+    private ICreateRepositoryPort<ComboModel> iCreateRepositoryPort;
 
     @Mock
-    private IExistsRepositoryPort<ComboDomain, Boolean> iSearchRepositoryPort;
+    private IExistsRepositoryPort<ComboModel, Boolean> iSearchRepositoryPort;
 
     @Mock
     private ISearchRepositoryPort<ProductFilterDto, List<ProductModel>> iSearchProductRepositoryPort;
@@ -64,13 +65,13 @@ class CreateComboUseCaseTest {
 
         //## Given
         final var productId = UUID.randomUUID().toString();
-        final var productDomain = ProductDomain.builder().id(productId).build();
+        final var productDomain = ProductModel.builder().id(productId).build();
         final var productModel = ProductModel.builder().id(productId).build();
-        final var comboDomain = new ComboDomain("1", "Combo da casa", Double.MAX_VALUE, List.of(productDomain), ZonedDateTime.now(ZoneOffset.UTC), ZonedDateTime.now(ZoneOffset.UTC));
+        final var comboDomain = new ComboModel("1", "Combo da casa", Double.MAX_VALUE, List.of(productDomain), ZonedDateTime.now(ZoneOffset.UTC), ZonedDateTime.now(ZoneOffset.UTC));
 
         //### Given - Mocks
         when(iSearchProductRepositoryPort.findAll(any(ProductFilterDto.class))).thenReturn(List.of(productModel));
-        when(iCreateRepositoryPort.saveItem(any(ComboDomain.class))).thenReturn(comboDomain);
+        when(iCreateRepositoryPort.saveItem(any(ComboModel.class))).thenReturn(comboDomain);
 
         //## When
         final var comboCreateDto = new ComboCreateDto("Combo da casa", BigDecimal.TEN, List.of(productId));
