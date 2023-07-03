@@ -13,9 +13,11 @@ import com.totem.food.application.ports.out.persistence.commons.ICreateRepositor
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
+import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
 import com.totem.food.application.ports.out.persistence.product.ProductModel;
 import com.totem.food.domain.combo.ComboDomain;
 import com.totem.food.domain.customer.CustomerDomain;
+import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import com.totem.food.domain.order.totem.OrderDomain;
 import com.totem.food.domain.product.ProductDomain;
 import lombok.SneakyThrows;
@@ -25,6 +27,7 @@ import mock.domain.OrderDomainMock;
 import mock.domain.ProductDomainMock;
 import mock.models.ComboModelMock;
 import mock.models.CustomerModelMock;
+import mock.models.OrderModelMock;
 import mock.models.ProductModelMock;
 import mock.ports.in.dto.OrderCreateDtoMock;
 import org.junit.jupiter.api.AfterEach;
@@ -62,7 +65,7 @@ class CreateOrderUseCaseTest {
     @Spy
     private IComboMapper iComboMapper = Mappers.getMapper(IComboMapper.class);
     @Mock
-    private ICreateRepositoryPort<OrderDomain> iCreateRepositoryPort;
+    private ICreateRepositoryPort<OrderModel> iCreateRepositoryPort;
     @Mock
     private ISearchUniqueRepositoryPort<Optional<CustomerModel>> iSearchUniqueCustomerRepositoryPort;
     @Mock
@@ -128,14 +131,14 @@ class CreateOrderUseCaseTest {
     void createItem() {
         //## Mock - Objects
 
-        var orderDomain = OrderDomainMock.getStatusNewMock();
+        var orderDomain = OrderModelMock.getOrderDomain(OrderStatusEnumDomain.NEW);
         var customerModel = CustomerModelMock.getMock();
         var productModel = ProductModelMock.getMock();
         var comboDomain = ComboModelMock.getMock();
         var orderCreateDto = OrderCreateDtoMock.getMock(productModel.getId(), comboDomain.getId());
 
         //## Given
-        when(iCreateRepositoryPort.saveItem(any(OrderDomain.class))).thenReturn(orderDomain);
+        when(iCreateRepositoryPort.saveItem(any(OrderModel.class))).thenReturn(orderDomain);
         when(iSearchUniqueCustomerRepositoryPort.findById(anyString())).thenReturn(Optional.of(customerModel));
         when(iSearchProductRepositoryPort.findAll(any(ProductFilterDto.class))).thenReturn(List.of(productModel));
         when(iSearchDomainRepositoryPort.findAll(any(ComboFilterDto.class))).thenReturn(List.of(comboDomain));

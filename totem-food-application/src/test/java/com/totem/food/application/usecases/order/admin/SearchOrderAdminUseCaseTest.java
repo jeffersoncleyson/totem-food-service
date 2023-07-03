@@ -4,6 +4,7 @@ import com.totem.food.application.ports.in.dtos.order.admin.OrderAdminDto;
 import com.totem.food.application.ports.in.dtos.order.admin.OrderAdminFilterDto;
 import com.totem.food.application.ports.in.mappers.order.admin.IOrderAdminMapper;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
+import com.totem.food.application.ports.out.persistence.order.admin.OrderAdminModel;
 import com.totem.food.application.usecases.commons.ISearchUseCase;
 import com.totem.food.domain.customer.CustomerDomain;
 import com.totem.food.domain.order.admin.OrderAdminDomain;
@@ -35,7 +36,7 @@ class SearchOrderAdminUseCaseTest {
     @Spy
     private IOrderAdminMapper iOrderAdminMapper = Mappers.getMapper(IOrderAdminMapper.class);
     @Mock
-    private ISearchRepositoryPort<OrderAdminFilterDto, List<OrderAdminDomain>> iSearchOrderRepositoryPort;
+    private ISearchRepositoryPort<OrderAdminFilterDto, List<OrderAdminModel>> iSearchOrderRepositoryPort;
 
     private ISearchUseCase<OrderAdminFilterDto, List<OrderAdminDto>> iSearchUseCase;
     private AutoCloseable closeable;
@@ -76,7 +77,7 @@ class SearchOrderAdminUseCaseTest {
         final var price = new BigDecimal("59.90").doubleValue();
         final var createAt = ZonedDateTime.now(ZoneOffset.UTC);
 
-        final var order = new OrderAdminDomain(
+        final var order = new OrderAdminModel(
                 orderId,
                 price,
                 customerDomain,

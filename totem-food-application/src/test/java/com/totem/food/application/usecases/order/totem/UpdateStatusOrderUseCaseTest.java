@@ -9,6 +9,7 @@ import com.totem.food.application.ports.out.email.ISendEmailPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
+import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.application.usecases.commons.IUpdateStatusUseCase;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
@@ -17,6 +18,7 @@ import com.totem.food.domain.payment.PaymentDomain;
 import lombok.SneakyThrows;
 import mock.domain.OrderDomainMock;
 import mock.domain.PaymentDomainMock;
+import mock.models.OrderModelMock;
 import mock.models.PaymentModelMock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,9 +47,9 @@ class UpdateStatusOrderUseCaseTest {
     @Spy
     private IOrderMapper iOrderMapper = Mappers.getMapper(IOrderMapper.class);
     @Mock
-    private ISearchUniqueRepositoryPort<Optional<OrderDomain>> iSearchUniqueRepositoryPort;
+    private ISearchUniqueRepositoryPort<Optional<OrderModel>> iSearchUniqueRepositoryPort;
     @Mock
-    private IUpdateRepositoryPort<OrderDomain> iProductRepositoryPort;
+    private IUpdateRepositoryPort<OrderModel> iProductRepositoryPort;
     @Mock
     private ISendEmailPort<EmailNotificationDto, Boolean> iSendEmailPort;
     @Mock
@@ -78,7 +80,7 @@ class UpdateStatusOrderUseCaseTest {
     void updateStatus() {
 
         //## Mock - Objects
-        var orderDomain = OrderDomainMock.getOrderDomain(OrderStatusEnumDomain.NEW);
+        var orderDomain = OrderModelMock.getOrderDomain(OrderStatusEnumDomain.NEW);
 
         //## Mocks
         when(iSearchUniqueRepositoryPort.findById(Mockito.anyString())).thenReturn(Optional.of(orderDomain));
@@ -120,13 +122,13 @@ class UpdateStatusOrderUseCaseTest {
     void updateStatusChangeStatusToReceived() {
 
         //## Mock - Objects
-        var orderDomain = OrderDomainMock.getOrderDomain(OrderStatusEnumDomain.WAITING_PAYMENT);
+        var orderDomain = OrderModelMock.getOrderDomain(OrderStatusEnumDomain.WAITING_PAYMENT);
         final var paymentDomain = PaymentModelMock.getPaymentStatusCompletedMock();
 
         //## Mocks
         when(iSearchUniqueRepositoryPort.findById(Mockito.anyString())).thenReturn(Optional.of(orderDomain));
         when(iSearchPaymentRepositoryPort.findAll(Mockito.any(PaymentFilterDto.class))).thenReturn(paymentDomain);
-        when(iProductRepositoryPort.updateItem(Mockito.any(OrderDomain.class))).thenReturn(orderDomain);
+        when(iProductRepositoryPort.updateItem(Mockito.any(OrderModel.class))).thenReturn(orderDomain);
 
         //## When
         final var orderDto = iUpdateStatusUseCase.updateStatus(orderDomain.getId(), OrderStatusEnumDomain.RECEIVED.key);
@@ -135,7 +137,7 @@ class UpdateStatusOrderUseCaseTest {
         verify(iOrderMapper, times(1)).toDto(any());
         verify(iSearchUniqueRepositoryPort, times(1)).findById(Mockito.anyString());
         verify(iSearchPaymentRepositoryPort, times(1)).findAll(Mockito.any(PaymentFilterDto.class));
-        verify(iProductRepositoryPort, times(1)).updateItem(Mockito.any(OrderDomain.class));
+        verify(iProductRepositoryPort, times(1)).updateItem(Mockito.any(OrderModel.class));
 
         final var orderDtoExpected = iOrderMapper.toDto(orderDomain);
         assertThat(orderDto).usingRecursiveComparison()
@@ -147,7 +149,7 @@ class UpdateStatusOrderUseCaseTest {
     void updateStatusChangeStatusToReceivedButPaymentStatusPending() {
 
         //## Mock - Objects
-        var orderDomain = OrderDomainMock.getOrderDomain(OrderStatusEnumDomain.WAITING_PAYMENT);
+        var orderDomain = OrderModelMock.getOrderDomain(OrderStatusEnumDomain.WAITING_PAYMENT);
 
         //## Mocks
         when(iSearchUniqueRepositoryPort.findById(Mockito.anyString())).thenReturn(Optional.of(orderDomain));
@@ -172,12 +174,12 @@ class UpdateStatusOrderUseCaseTest {
     void updateStatusChangeStatusToReady() {
 
         //## Mock - Objects
-        var orderDomain = OrderDomainMock.getOrderDomain(OrderStatusEnumDomain.IN_PREPARATION);
-        var orderDomainReady = OrderDomainMock.getOrderDomain(OrderStatusEnumDomain.READY);
+        var orderDomain = OrderModelMock.getOrderDomain(OrderStatusEnumDomain.IN_PREPARATION);
+        var orderDomainReady = OrderModelMock.getOrderDomain(OrderStatusEnumDomain.READY);
 
         //## Mocks
         when(iSearchUniqueRepositoryPort.findById(Mockito.anyString())).thenReturn(Optional.of(orderDomain));
-        when(iProductRepositoryPort.updateItem(Mockito.any(OrderDomain.class))).thenReturn(orderDomainReady);
+        when(iProductRepositoryPort.updateItem(Mockito.any(OrderModel.class))).thenReturn(orderDomainReady);
 
         //## When
         final var orderDto = iUpdateStatusUseCase.updateStatus(orderDomain.getId(), OrderStatusEnumDomain.READY.key);
@@ -186,7 +188,7 @@ class UpdateStatusOrderUseCaseTest {
         verify(iOrderMapper, times(1)).toDto(any());
         verify(iSearchUniqueRepositoryPort, times(1)).findById(Mockito.anyString());
         verify(iSearchPaymentRepositoryPort, times(0)).findAll(Mockito.any(PaymentFilterDto.class));
-        verify(iProductRepositoryPort, times(1)).updateItem(Mockito.any(OrderDomain.class));
+        verify(iProductRepositoryPort, times(1)).updateItem(Mockito.any(OrderModel.class));
         verify(iSendEmailPort, times(1)).sendEmail(Mockito.any(EmailNotificationDto.class));
 
         final var orderDtoExpected = iOrderMapper.toDto(orderDomainReady);

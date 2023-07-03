@@ -2,8 +2,8 @@ package com.totem.food.framework.adapters.out.persistence.mongo.order.totem.repo
 
 import com.totem.food.application.ports.in.dtos.order.totem.OrderFilterDto;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
+import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
-import com.totem.food.domain.order.totem.OrderDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepository;
 import com.totem.food.framework.adapters.out.persistence.mongo.order.totem.entity.OrderEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.order.totem.mapper.IOrderEntityMapper;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Component
-public class SearchOrderRepositoryAdapter implements ISearchRepositoryPort<OrderFilterDto, List<OrderDomain>> {
+public class SearchOrderRepositoryAdapter implements ISearchRepositoryPort<OrderFilterDto, List<OrderModel>> {
 
     @Repository
     protected interface OrderRepositoryMongoDB extends BaseRepository<OrderEntity, String> {
@@ -37,16 +37,16 @@ public class SearchOrderRepositoryAdapter implements ISearchRepositoryPort<Order
     private final IOrderEntityMapper iOrderEntityMapper;
 
     @Override
-    public List<OrderDomain> findAll(OrderFilterDto filter) {
+    public List<OrderModel> findAll(OrderFilterDto filter) {
 
         if (StringUtils.isNotEmpty(filter.getCustomerId()))
             return repository.findByFilter(new ObjectId(filter.getCustomerId()))
                     .stream()
-                    .map(iOrderEntityMapper::toDomain)
+                    .map(iOrderEntityMapper::toModel)
                     .toList();
 
         if (StringUtils.isNotEmpty(filter.getOrderId())) {
-            return repository.findById(filter.getOrderId()).map(iOrderEntityMapper::toDomain)
+            return repository.findById(filter.getOrderId()).map(iOrderEntityMapper::toModel)
                     .map(List::of)
                     .orElse(List.of());
         }
@@ -59,7 +59,7 @@ public class SearchOrderRepositoryAdapter implements ISearchRepositoryPort<Order
                     .collect(Collectors.toSet());
             return repository.findByStatus(status)
                     .stream()
-                    .map(iOrderEntityMapper::toDomain).toList();
+                    .map(iOrderEntityMapper::toModel).toList();
         }
 
         return List.of();

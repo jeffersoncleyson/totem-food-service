@@ -16,6 +16,7 @@ import com.totem.food.application.ports.out.persistence.commons.ICreateRepositor
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
+import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
 import com.totem.food.application.ports.out.persistence.product.ProductModel;
 import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
@@ -42,7 +43,7 @@ public class CreateOrderUseCase implements ICreateUseCase<OrderCreateDto, OrderD
     private final ICustomerMapper iCustomerMapper;
     private final IProductMapper iProductMapper;
     private final IComboMapper iComboMapper;
-    private final ICreateRepositoryPort<OrderDomain> iCreateRepositoryPort;
+    private final ICreateRepositoryPort<OrderModel> iCreateRepositoryPort;
     private final ISearchUniqueRepositoryPort<Optional<CustomerModel>> iSearchUniqueCustomerRepositoryPort;
     private final ISearchRepositoryPort<ProductFilterDto, List<ProductModel>> iSearchProductRepositoryPort;
     private final ISearchRepositoryPort<ComboFilterDto, List<ComboModel>> iSearchDomainRepositoryPort;
@@ -64,7 +65,8 @@ public class CreateOrderUseCase implements ICreateUseCase<OrderCreateDto, OrderD
         domain.calculatePrice();
         domain.fillDates();
 
-        final var domainSaved = iCreateRepositoryPort.saveItem(domain);
+        final var model = iOrderMapper.toModel(domain);
+        final var domainSaved = iCreateRepositoryPort.saveItem(model);
         return iOrderMapper.toDto(domainSaved);
     }
 

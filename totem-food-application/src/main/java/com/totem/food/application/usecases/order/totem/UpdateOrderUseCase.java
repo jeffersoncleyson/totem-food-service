@@ -13,6 +13,7 @@ import com.totem.food.application.ports.out.persistence.combo.ComboModel;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
+import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
 import com.totem.food.application.ports.out.persistence.product.ProductModel;
 import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.IUpdateUseCase;
@@ -35,31 +36,35 @@ public class UpdateOrderUseCase implements IUpdateUseCase<OrderUpdateDto, OrderD
     private final IOrderMapper iOrderMapper;
     private final IProductMapper iProductMapper;
     private final IComboMapper iComboMapper;
-    private final ISearchUniqueRepositoryPort<Optional<OrderDomain>> iSearchUniqueRepositoryPort;
+    private final ISearchUniqueRepositoryPort<Optional<OrderModel>> iSearchUniqueRepositoryPort;
     private final ISearchRepositoryPort<ComboFilterDto, List<ComboModel>> iSearchComboDomainRepositoryPort;
     private final ISearchRepositoryPort<ProductFilterDto, List<ProductModel>> iSearchProductRepositoryPort;
-    private final IUpdateRepositoryPort<OrderDomain> iProductRepositoryPort;
+    private final IUpdateRepositoryPort<OrderModel> iProductRepositoryPort;
 
     @Override
     public OrderDto updateItem(OrderUpdateDto item, String id) {
 
-        final var orderDomainOpt = iSearchUniqueRepositoryPort.findById(id);
+        final var orderModelOptional = iSearchUniqueRepositoryPort.findById(id);
 
-        final var domain = orderDomainOpt
+        final var orderModel = orderModelOptional
                 .orElseThrow(() -> new ElementNotFoundException(String.format("Order [%s] not found", id)));
 
-        setProductsToDomain(item, domain);
-        setCombosToDomain(item, domain);
+        setProductsToDomain(item, orderModel);
+        setCombosToDomain(item, orderModel);
+
+        final var domain = iOrderMapper.toDomain(orderModel);
 
         domain.calculatePrice();
         domain.updateModifiedAt();
 
-        final var domainSaved = iProductRepositoryPort.updateItem(domain);
+        final var model = iOrderMapper.toModel(domain);
+
+        final var domainSaved = iProductRepositoryPort.updateItem(model);
 
         return iOrderMapper.toDto(domainSaved);
     }
 
-    private void setCombosToDomain(OrderUpdateDto item, OrderDomain domain) {
+    private void setCombosToDomain(OrderUpdateDto item, OrderModel model) {
         if (CollectionUtils.isNotEmpty(item.getCombos())) {
 
             final var ids = item.getCombos().stream().map(ItemQuantityDto::getId).toList();
@@ -72,9 +77,9 @@ public class UpdateOrderUseCase implements IUpdateUseCase<OrderUpdateDto, OrderD
 
             final var comboDomainToAdd = getComboDomains(item, combos);
 
-            domain.setCombos(comboDomainToAdd);
+            model.setCombos(comboDomainToAdd);
         } else {
-            domain.clearCombos();
+            model.setCombos(null);
         }
     }
 
@@ -92,7 +97,7 @@ public class UpdateOrderUseCase implements IUpdateUseCase<OrderUpdateDto, OrderD
         return comboDomainToAdd;
     }
 
-    private void setProductsToDomain(OrderUpdateDto item, OrderDomain domain) {
+    private void setProductsToDomain(OrderUpdateDto item, OrderModel model) {
         if (CollectionUtils.isNotEmpty(item.getProducts())) {
 
             final var ids = item.getProducts().stream().map(ItemQuantityDto::getId).toList();
@@ -104,9 +109,9 @@ public class UpdateOrderUseCase implements IUpdateUseCase<OrderUpdateDto, OrderD
             }
 
             final var productsDomainToAdd = getProductDomains(item, products);
-            domain.setProducts(productsDomainToAdd);
+            model.setProducts(productsDomainToAdd);
         } else {
-            domain.clearProducts();
+            model.setProducts(null);
         }
     }
 
