@@ -3,19 +3,23 @@ package com.totem.food.application.usecases.payment;
 import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.ports.in.dtos.payment.PaymentQRCodeDto;
 import com.totem.food.application.ports.in.mappers.customer.ICustomerMapper;
+import com.totem.food.application.ports.in.mappers.order.totem.IOrderMapper;
 import com.totem.food.application.ports.in.mappers.payment.IPaymentMapper;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
+import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.application.ports.out.web.ISendRequestPort;
 import com.totem.food.domain.exceptions.InvalidStatusException;
+import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import com.totem.food.domain.order.totem.OrderDomain;
 import com.totem.food.domain.payment.PaymentDomain;
 import lombok.SneakyThrows;
 import mock.domain.OrderDomainMock;
 import mock.domain.PaymentDomainMock;
 import mock.models.CustomerModelMock;
+import mock.models.OrderModelMock;
 import mock.models.PaymentModelMock;
 import mock.ports.in.dto.PaymentCreateDtoMock;
 import mock.ports.in.dto.PaymentQRCodeDtoMock;
@@ -47,11 +51,13 @@ class CreatePaymentUseCaseTest {
     @Mock
     private ICreateRepositoryPort<PaymentModel> iCreateRepositoryPort;
     @Spy
+    private IOrderMapper iOrderMapper = Mappers.getMapper(IOrderMapper.class);
+    @Spy
     private ICustomerMapper iCustomerMapper = Mappers.getMapper(ICustomerMapper.class);
     @Spy
     private IPaymentMapper iPaymentMapper = Mappers.getMapper(IPaymentMapper.class);
     @Mock
-    private ISearchUniqueRepositoryPort<Optional<OrderDomain>> iSearchUniqueOrderRepositoryPort;
+    private ISearchUniqueRepositoryPort<Optional<OrderModel>> iSearchUniqueOrderRepositoryPort;
     @Mock
     private ISearchUniqueRepositoryPort<Optional<CustomerModel>> iSearchUniqueCustomerRepositoryPort;
     @Mock
@@ -65,7 +71,7 @@ class CreatePaymentUseCaseTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        createPaymentUseCase = new CreatePaymentUseCase(iCreateRepositoryPort, iCustomerMapper, iPaymentMapper, iSearchUniqueOrderRepositoryPort, iSearchUniqueCustomerRepositoryPort, iSendRequest);
+        createPaymentUseCase = new CreatePaymentUseCase(iCreateRepositoryPort, iOrderMapper, iCustomerMapper, iPaymentMapper, iSearchUniqueOrderRepositoryPort, iSearchUniqueCustomerRepositoryPort, iSendRequest);
     }
 
     @SneakyThrows
@@ -78,7 +84,7 @@ class CreatePaymentUseCaseTest {
     void createItemWhenOrderStatusWaitingPayment() {
 
         //## Mock - Objects
-        var orderDomain = OrderDomainMock.getStatusWaitingPaymentMock();
+        var orderDomain = OrderModelMock.orderModel(OrderStatusEnumDomain.WAITING_PAYMENT);
         var customerModel = CustomerModelMock.getMock();
         var paymentQRCodeDto = PaymentQRCodeDtoMock.getStatusPendingMock();
         var paymentCreateDto = PaymentCreateDtoMock.getMock();
@@ -123,7 +129,7 @@ class CreatePaymentUseCaseTest {
     void createItemWhenInvalidStatusException() {
 
         //## Mock - Objects
-        var orderDomain = OrderDomainMock.getStatusNewMock();
+        var orderDomain = OrderModelMock.orderModel(OrderStatusEnumDomain.NEW);
         var paymentCreateDto = PaymentCreateDtoMock.getMock();
 
         //## Give

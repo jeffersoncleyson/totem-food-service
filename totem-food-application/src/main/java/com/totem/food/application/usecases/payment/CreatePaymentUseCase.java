@@ -4,10 +4,12 @@ import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.ports.in.dtos.payment.PaymentCreateDto;
 import com.totem.food.application.ports.in.dtos.payment.PaymentQRCodeDto;
 import com.totem.food.application.ports.in.mappers.customer.ICustomerMapper;
+import com.totem.food.application.ports.in.mappers.order.totem.IOrderMapper;
 import com.totem.food.application.ports.in.mappers.payment.IPaymentMapper;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
+import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.application.ports.out.web.ISendRequestPort;
 import com.totem.food.application.usecases.annotations.UseCase;
@@ -29,9 +31,10 @@ import java.util.UUID;
 public class CreatePaymentUseCase implements ICreateUseCase<PaymentCreateDto, PaymentQRCodeDto> {
 
     private final ICreateRepositoryPort<PaymentModel> iCreateRepositoryPort;
+    private final IOrderMapper iOrderMapper;
     private final ICustomerMapper iCustomerMapper;
     private final IPaymentMapper iPaymentMapper;
-    private final ISearchUniqueRepositoryPort<Optional<OrderDomain>> iSearchUniqueOrderRepositoryPort;
+    private final ISearchUniqueRepositoryPort<Optional<OrderModel>> iSearchUniqueOrderRepositoryPort;
     private final ISearchUniqueRepositoryPort<Optional<CustomerModel>> iSearchUniqueCustomerRepositoryPort;
     private final ISendRequestPort<PaymentModel, PaymentQRCodeDto> iSendRequest;
 
@@ -53,7 +56,9 @@ public class CreatePaymentUseCase implements ICreateUseCase<PaymentCreateDto, Pa
                         paymentDomainBuilder.customer(customerDomain);
                     });
 
-            paymentDomainBuilder.order(orderDomain);
+            final var domain = iOrderMapper.toDomain(orderDomain);
+
+            paymentDomainBuilder.order(domain);
             paymentDomainBuilder.price(orderDomain.getPrice());
             paymentDomainBuilder.token(UUID.randomUUID().toString());
             paymentDomainBuilder.status(PaymentDomain.PaymentStatus.PENDING);

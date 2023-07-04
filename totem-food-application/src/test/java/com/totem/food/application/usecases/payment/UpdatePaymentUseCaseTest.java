@@ -2,15 +2,17 @@ package com.totem.food.application.usecases.payment;
 
 import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.ports.in.dtos.payment.PaymentFilterDto;
+import com.totem.food.application.ports.in.mappers.order.totem.IOrderMapper;
 import com.totem.food.application.ports.in.mappers.payment.IPaymentMapper;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
+import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
-import com.totem.food.domain.order.totem.OrderDomain;
+import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import lombok.SneakyThrows;
 import mock.domain.OrderDomainMock;
-import mock.domain.PaymentDomainMock;
+import mock.models.OrderModelMock;
 import mock.models.PaymentModelMock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,6 +42,8 @@ class UpdatePaymentUseCaseTest {
 
     @Spy
     private IPaymentMapper iPaymentMapper = Mappers.getMapper(IPaymentMapper.class);
+    @Spy
+    private IOrderMapper iOrderMapper = Mappers.getMapper(IOrderMapper.class);
     @Mock
     private ISearchRepositoryPort<PaymentFilterDto, PaymentModel> iSearchRepositoryPort;
 
@@ -47,10 +51,10 @@ class UpdatePaymentUseCaseTest {
     private IUpdateRepositoryPort<PaymentModel> iUpdateRepositoryPort;
 
     @Mock
-    private ISearchUniqueRepositoryPort<Optional<OrderDomain>> iSearchUniqueRepositoryPort;
+    private ISearchUniqueRepositoryPort<Optional<OrderModel>> iSearchUniqueRepositoryPort;
 
     @Mock
-    private IUpdateRepositoryPort<OrderDomain> iUpdateOrderRepositoryPort;
+    private IUpdateRepositoryPort<OrderModel> iUpdateOrderRepositoryPort;
 
     private UpdatePaymentUseCase updatePaymentUseCase;
 
@@ -59,7 +63,7 @@ class UpdatePaymentUseCaseTest {
     @BeforeEach
     void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
-        updatePaymentUseCase = new UpdatePaymentUseCase(iPaymentMapper, iSearchRepositoryPort, iUpdateRepositoryPort, iSearchUniqueRepositoryPort, iUpdateOrderRepositoryPort);
+        updatePaymentUseCase = new UpdatePaymentUseCase(iPaymentMapper, iOrderMapper, iSearchRepositoryPort, iUpdateRepositoryPort, iSearchUniqueRepositoryPort, iUpdateOrderRepositoryPort);
     }
 
     @SneakyThrows
@@ -92,7 +96,7 @@ class UpdatePaymentUseCaseTest {
         //## Mock - Objects
         var paymentModel = PaymentModelMock.getPaymentStatusPendingMock();
         var paymentFilterDto = PaymentFilterDto.builder().orderId("1").token("token").build();
-        var orderDomain = OrderDomainMock.getStatusWaitingPaymentMock();
+        var orderDomain = OrderModelMock.orderModel(OrderStatusEnumDomain.WAITING_PAYMENT);
 
         //## Given
         when(iSearchRepositoryPort.findAll(any())).thenReturn(paymentModel);
@@ -103,7 +107,7 @@ class UpdatePaymentUseCaseTest {
 
         //## Then
         assertTrue(updateItem);
-        verify(iUpdateOrderRepositoryPort, times(1)).updateItem(orderDomain);
+        verify(iUpdateOrderRepositoryPort, times(1)).updateItem(Mockito.any(OrderModel.class));
         verify(iUpdateRepositoryPort, times(1)).updateItem(Mockito.any(PaymentModel.class));
 
     }
@@ -114,7 +118,7 @@ class UpdatePaymentUseCaseTest {
         //## Mock - Objects
         var paymentModel = PaymentModelMock.getPaymentStatusPendingMock();
         var paymentFilterDto = PaymentFilterDto.builder().orderId("1").token("token").build();
-        var orderDomain = OrderDomainMock.getStatusWaitingPaymentMock();
+        var orderDomain = OrderModelMock.orderModel(OrderStatusEnumDomain.WAITING_PAYMENT);
 
         //## Given
         when(iSearchRepositoryPort.findAll(any())).thenReturn(paymentModel);

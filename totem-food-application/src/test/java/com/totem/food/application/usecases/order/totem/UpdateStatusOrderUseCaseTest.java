@@ -13,11 +13,8 @@ import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.application.usecases.commons.IUpdateStatusUseCase;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
-import com.totem.food.domain.order.totem.OrderDomain;
-import com.totem.food.domain.payment.PaymentDomain;
 import lombok.SneakyThrows;
 import mock.domain.OrderDomainMock;
-import mock.domain.PaymentDomainMock;
 import mock.models.OrderModelMock;
 import mock.models.PaymentModelMock;
 import org.junit.jupiter.api.AfterEach;
@@ -80,7 +77,7 @@ class UpdateStatusOrderUseCaseTest {
     void updateStatus() {
 
         //## Mock - Objects
-        var orderDomain = OrderModelMock.getOrderDomain(OrderStatusEnumDomain.NEW);
+        var orderDomain = OrderModelMock.orderModel(OrderStatusEnumDomain.NEW);
 
         //## Mocks
         when(iSearchUniqueRepositoryPort.findById(Mockito.anyString())).thenReturn(Optional.of(orderDomain));
@@ -122,7 +119,7 @@ class UpdateStatusOrderUseCaseTest {
     void updateStatusChangeStatusToReceived() {
 
         //## Mock - Objects
-        var orderDomain = OrderModelMock.getOrderDomain(OrderStatusEnumDomain.WAITING_PAYMENT);
+        var orderDomain = OrderModelMock.orderModel(OrderStatusEnumDomain.WAITING_PAYMENT);
         final var paymentDomain = PaymentModelMock.getPaymentStatusCompletedMock();
 
         //## Mocks
@@ -149,7 +146,7 @@ class UpdateStatusOrderUseCaseTest {
     void updateStatusChangeStatusToReceivedButPaymentStatusPending() {
 
         //## Mock - Objects
-        var orderDomain = OrderModelMock.getOrderDomain(OrderStatusEnumDomain.WAITING_PAYMENT);
+        var orderDomain = OrderModelMock.orderModel(OrderStatusEnumDomain.WAITING_PAYMENT);
 
         //## Mocks
         when(iSearchUniqueRepositoryPort.findById(Mockito.anyString())).thenReturn(Optional.of(orderDomain));
@@ -174,8 +171,8 @@ class UpdateStatusOrderUseCaseTest {
     void updateStatusChangeStatusToReady() {
 
         //## Mock - Objects
-        var orderDomain = OrderModelMock.getOrderDomain(OrderStatusEnumDomain.IN_PREPARATION);
-        var orderDomainReady = OrderModelMock.getOrderDomain(OrderStatusEnumDomain.READY);
+        var orderDomain = OrderModelMock.orderModel(OrderStatusEnumDomain.IN_PREPARATION);
+        var orderDomainReady = OrderModelMock.orderModel(OrderStatusEnumDomain.READY);
 
         //## Mocks
         when(iSearchUniqueRepositoryPort.findById(Mockito.anyString())).thenReturn(Optional.of(orderDomain));

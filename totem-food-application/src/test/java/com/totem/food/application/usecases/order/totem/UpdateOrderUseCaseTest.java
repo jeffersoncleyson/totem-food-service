@@ -13,12 +13,9 @@ import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRep
 import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
 import com.totem.food.application.ports.out.persistence.product.ProductModel;
-import com.totem.food.domain.combo.ComboDomain;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
-import com.totem.food.domain.order.totem.OrderDomain;
 import lombok.SneakyThrows;
 import mock.domain.ComboDomainMock;
-import mock.domain.OrderDomainMock;
 import mock.domain.ProductDomainMock;
 import mock.models.ComboModelMock;
 import mock.models.OrderModelMock;
@@ -114,7 +111,7 @@ class UpdateOrderUseCaseTest {
         var comboDomain = ComboDomainMock.getMock();
         var orderUpdateDto = OrderUpdateDtoMock.getMock(productDomain.getId(), comboModel.getId());
 
-        var orderDomainOpt = OrderModelMock.getOrderDomain(OrderStatusEnumDomain.NEW);
+        var orderDomainOpt = OrderModelMock.orderModel(OrderStatusEnumDomain.NEW);
         orderDomainOpt.setCombos(List.of(comboDomain));
         orderDomainOpt.setProducts(List.of(productDomain));
 

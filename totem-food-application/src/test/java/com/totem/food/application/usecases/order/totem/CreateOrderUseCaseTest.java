@@ -15,16 +15,8 @@ import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRep
 import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
 import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
 import com.totem.food.application.ports.out.persistence.product.ProductModel;
-import com.totem.food.domain.combo.ComboDomain;
-import com.totem.food.domain.customer.CustomerDomain;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
-import com.totem.food.domain.order.totem.OrderDomain;
-import com.totem.food.domain.product.ProductDomain;
 import lombok.SneakyThrows;
-import mock.domain.ComboDomainMock;
-import mock.domain.CustomerDomainMock;
-import mock.domain.OrderDomainMock;
-import mock.domain.ProductDomainMock;
 import mock.models.ComboModelMock;
 import mock.models.CustomerModelMock;
 import mock.models.OrderModelMock;
@@ -131,7 +123,7 @@ class CreateOrderUseCaseTest {
     void createItem() {
         //## Mock - Objects
 
-        var orderDomain = OrderModelMock.getOrderDomain(OrderStatusEnumDomain.NEW);
+        var orderDomain = OrderModelMock.orderModel(OrderStatusEnumDomain.NEW);
         var customerModel = CustomerModelMock.getMock();
         var productModel = ProductModelMock.getMock();
         var comboDomain = ComboModelMock.getMock();

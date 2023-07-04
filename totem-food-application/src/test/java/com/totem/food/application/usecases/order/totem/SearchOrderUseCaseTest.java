@@ -5,9 +5,7 @@ import com.totem.food.application.ports.in.mappers.order.totem.IOrderMapper;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
-import com.totem.food.domain.order.totem.OrderDomain;
 import lombok.SneakyThrows;
-import mock.domain.OrderDomainMock;
 import mock.models.OrderModelMock;
 import mock.ports.in.dto.OrderDtoMock;
 import org.junit.jupiter.api.AfterEach;
@@ -57,7 +55,7 @@ class SearchOrderUseCaseTest {
 
         //## Mock - Objects
         var orderFilterDto = OrderFilterDto.builder().orderId("1").customerId("1").build();
-        var orderDomain = OrderModelMock.getOrderDomain(OrderStatusEnumDomain.NEW);
+        var orderDomain = OrderModelMock.orderModel(OrderStatusEnumDomain.NEW);
         var orderDto = OrderDtoMock.getMock();
 
         //## Given

@@ -3,7 +3,6 @@ package mock.models;
 import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
 import com.totem.food.domain.combo.ComboDomain;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
-import com.totem.food.domain.order.totem.OrderDomain;
 import com.totem.food.domain.product.ProductDomain;
 import mock.domain.CustomerDomainMock;
 
@@ -13,7 +12,7 @@ import java.util.List;
 public class OrderModelMock {
 
 
-    public static OrderModel getOrderDomain(OrderStatusEnumDomain orderStatusEnumDomain) {
+    public static OrderModel orderModel(OrderStatusEnumDomain orderStatusEnumDomain) {
         return OrderModel.builder()
                 .id("1")
                 .customer(CustomerDomainMock.getMock())
