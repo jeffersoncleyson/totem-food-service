@@ -6,8 +6,6 @@ COPY totem-food-framework /usr/src/app/totem-food-framework
 COPY pom.xml /usr/src/app/pom.xml
 RUN mvn -f /usr/src/app/pom.xml clean package
 
-RUN mvn dependency:go-offline -s settings.xml
-
 FROM openjdk:17.0.2-slim-buster
 LABEL maintainer="Totem Food Service"
 WORKDIR /opt/app
