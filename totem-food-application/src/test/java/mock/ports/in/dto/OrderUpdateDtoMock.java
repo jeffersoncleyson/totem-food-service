@@ -7,9 +7,8 @@ import java.util.List;
 
 public class OrderUpdateDtoMock {
 
-    public static OrderUpdateDto getMock(String productId, String comboId) {
+    public static OrderUpdateDto getMock(String productId) {
         var oderUpdate = new OrderUpdateDto();
-        oderUpdate.setCombos(List.of(new ItemQuantityDto(1, comboId)));
         oderUpdate.setProducts(List.of(new ItemQuantityDto(1, productId)));
         return oderUpdate;
     }

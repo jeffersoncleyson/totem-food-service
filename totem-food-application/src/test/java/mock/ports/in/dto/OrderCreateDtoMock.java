@@ -7,11 +7,10 @@ import java.util.List;
 
 public class OrderCreateDtoMock {
 
-    public static OrderCreateDto getMock(String productId, String comboId) {
+    public static OrderCreateDto getMock(String productId) {
         var orderCreate = new OrderCreateDto();
         orderCreate.setCustomerId("1");
         orderCreate.setProducts(List.of(new ItemQuantityDto(1, productId)));
-        orderCreate.setCombos(List.of(new ItemQuantityDto(1, comboId)));
         return orderCreate;
     }
 }

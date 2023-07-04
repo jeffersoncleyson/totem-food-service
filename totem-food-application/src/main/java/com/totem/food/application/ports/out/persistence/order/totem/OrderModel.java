@@ -1,6 +1,5 @@
 package com.totem.food.application.ports.out.persistence.order.totem;
 
-import com.totem.food.domain.combo.ComboDomain;
 import com.totem.food.domain.customer.CustomerDomain;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import com.totem.food.domain.product.ProductDomain;
@@ -23,9 +22,6 @@ public class OrderModel {
 
     @Setter
     private List<ProductDomain> products;
-
-    @Setter
-    private List<ComboDomain> combos;
 
     @Builder.Default
     private OrderStatusEnumDomain status = OrderStatusEnumDomain.NEW;

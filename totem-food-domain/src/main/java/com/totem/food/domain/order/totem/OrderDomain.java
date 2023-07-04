@@ -1,15 +1,10 @@
 package com.totem.food.domain.order.totem;
 
-import com.totem.food.domain.combo.ComboDomain;
 import com.totem.food.domain.customer.CustomerDomain;
 import com.totem.food.domain.exceptions.InvalidStatusTransition;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import com.totem.food.domain.product.ProductDomain;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -36,9 +31,6 @@ public class OrderDomain {
 
     @Setter
     private List<ProductDomain> products;
-
-    @Setter
-    private List<ComboDomain> combos;
 
     @Builder.Default
     private OrderStatusEnumDomain status = OrderStatusEnumDomain.NEW;
@@ -90,20 +82,14 @@ public class OrderDomain {
         this.products = null;
     }
 
-    public void clearCombos() {
-        this.combos = null;
-    }
 
     public void calculatePrice() {
 
         final var productsPrice = Optional.ofNullable(this.products)
                 .filter(CollectionUtils::isNotEmpty)
                 .map(p -> p.stream().mapToDouble(ProductDomain::getPrice).sum()).orElse(0D);
-        final var comboPrice = Optional.ofNullable(this.combos)
-                .filter(CollectionUtils::isNotEmpty)
-                .map(c -> c.stream().mapToDouble(ComboDomain::getPrice).sum()).orElse(0D);
 
-        this.price = BigDecimal.valueOf(productsPrice + comboPrice)
+        this.price = BigDecimal.valueOf(productsPrice)
                 .setScale(2, RoundingMode.FLOOR)
                 .doubleValue();
     }

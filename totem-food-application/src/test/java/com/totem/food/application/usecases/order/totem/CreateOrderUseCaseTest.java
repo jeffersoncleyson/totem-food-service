@@ -2,13 +2,10 @@ package com.totem.food.application.usecases.order.totem;
 
 import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.exceptions.InvalidInput;
-import com.totem.food.application.ports.in.dtos.combo.ComboFilterDto;
 import com.totem.food.application.ports.in.dtos.product.ProductFilterDto;
-import com.totem.food.application.ports.in.mappers.combo.IComboMapper;
 import com.totem.food.application.ports.in.mappers.customer.ICustomerMapper;
 import com.totem.food.application.ports.in.mappers.order.totem.IOrderMapper;
 import com.totem.food.application.ports.in.mappers.product.IProductMapper;
-import com.totem.food.application.ports.out.persistence.combo.ComboModel;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
@@ -17,7 +14,6 @@ import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
 import com.totem.food.application.ports.out.persistence.product.ProductModel;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import lombok.SneakyThrows;
-import mock.models.ComboModelMock;
 import mock.models.CustomerModelMock;
 import mock.models.OrderModelMock;
 import mock.models.ProductModelMock;
@@ -54,16 +50,12 @@ class CreateOrderUseCaseTest {
     private ICustomerMapper iCustomerMapper = Mappers.getMapper(ICustomerMapper.class);
     @Spy
     private IProductMapper iProductMapper = Mappers.getMapper(IProductMapper.class);
-    @Spy
-    private IComboMapper iComboMapper = Mappers.getMapper(IComboMapper.class);
     @Mock
     private ICreateRepositoryPort<OrderModel> iCreateRepositoryPort;
     @Mock
     private ISearchUniqueRepositoryPort<Optional<CustomerModel>> iSearchUniqueCustomerRepositoryPort;
     @Mock
     private ISearchRepositoryPort<ProductFilterDto, List<ProductModel>> iSearchProductRepositoryPort;
-    @Mock
-    private ISearchRepositoryPort<ComboFilterDto, List<ComboModel>> iSearchDomainRepositoryPort;
 
     private CreateOrderUseCase createOrderUseCase;
 
@@ -72,7 +64,7 @@ class CreateOrderUseCaseTest {
     @BeforeEach
     void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
-        createOrderUseCase = new CreateOrderUseCase(iOrderMapper, iCustomerMapper, iProductMapper, iComboMapper, iCreateRepositoryPort, iSearchUniqueCustomerRepositoryPort, iSearchProductRepositoryPort, iSearchDomainRepositoryPort);
+        createOrderUseCase = new CreateOrderUseCase(iOrderMapper, iCustomerMapper, iProductMapper, iCreateRepositoryPort, iSearchUniqueCustomerRepositoryPort, iSearchProductRepositoryPort);
     }
 
     @SneakyThrows
@@ -85,9 +77,8 @@ class CreateOrderUseCaseTest {
     void invalidInputWhenCreateItem() {
 
         //## Given - Mock - Objects
-        var orderCreateDto = OrderCreateDtoMock.getMock("", "");
+        var orderCreateDto = OrderCreateDtoMock.getMock("");
         orderCreateDto.setProducts(List.of());
-        orderCreateDto.setCombos(List.of());
 
         //## When
         var exception = assertThrows(InvalidInput.class,
@@ -99,41 +90,18 @@ class CreateOrderUseCaseTest {
     }
 
     @Test
-    void elementNotFoundExceptionWhenProductToDomain() {
-        //## Mock - Objects
-        var orderCreateDto = OrderCreateDtoMock.getMock("", "");
-        var customerModel = CustomerModelMock.getMock();
-        var productModel = ProductModelMock.getMock();
-
-        //## Given
-        when(iSearchUniqueCustomerRepositoryPort.findById(anyString())).thenReturn(Optional.of(customerModel));
-        when(iSearchProductRepositoryPort.findAll(any(ProductFilterDto.class))).thenReturn(List.of(productModel));
-
-        //## When
-        var exception = assertThrows(ElementNotFoundException.class,
-                () -> createOrderUseCase.createItem(orderCreateDto)
-        );
-
-        //## Then
-        assertEquals(exception.getMessage(), "Combos [[]] some combos are invalid");
-        verify(iOrderMapper, never()).toDto(any());
-    }
-
-    @Test
     void createItem() {
         //## Mock - Objects
 
         var orderDomain = OrderModelMock.orderModel(OrderStatusEnumDomain.NEW);
         var customerModel = CustomerModelMock.getMock();
         var productModel = ProductModelMock.getMock();
-        var comboDomain = ComboModelMock.getMock();
-        var orderCreateDto = OrderCreateDtoMock.getMock(productModel.getId(), comboDomain.getId());
+        var orderCreateDto = OrderCreateDtoMock.getMock(productModel.getId());
 
         //## Given
         when(iCreateRepositoryPort.saveItem(any(OrderModel.class))).thenReturn(orderDomain);
         when(iSearchUniqueCustomerRepositoryPort.findById(anyString())).thenReturn(Optional.of(customerModel));
         when(iSearchProductRepositoryPort.findAll(any(ProductFilterDto.class))).thenReturn(List.of(productModel));
-        when(iSearchDomainRepositoryPort.findAll(any(ComboFilterDto.class))).thenReturn(List.of(comboDomain));
 
         //## When
         var orderDto = createOrderUseCase.createItem(orderCreateDto);
