@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "44c95624-d08e-442b-9558-002036efefd8",
+		"_postman_id": "e00dfd84-6637-4359-a13c-df8d2ff043a1",
 		"name": "Entrega Fase 1",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "16179794"
+		"_exporter_id": "7142154",
+		"_collection_link": "https://universal-escape-423074.postman.co/workspace/Tech-FIAP~d4d455ca-b6d7-465e-b694-d16b56713f80/collection/7142154-e00dfd84-6637-4359-a13c-df8d2ff043a1?action=share&creator=7142154&source=collection_link"
 	},
 	"item": [
 		{
@@ -142,7 +143,7 @@
 							"variable": [
 								{
 									"key": "categoryId",
-									"value": "6494c00c46ab85304f1d8182"
+									"value": "64a36dba3062d455519a4730"
 								}
 							]
 						}
@@ -150,7 +151,7 @@
 					"response": []
 				},
 				{
-					"name": "/administrative/category",
+					"name": "/administrative/category Copy",
 					"request": {
 						"method": "DELETE",
 						"header": [],
@@ -167,7 +168,7 @@
 							"variable": [
 								{
 									"key": "categoryId",
-									"value": "6494bf2f46ab85304f1d8181"
+									"value": "64a36dba3062d455519a4730"
 								}
 							]
 						}
@@ -186,7 +187,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"X-TUDO\",\n    \"description\": \"Pão com gergilim, hamburger 200g, tomate\",\n    \"image\": \"https://s2.glbimg.com/x4W3eb8dGwiiv6MEzxk6qMeukSs=/smart/e.glbimg.com/og/ed/f/original/2021/05/28/receitas-para-acompanhar-batata-frita.jpg\",\n    \"price\": 25,\n    \"category\": \"649ba3992ac1382377bd0440\"\n}",
+							"raw": "{\n    \"name\": \"Batata\",\n    \"description\": \"Batata\",\n    \"image\": \"https://s2.glbimg.com/x4W3eb8dGwiiv6MEzxk6qMeukSs=/smart/e.glbimg.com/og/ed/f/original/2021/05/28/receitas-para-acompanhar-batata-frita.jpg\",\n    \"price\": 5,\n    \"category\": \"64a36df03062d455519a4731\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -213,7 +214,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Batata Frita\",\n    \"description\": \"Batata frita 150g\",\n    \"image\": \"https://s2.glbimg.com/x4W3eb8dGwiiv6MEzxk6qMeukSs=/smart/e.glbimg.com/og/ed/f/original/2021/05/28/receitas-para-acompanhar-batata-frita.jpg\",\n    \"price\": 15.0,\n    \"category\": \"6496ef4f26e09a01c307a47f\"\n}",
+							"raw": "{\n    \"name\": \"X-Tudo\",\n    \"description\": \"X-Tudo 250g\",\n    \"image\": \"https://s2.glbimg.com/x4W3eb8dGwiiv6MEzxk6qMeukSs=/smart/e.glbimg.com/og/ed/f/original/2021/05/28/receitas-para-acompanhar-batata-frita.jpg\",\n    \"price\": 15.0,\n    \"category\": \"64a36df03062d455519a4731\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -233,7 +234,7 @@
 							"variable": [
 								{
 									"key": "productId",
-									"value": "649666305b5ed22abab66160"
+									"value": "64a36dfa3062d455519a4732"
 								}
 							]
 						}
@@ -262,7 +263,7 @@
 								},
 								{
 									"key": "categoryId",
-									"value": "649b6799f28cf303b08ebb95",
+									"value": "6494c70d1f3ffa4175e155b2",
 									"disabled": true
 								}
 							]
@@ -288,7 +289,7 @@
 							"variable": [
 								{
 									"key": "productId",
-									"value": "649664ec5b5ed22abab6615f"
+									"value": "64a36dfa3062d455519a4732"
 								}
 							]
 						}
@@ -307,7 +308,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"products\": [\n        {\"id\": \"649ba39f2ac1382377bd0441\", \"qtd\": 2}\n    ],\n    \"combos\": []\n}",
+							"raw": "{\n  \"customerId\": \"64a36d5a3062d455519a472f\",\n  \"products\": [\n    {\n      \"qtd\": 1,\n      \"id\": \"64a36e513062d455519a4733\"\n    }\n  ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -334,7 +335,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"products\": [\n        \"6494c68d1f3ffa4175e155b1\",\n        \"6494c7c41f3ffa4175e155b4\",\n        \"6494c8661f3ffa4175e155b5\"\n    ],\n    \"combos\": []\n}",
+							"raw": "{\n    \"products\": [\n        {\n            \"qtd\": 4,\n            \"id\": \"64a370e03062d455519a4735\"\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -354,7 +355,7 @@
 							"variable": [
 								{
 									"key": "orderId",
-									"value": "6494ca5ea9ae77422fdcff23"
+									"value": "64a36fa53062d455519a4734"
 								}
 							]
 						}
@@ -367,7 +368,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{backend}}/totem/order?status=RECEIVED&status=WAITING_PAYMENT",
+							"raw": "{{backend}}/totem/order?orderId=64a36fa53062d455519a4734",
 							"host": [
 								"{{backend}}"
 							],
@@ -378,16 +379,7 @@
 							"query": [
 								{
 									"key": "orderId",
-									"value": "649cdabfb76e142c8b405916",
-									"disabled": true
-								},
-								{
-									"key": "status",
-									"value": "RECEIVED"
-								},
-								{
-									"key": "status",
-									"value": "WAITING_PAYMENT"
+									"value": "64a36fa53062d455519a4734"
 								}
 							]
 						}
@@ -414,11 +406,11 @@
 							"variable": [
 								{
 									"key": "orderId",
-									"value": "649ceca16bfb285e95b39fd4"
+									"value": "64a36fa53062d455519a4734"
 								},
 								{
 									"key": "statusName",
-									"value": "WAITING_PAYMENT"
+									"value": "RECEIVED"
 								}
 							]
 						}
@@ -437,7 +429,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"orderId\": \"649ceca16bfb285e95b39fd4\"\n}",
+							"raw": "{\n    \"orderId\": \"64a36fa53062d455519a4734\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -475,7 +467,7 @@
 							"variable": [
 								{
 									"key": "paymentId",
-									"value": "649cdbab6a4b740c65e326d0"
+									"value": "64a372ca3062d455519a4736"
 								}
 							]
 						}
@@ -489,7 +481,7 @@
 						"header": [
 							{
 								"key": "token",
-								"value": "b52f31dd-0373-4dcb-a206-0f68b77f002b",
+								"value": "ea9d8400-7d82-4783-921e-59bddde15e74",
 								"type": "text"
 							}
 						],
@@ -508,7 +500,7 @@
 							"variable": [
 								{
 									"key": "orderId",
-									"value": "649ceca16bfb285e95b39fd4"
+									"value": "64a36fa53062d455519a4734"
 								}
 							]
 						}
@@ -538,7 +530,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{backend}}/totem/order",
+							"raw": "{{backend}}/totem/order?orderId=64a36fa53062d455519a4734",
 							"host": [
 								"{{backend}}"
 							],
@@ -554,18 +546,7 @@
 								},
 								{
 									"key": "orderId",
-									"value": "6496f21126e09a01c307a482",
-									"disabled": true
-								},
-								{
-									"key": "status",
-									"value": "RECEIVED",
-									"disabled": true
-								},
-								{
-									"key": "status",
-									"value": "WAITING_PAYMENT",
-									"disabled": true
+									"value": "64a36fa53062d455519a4734"
 								}
 							]
 						}
@@ -594,6 +575,31 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "/administrative/customer/{customerId}",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{backend}}/administrative/customer/:customerId",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"administrative",
+								"customer",
+								":customerId"
+							],
+							"variable": [
+								{
+									"key": "customerId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -606,7 +612,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{backend}}/administrative/orders?status=RECEIVED",
+							"raw": "{{backend}}/administrative/orders",
 							"host": [
 								"{{backend}}"
 							],
@@ -617,11 +623,7 @@
 							"query": [
 								{
 									"key": "status",
-									"value": "RECEIVED"
-								},
-								{
-									"key": "status",
-									"value": "WAITING_PAYMENT",
+									"value": "NEW",
 									"disabled": true
 								}
 							]
