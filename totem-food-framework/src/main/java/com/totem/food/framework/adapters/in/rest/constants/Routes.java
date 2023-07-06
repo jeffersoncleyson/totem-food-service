@@ -13,9 +13,6 @@ public class Routes {
     public static final String ADM_CATEGORY = "/administrative/category";
     public static final String CATEGORY_ID = "/{categoryId}";
 
-    //######## COMBO
-    public static final String ADM_COMBO = "/administrative/combo";
-
     //######## CUSTOMER
     public static final String ADM_CUSTOMER = "/administrative/customer";
     public static final String TOTEM_CUSTOMER = "/totem/customer";

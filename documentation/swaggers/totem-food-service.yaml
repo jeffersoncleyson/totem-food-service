@@ -26,8 +26,7 @@ tags:
     description: Access to categories
   - name: Products
     description: Access to product
-  - name: Combo
-    description: Access to combo
+
 paths:
   /totem/customer:
     post:
@@ -50,6 +49,27 @@ paths:
                 $ref: '#/components/schemas/CustomerDto'
         '405':
           description: Invalid input
+
+  /totem/customer/{customerId}:
+    delete:
+      tags:
+        - Customers
+      summary: Remove a Customer by ID
+      description: Remove Customer
+      operationId: deleteById
+      parameters:
+        - name: customerId
+          in: path
+          description: Delete customer by id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No content
+        '404':
+          description: Not found
+
   /totem/login:
     get:
       tags:
@@ -79,7 +99,7 @@ paths:
                 $ref: '#/components/schemas/CustomerDto'
         '405':
           description: Invalid input
-          
+
   /administrative/customer:
     get:
       tags:
@@ -98,7 +118,7 @@ paths:
                   $ref: '#/components/schemas/CustomerDto'
         '405':
           description: Invalid input
-          
+
   /administrative/category:
     post:
       tags:
@@ -147,7 +167,7 @@ paths:
       parameters:
         - name: categoryId
           in: path
-          description: ID of pet to return
+          description: ID of category to return
           required: true
           schema:
             type: string
@@ -169,7 +189,7 @@ paths:
       parameters:
         - name: categoryId
           in: path
-          description: ID of pet to return
+          description: ID of category to return
           required: true
           schema:
             type: string
@@ -196,7 +216,7 @@ paths:
       parameters:
         - name: categoryId
           in: path
-          description: ID of pet to return
+          description: ID of category to return
           required: true
           schema:
             type: string
@@ -205,8 +225,8 @@ paths:
           description: No content
         '404':
           description: Not found
-          
-  
+
+
   /administrative/product:
     post:
       tags:
@@ -255,7 +275,7 @@ paths:
       parameters:
         - name: productId
           in: path
-          description: ID of pet to return
+          description: ID of product to return
           required: true
           schema:
             type: integer
@@ -278,7 +298,7 @@ paths:
       parameters:
         - name: productId
           in: path
-          description: ID of pet to return
+          description: ID of product to return
           required: true
           schema:
             type: integer
@@ -306,7 +326,7 @@ paths:
       parameters:
         - name: productId
           in: path
-          description: ID of pet to return
+          description: ID of product to return
           required: true
           schema:
             type: integer
@@ -316,29 +336,7 @@ paths:
           description: No content
         '404':
           description: Not found
-          
-  /administrative/combo:
-    post:
-      tags:
-        - Combo
-      summary: Create a new combo
-      description: Create a new combo
-      operationId: createCombo
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ComboCreateDto'
-      responses:
-        '201':
-          description: created operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ComboDto'
-        '405':
-          description: Invalid input
-          
+
   /totem/order:
     post:
       tags:
@@ -360,12 +358,12 @@ paths:
                 $ref: '#/components/schemas/OrderDto'
         '405':
           description: Invalid input
-          
+
     get:
       tags:
         - Order
-      summary: Get order
-      description: Get order
+      summary: Get orders
+      description: Get orders
       operationId: orderGetFilter
       parameters:
         - name: orderId
@@ -386,10 +384,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OrderDto'
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderDto'
         '405':
-          description: Invalid input  
-          
+          description: Invalid input
+
   /totem/order/{orderId}:
     put:
       tags:
@@ -400,7 +400,7 @@ paths:
       parameters:
         - name: orderId
           in: path
-          description: ID of pet to return
+          description: ID of order to return
           required: true
           schema:
             type: integer
@@ -419,7 +419,7 @@ paths:
                 $ref: '#/components/schemas/OrderDto'
         '405':
           description: Invalid input
-          
+
   /totem/order/{orderId}/status/{statusName}:
     put:
       tags:
@@ -430,14 +430,14 @@ paths:
       parameters:
         - name: orderId
           in: path
-          description: ID of pet to return
+          description: ID of order to return
           required: true
           schema:
             type: integer
             format: int64
         - name: statusName
           in: path
-          description: ID of pet to return
+          description: ID of order to return
           required: true
           schema:
             $ref: '#/components/schemas/OrderStatusEnum'
@@ -450,7 +450,7 @@ paths:
                 $ref: '#/components/schemas/OrderDto'
         '405':
           description: Invalid input
-          
+
   /administrative/orders:
     get:
       tags:
@@ -481,8 +481,8 @@ paths:
                 items:
                   $ref: '#/components/schemas/OrderAdminDto'
         '405':
-          description: Invalid input        
-          
+          description: Invalid input
+
   /totem/payment:
     post:
       tags:
@@ -504,6 +504,32 @@ paths:
                 $ref: '#/components/schemas/PaymentQRCodeDto'
         '405':
           description: Invalid input
+
+  /totem/payment/{paymentId}:
+    get:
+      tags:
+        - Payment Gateway
+      summary: Get payment the order
+      description: Get payment
+      operationId: getPaymentByID
+      parameters:
+        - name: paymentId
+          in: path
+          description: ID of product to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: created operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentDto'
+        '405':
+          description: Invalid input
+
+
   /totem/payment/callback/order/{orderId}:
     put:
       tags:
@@ -514,7 +540,7 @@ paths:
       parameters:
         - name: orderId
           in: path
-          description: ID of pet to return
+          description: ID of orderId to return
           required: true
           schema:
             type: string
@@ -621,11 +647,6 @@ components:
         customerId:
           type: string
           example: 11934bb3554280604d93d7b6
-        combo:
-          type: array
-          items:
-            type: string
-          example: ["22826bb3554280604d93d7b6","33826bb3554280604d93d7b6"]
         product:
           type: array
           items:
@@ -637,16 +658,19 @@ components:
         id:
           type: string
           example: '64826bb3554280604d93d7b6'
-        combo:
-          type: array
-          items:
-            $ref: '#/components/schemas/ComboDto'
+        customerId:
+          type: string
+          example: '4d93d7b6'
         product:
           type: array
           items:
             $ref: '#/components/schemas/ProductDto'
         status:
           $ref: '#/components/schemas/OrderStatusEnum'
+        price:
+          type: number
+          description: price
+          example: '53.89'
         modifiedAt:
           type: string
           format: date-time
@@ -657,7 +681,7 @@ components:
           format: date-time
           example: '2023-06-09T00:00:51.623596531Z'
           description: Date of creation
-          
+
     OrderAdminDto:
       type: object
       properties:
@@ -705,7 +729,7 @@ components:
         - FINALIZED # Take the order on the counter
         - CANCELED
       example: NEW
-          
+
     ProductCreateDto:
       type: object
       properties:
@@ -729,10 +753,14 @@ components:
           type: string
           description: category identification
           example: '64826bb3554280604d93d7b6'
-          
+
     ProductDto:
       type: object
       properties:
+        id:
+          type: string
+          description: Order id
+          example: '1'
         name:
           type: string
           description: Product name
@@ -751,50 +779,6 @@ components:
           example: '5.90'
         category:
           $ref: '#/components/schemas/CategoryDto'
-        modifiedAt:
-          type: string
-          format: date-time
-          example: '2023-06-09T00:00:51.623596531Z'
-          description: Date of last update
-        createAt:
-          type: string
-          format: date-time
-          example: '2023-06-09T00:00:51.623596531Z'
-          description: Date of creation
-          
-    ComboCreateDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Category name
-          example: 'Combo da casa'
-        price:
-          type: number
-          description: Price
-          example: '24.99'
-        products:
-          type: array
-          items:
-            type: string
-            example: '64826bb3554280604d93d7b6'
-          
-    ComboDto:
-      type: object
-      properties:
-        id:
-          type: string
-          example: '64826bb3554280604d93d7b6'
-        name:
-          type: string
-          example: 'combo da casa'
-        price:
-          type: number
-          example: 40.50
-        product:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProductDto'
         modifiedAt:
           type: string
           format: date-time
@@ -835,7 +819,7 @@ components:
           example: '11826bb3554280604d93d7b6'
         status:
           $ref: '#/components/schemas/PaymentStatusEnum'
-          
+
     PaymentStatusEnum:
       type: string
       description: Status payment
@@ -843,3 +827,27 @@ components:
         - PENDING
         - COMPLETED
       example: PENDING
+
+    PaymentDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Order id
+          example: '1'
+        price:
+          type: number
+          description: Price
+          example: '5.90'
+        status:
+          $ref: '#/components/schemas/PaymentStatusEnum'
+        modifiedAt:
+          type: string
+          format: date-time
+          example: '2023-06-09T00:00:51.623596531Z'
+          description: Date of last update
+        createAt:
+          type: string
+          format: date-time
+          example: '2023-06-09T00:00:51.623596531Z'
+          description: Date of creation
