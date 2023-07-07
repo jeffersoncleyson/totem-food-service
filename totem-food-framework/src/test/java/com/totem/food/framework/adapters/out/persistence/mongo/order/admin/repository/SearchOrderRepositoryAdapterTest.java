@@ -3,7 +3,6 @@ package com.totem.food.framework.adapters.out.persistence.mongo.order.admin.repo
 import com.totem.food.application.ports.in.dtos.order.admin.OrderAdminFilterDto;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.order.admin.OrderAdminModel;
-import com.totem.food.domain.order.admin.OrderAdminDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.customer.entity.CustomerEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.order.admin.entity.OrderAdminEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.order.admin.mapper.IOrderAdminEntityMapper;
@@ -92,7 +91,7 @@ class SearchOrderRepositoryAdapterTest {
                 null
         );
         final var orderAdminEntityList = List.of(order);
-        final var orderFilterDto = OrderAdminFilterDto.builder().orderId(orderId).build();
+        final var orderFilterDto = OrderAdminFilterDto.builder().build();
 
         //### Given - Mocks
         when(repository.findAll()).thenReturn(orderAdminEntityList);
@@ -152,7 +151,7 @@ class SearchOrderRepositoryAdapterTest {
                 null
         );
         final var orderAdminEntityList = List.of(order);
-        final var orderFilterDto = OrderAdminFilterDto.builder().orderId(orderId).status(Set.of("NEW")).build();
+        final var orderFilterDto = OrderAdminFilterDto.builder().status(Set.of("NEW")).build();
 
         //### Given - Mocks
         when(repository.findByStatus(anySet())).thenReturn(orderAdminEntityList);

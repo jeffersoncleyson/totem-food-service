@@ -88,7 +88,7 @@ class SearchOrderAdminUseCaseTest {
                 0
         );
         final var orderAdminDomainList = List.of(order);
-        final var orderFilterDto = OrderAdminFilterDto.builder().orderId(orderId).build();
+        final var orderFilterDto = OrderAdminFilterDto.builder().build();
 
         //### Given - Mocks
         when(iSearchOrderRepositoryPort.findAll(Mockito.any(OrderAdminFilterDto.class))).thenReturn(orderAdminDomainList);
