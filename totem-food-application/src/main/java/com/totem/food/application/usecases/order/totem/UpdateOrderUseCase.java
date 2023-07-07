@@ -45,6 +45,7 @@ public class UpdateOrderUseCase implements IUpdateUseCase<OrderUpdateDto, OrderD
 
         final var domain = iOrderMapper.toDomain(orderModel);
 
+        domain.isOrderInStatusOfUpdate();
         domain.calculatePrice();
         domain.updateModifiedAt();
 
