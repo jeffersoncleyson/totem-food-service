@@ -1,0 +1,705 @@
+{
+	"info": {
+		"_postman_id": "44c95624-d08e-442b-9558-002036efefd8",
+		"name": "Entrega Fase 1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16179794"
+	},
+	"item": [
+		{
+			"name": "1 - Identificação Cliente",
+			"item": [
+				{
+					"name": "/totem/customer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Jefferson\",\n    \"email\": \"jef@gmail.com\",\n    \"cpf\": \"43285823239\",\n    \"mobile\": \"11966081162\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{backend}}/totem/customer",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"totem",
+								"customer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/totem/login",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "cpf",
+								"value": "12585824659",
+								"type": "text"
+							},
+							{
+								"key": "password",
+								"value": "123456",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{backend}}/totem/login",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"totem",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/totem/customer/:customerId",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "cpf",
+								"value": "12585824659",
+								"type": "text"
+							},
+							{
+								"key": "password",
+								"value": "123456",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{backend}}/totem/customer/:customerId",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"totem",
+								"customer",
+								":customerId"
+							],
+							"variable": [
+								{
+									"key": "customerId",
+									"value": "64a1f7a5ed3da311b18b0b62"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2 - Categoria",
+			"item": [
+				{
+					"name": "/administrative/category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Sobremesa\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{backend}}/administrative/category",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"administrative",
+								"category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/administrative/category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend}}/administrative/category",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"administrative",
+								"category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/administrative/category",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Bebida\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{backend}}/administrative/category/:categoryId",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"administrative",
+								"category",
+								":categoryId"
+							],
+							"variable": [
+								{
+									"key": "categoryId",
+									"value": "64a1ee96b6b6b8721473e10d"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/administrative/category",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{backend}}/administrative/category/:categoryId",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"administrative",
+								"category",
+								":categoryId"
+							],
+							"variable": [
+								{
+									"key": "categoryId",
+									"value": "64a1ee96b6b6b8721473e10d"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3 - Produto",
+			"item": [
+				{
+					"name": "/administrative/product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Sunday\",\n    \"description\": \"Pão com gergilim, hamburger 200g, tomate\",\n    \"image\": \"https://s2.glbimg.com/x4W3eb8dGwiiv6MEzxk6qMeukSs=/smart/e.glbimg.com/og/ed/f/original/2021/05/28/receitas-para-acompanhar-batata-frita.jpg\",\n    \"price\": 15,\n    \"category\": \"64a765241a4d140bb25fbb64\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{backend}}/administrative/product",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"administrative",
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/administrative/product/:productId",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Batata Frita\",\n    \"description\": \"Batata frita 150g\",\n    \"image\": \"https://s2.glbimg.com/x4W3eb8dGwiiv6MEzxk6qMeukSs=/smart/e.glbimg.com/og/ed/f/original/2021/05/28/receitas-para-acompanhar-batata-frita.jpg\",\n    \"price\": 15.0,\n    \"category\": \"6496ef4f26e09a01c307a47f\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{backend}}/administrative/product/:productId",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"administrative",
+								"product",
+								":productId"
+							],
+							"variable": [
+								{
+									"key": "productId",
+									"value": "649666305b5ed22abab66160"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/administrative/product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend}}/administrative/product?categoryId=649f656e93ecc62de1ffa263",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"administrative",
+								"product"
+							],
+							"query": [
+								{
+									"key": "categoryId",
+									"value": "649f656e93ecc62de1ffa263"
+								},
+								{
+									"key": "categoryId",
+									"value": "649f658d93ecc62de1ffa264",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/administrative/product/:productId",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{backend}}/administrative/product/:productId",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"administrative",
+								"product",
+								":productId"
+							],
+							"variable": [
+								{
+									"key": "productId",
+									"value": "649664ec5b5ed22abab6615f"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "4 - Pedidos",
+			"item": [
+				{
+					"name": "/totem/order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"customerId\": \"64a7652f1a4d140bb25fbb65\",\n    \"products\": [\n        {\n            \"id\": \"64a7653b1a4d140bb25fbb66\",\n            \"qtd\": 2\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{backend}}/totem/order",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"totem",
+								"order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/totem/order/:orderId",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"products\": [\n        {\n            \"id\": \"64a7653b1a4d140bb25fbb66\",\n            \"qtd\": 2\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{backend}}/totem/order/:orderId",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"totem",
+								"order",
+								":orderId"
+							],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "64a765521a4d140bb25fbb67"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/totem/order",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend}}/totem/order",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"totem",
+								"order"
+							],
+							"query": [
+								{
+									"key": "customerId",
+									"value": "64a7652f1a4d140bb25fbb65",
+									"disabled": true
+								},
+								{
+									"key": "orderId",
+									"value": "64a765521a4d140bb25fbb67",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "NEW",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "FINALIZED",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/totem/order/:orderId/status/:statusName",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{backend}}/totem/order/:orderId/status/:statusName",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"totem",
+								"order",
+								":orderId",
+								"status",
+								":statusName"
+							],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "64a765521a4d140bb25fbb67"
+								},
+								{
+									"key": "statusName",
+									"value": "READY"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "5 - Pagamento",
+			"item": [
+				{
+					"name": "/totem/payment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orderId\": \"64a765521a4d140bb25fbb67\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{backend}}/totem/payment",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"totem",
+								"payment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/totem/payment/:paymentId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend}}/totem/payment/:paymentId",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"totem",
+								"payment",
+								":paymentId"
+							],
+							"variable": [
+								{
+									"key": "paymentId",
+									"value": "649f695493ecc62de1ffa26c"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/totem/payment/callback/order/:orderId",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "64078c78-fc83-4be4-8e78-25c91bb99dce",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{backend}}/totem/payment/callback/order/:orderId",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"totem",
+								"payment",
+								"callback",
+								"order",
+								":orderId"
+							],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "64a765521a4d140bb25fbb67"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "6 - Acompanhamento",
+			"item": [
+				{
+					"name": "/totem/order",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"customerId\": \"6494bd6d46ab85304f1d8180\",\n    \"products\": [\n        \"6494c68d1f3ffa4175e155b1\",\n        \"6494c7c41f3ffa4175e155b4\",\n        \"6494c8661f3ffa4175e155b5\"\n    ],\n    \"combos\": []\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{backend}}/totem/order",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"totem",
+								"order"
+							],
+							"query": [
+								{
+									"key": "customerId",
+									"value": "6494bd6d46ab85304f1d8180",
+									"disabled": true
+								},
+								{
+									"key": "orderId",
+									"value": "64a765521a4d140bb25fbb67",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "RECEIVED",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "WAITING_PAYMENT",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "7 - Gerenciar Clientes",
+			"item": [
+				{
+					"name": "/administrative/customer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend}}/administrative/customer",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"administrative",
+								"customer"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "8 - Gerenciar Pedidos",
+			"item": [
+				{
+					"name": "/administrative/orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend}}/administrative/orders",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"administrative",
+								"orders"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "RECEIVED",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "WAITING_PAYMENT",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "backend",
+			"value": "http://localhost:8080/v1",
+			"type": "string"
+		}
+	]
+}

@@ -4,12 +4,22 @@ server:
 logging:
   level:
     root: ${LOGGING_LEVEL:info}
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: INFO
+            repository:
+                query: INFO
     "[com.totem.food]": ${APP_LOGGING_LEVEL:debug}
     "[org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping]": ${SHOW_ENDPOINTS_LOGGING_LEVEL:info}
   pattern:
     level: "%clr(${LOG_LEVEL_PATTERN: [%X{x-request-id}] [%X{x-environment-id}] [%X{x-customer-id}] -%5p})"
 
 spring:
+  jackson:
+    default-property-inclusion: non_null
   data:
     mongodb:
       host: localhost
@@ -18,6 +28,19 @@ spring:
       username: root
       password: qwe123
       authentication-database: admin
+
+payment:
+  url: ${PAYMENT_GATEWAY_URL:http://localhost:5000/v1/online-payment}
+
+mail:
+  smtp:
+    host: ${SMTP_HOST:localhost}
+    port: ${SMTP_PORT:1025}
+    username: ${SMTP_USERNAME:username}
+    password: ${SMTP_PASSWORD:password}
+    auth: ${SMTP_AUTH_ENABLED:false}
+    tls: ${SMTP_TLS_ENABLED:false}
+    email: ${SMTP_EMAIL:contato@totem.food.service.com.br}
 
 app:
   version: ^project.version^

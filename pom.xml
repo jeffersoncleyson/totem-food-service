@@ -41,14 +41,26 @@
         <bcprov-jdk18on.version>1.72</bcprov-jdk18on.version>
         <bcpkix-jdk18on.version>1.72</bcpkix-jdk18on.version>
         <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
-        <junit-jupiter-engine.version>5.7.2</junit-jupiter-engine.version>
-        <mockito-junit-jupiter.version>4.8.0</mockito-junit-jupiter.version>
+        <junit-jupiter-engine.version>5.8.2</junit-jupiter-engine.version>
+        <mockito-junit-jupiter.version>5.3.1</mockito-junit-jupiter.version>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar-maven-plugin.version>3.9.1.2184</sonar-maven-plugin.version>
         <sonar.projectName>totem-food-service</sonar.projectName>
         <sonar.organization>fiap-tech-challenge-4787bf24ba181ac258cb520837a657896a92044c</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
+        <assertj-core.version>3.24.2</assertj-core.version>
+        <sonar.coverage.exclusions>
+            **com/totem/food/framework/adapters/out/persistence/mongo/category/entity/**,
+            **com/totem/food/framework/adapters/out/persistence/mongo/category/mapper/**,
+            **com/totem/food/framework/adapters/out/persistence/mongo/configuration/**,
+            **com/totem/food/framework/adapters/out/persistence/mongo/commons/**,
+            **com/totem/food/framework/config/**,
+            **com/totem/food/application/ports/**,
+            **com/totem/food/application/ports/in/dtos/**,
+            **com/totem/food/application/ports/out/dtos/**,
+            **com/totem/food/domain/**
+        </sonar.coverage.exclusions>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -73,16 +85,6 @@
                 <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.springdoc</groupId>
-                <artifactId>springdoc-openapi-ui</artifactId>
-                <version>${springdoc-openapi-ui.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.swagger</groupId>
-                <artifactId>swagger-annotations</artifactId>
-                <version>${swagger-annotations.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -137,6 +139,12 @@
                 <version>${mockito-junit-jupiter.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>${assertj-core.version}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <build>
@@ -184,7 +192,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.22.2</version>
+                    <version>3.1.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>
