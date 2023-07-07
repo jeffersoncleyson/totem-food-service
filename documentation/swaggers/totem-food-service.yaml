@@ -254,6 +254,15 @@ paths:
       summary: List all product
       description: List all product
       operationId: listAllProducts
+      parameters:
+        - name: categoryId
+          in: query
+          description: ID of order to return
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         '200':
           description: successful operation
@@ -363,7 +372,7 @@ paths:
       tags:
         - Order
       summary: Get orders
-      description: Get orders
+      description: "Get orders. Attention! use only one of the following filters customerId, orderId or status[]"
       operationId: orderGetFilter
       parameters:
         - name: orderId
@@ -378,6 +387,14 @@ paths:
           required: false
           schema:
             type: string
+        - name: status
+          in: query
+          description: ID of order to return
+          required: false
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/OrderStatusEnum'
       responses:
         '202':
           description: Accepted
@@ -387,6 +404,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/OrderDto'
+        '204':
+          description: No results found or input filters are incorrect
         '405':
           description: Invalid input
 
@@ -459,18 +478,14 @@ paths:
       description: List all orders
       operationId: listAllOrders
       parameters:
-        - name: orderId
-          in: query
-          description: ID of order
-          required: false
-          schema:
-            type: string
         - name: status
           in: query
           description: Order token
           required: false
           schema:
-            $ref: '#/components/schemas/OrderStatusEnum'
+            type: array
+            items:
+              $ref: '#/components/schemas/OrderStatusEnum'
       responses:
         '200':
           description: successful operation
