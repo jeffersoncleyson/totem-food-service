@@ -4,7 +4,6 @@ import com.mongodb.DBRef;
 import com.totem.food.application.ports.in.dtos.product.ProductFilterDto;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.product.ProductModel;
-import com.totem.food.domain.product.ProductDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepository;
 import com.totem.food.framework.adapters.out.persistence.mongo.product.entity.ProductEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.product.mapper.IProductEntityMapper;

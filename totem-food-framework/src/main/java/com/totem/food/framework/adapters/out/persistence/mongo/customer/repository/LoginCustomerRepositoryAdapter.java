@@ -2,7 +2,6 @@ package com.totem.food.framework.adapters.out.persistence.mongo.customer.reposit
 
 import com.totem.food.application.ports.out.persistence.commons.ILoginRepositoryPort;
 import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
-import com.totem.food.domain.customer.CustomerDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepository;
 import com.totem.food.framework.adapters.out.persistence.mongo.customer.entity.CustomerEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.customer.mapper.ICustomerEntityMapper;

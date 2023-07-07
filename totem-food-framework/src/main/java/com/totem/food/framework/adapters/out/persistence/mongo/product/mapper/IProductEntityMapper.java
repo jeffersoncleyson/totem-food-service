@@ -1,7 +1,6 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.product.mapper;
 
 import com.totem.food.application.ports.out.persistence.product.ProductModel;
-import com.totem.food.domain.product.ProductDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.product.entity.ProductEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;

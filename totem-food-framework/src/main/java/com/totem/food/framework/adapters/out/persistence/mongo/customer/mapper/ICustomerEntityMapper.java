@@ -1,7 +1,6 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.customer.mapper;
 
 import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
-import com.totem.food.domain.customer.CustomerDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.customer.entity.CustomerEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

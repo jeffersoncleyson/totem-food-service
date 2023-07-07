@@ -7,7 +7,6 @@ import com.totem.food.application.ports.out.persistence.commons.ISearchRepositor
 import com.totem.food.application.ports.out.persistence.product.ProductModel;
 import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.ISearchUseCase;
-import com.totem.food.domain.product.ProductDomain;
 import lombok.AllArgsConstructor;
 
 import java.util.List;

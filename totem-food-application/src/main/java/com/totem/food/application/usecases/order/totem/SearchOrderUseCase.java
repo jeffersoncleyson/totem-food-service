@@ -7,7 +7,6 @@ import com.totem.food.application.ports.out.persistence.commons.ISearchRepositor
 import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
 import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.ISearchUseCase;
-import com.totem.food.domain.order.totem.OrderDomain;
 import lombok.AllArgsConstructor;
 
 import java.util.ArrayList;
