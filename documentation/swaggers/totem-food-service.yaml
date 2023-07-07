@@ -653,8 +653,7 @@ components:
         product:
           type: array
           items:
-            type: string
-          example: ["11826bb3554280604d93d7b6","55526bb3554280604d93d7b6"]
+            $ref: '#/components/schemas/ItemQuantityDto'
     OrderDto:
       type: object
       properties:
@@ -684,6 +683,17 @@ components:
           format: date-time
           example: '2023-06-09T00:00:51.623596531Z'
           description: Date of creation
+
+    ItemQuantityDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Product id
+          example: '64826bb3554280604d93d7b6'
+        qtd:
+          type: number
+          example: 2
 
     OrderAdminDto:
       type: object
