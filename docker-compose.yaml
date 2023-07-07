@@ -51,6 +51,7 @@ services:
       SMTP_EMAIL: contato@totem.food.service.com.br
     ports:
       - "8080:8080"
+      - "8787:8787" # DEBUG
     depends_on:
       - mongo-dev
     networks:
@@ -77,3 +78,5 @@ services:
     ports:
       - 1025:1025
       - 8025:8025
+    networks:
+      - developer-network

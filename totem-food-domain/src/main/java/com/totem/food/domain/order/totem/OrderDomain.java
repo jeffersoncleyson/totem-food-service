@@ -1,15 +1,11 @@
 package com.totem.food.domain.order.totem;
 
-import com.totem.food.domain.combo.ComboDomain;
 import com.totem.food.domain.customer.CustomerDomain;
+import com.totem.food.domain.exceptions.InvalidStatusException;
 import com.totem.food.domain.exceptions.InvalidStatusTransition;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import com.totem.food.domain.product.ProductDomain;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -17,10 +13,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Builder
@@ -36,9 +29,6 @@ public class OrderDomain {
 
     @Setter
     private List<ProductDomain> products;
-
-    @Setter
-    private List<ComboDomain> combos;
 
     @Builder.Default
     private OrderStatusEnumDomain status = OrderStatusEnumDomain.NEW;
@@ -90,8 +80,10 @@ public class OrderDomain {
         this.products = null;
     }
 
-    public void clearCombos() {
-        this.combos = null;
+    public void isOrderInStatusOfUpdate(){
+        if(!Objects.equals(OrderStatusEnumDomain.NEW, this.status)){
+            throw new InvalidStatusException("Order", this.status.key, OrderStatusEnumDomain.NEW.key);
+        }
     }
 
     public void calculatePrice() {
@@ -99,11 +91,8 @@ public class OrderDomain {
         final var productsPrice = Optional.ofNullable(this.products)
                 .filter(CollectionUtils::isNotEmpty)
                 .map(p -> p.stream().mapToDouble(ProductDomain::getPrice).sum()).orElse(0D);
-        final var comboPrice = Optional.ofNullable(this.combos)
-                .filter(CollectionUtils::isNotEmpty)
-                .map(c -> c.stream().mapToDouble(ComboDomain::getPrice).sum()).orElse(0D);
 
-        this.price = BigDecimal.valueOf(productsPrice + comboPrice)
+        this.price = BigDecimal.valueOf(productsPrice)
                 .setScale(2, RoundingMode.FLOOR)
                 .doubleValue();
     }

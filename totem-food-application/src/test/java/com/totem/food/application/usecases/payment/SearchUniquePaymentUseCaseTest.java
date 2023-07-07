@@ -2,8 +2,12 @@ package com.totem.food.application.usecases.payment;
 
 import com.totem.food.application.ports.in.mappers.payment.IPaymentMapper;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
+import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.domain.payment.PaymentDomain;
+import lombok.SneakyThrows;
 import mock.domain.PaymentDomainMock;
+import mock.models.PaymentModelMock;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,7 +31,7 @@ class SearchUniquePaymentUseCaseTest {
 
 
     @Mock
-    private ISearchUniqueRepositoryPort<Optional<PaymentDomain>> iSearchUniqueRepositoryPort;
+    private ISearchUniqueRepositoryPort<Optional<PaymentModel>> iSearchUniqueRepositoryPort;
 
     @Spy
     private IPaymentMapper iPaymentMapper = Mappers.getMapper(IPaymentMapper.class);
@@ -35,17 +39,25 @@ class SearchUniquePaymentUseCaseTest {
 
     private SearchUniquePaymentUseCase searchUniquePaymentUseCase;
 
+    private AutoCloseable autoCloseable;
+
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        autoCloseable = MockitoAnnotations.openMocks(this);
         this.searchUniquePaymentUseCase = new SearchUniquePaymentUseCase(iSearchUniqueRepositoryPort, iPaymentMapper);
+    }
+
+    @SneakyThrows
+    @AfterEach
+    void down(){
+        autoCloseable.close();
     }
 
     @Test
     void item() {
 
         //## Given - Mock
-        var paymentDomain = PaymentDomainMock.getPaymentStatusPendingMock();
+        var paymentDomain = PaymentModelMock.getPaymentStatusPendingMock();
 
         //## Given
         when(iSearchUniqueRepositoryPort.findById(anyString())).thenReturn(Optional.of(paymentDomain));
@@ -55,7 +67,7 @@ class SearchUniquePaymentUseCaseTest {
 
         //## Then
         assertNotNull(paymentDto);
-        verify(iPaymentMapper, times(1)).toDto(any(PaymentDomain.class));
+        verify(iPaymentMapper, times(1)).toDto(any(PaymentModel.class));
     }
 
 }

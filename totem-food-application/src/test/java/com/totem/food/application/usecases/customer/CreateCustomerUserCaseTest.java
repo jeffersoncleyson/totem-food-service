@@ -6,6 +6,7 @@ import com.totem.food.application.ports.in.dtos.customer.CustomerDto;
 import com.totem.food.application.ports.in.mappers.customer.ICustomerMapper;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.IExistsRepositoryPort;
+import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
 import com.totem.food.domain.customer.CustomerDomain;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
@@ -39,10 +40,10 @@ class CreateCustomerUserCaseTest {
     private ICustomerMapper iCustomerMapper = Mappers.getMapper(ICustomerMapper.class);
 
     @Mock
-    private ICreateRepositoryPort<CustomerDomain> iCreateRepositoryPort;
+    private ICreateRepositoryPort<CustomerModel> iCreateRepositoryPort;
 
     @Mock
-    private IExistsRepositoryPort<CustomerDomain, Boolean> iExistsRepositoryPort;
+    private IExistsRepositoryPort<CustomerModel, Boolean> iExistsRepositoryPort;
 
     private CreateCustomerUserCase createCustomerUserCase;
     private AutoCloseable closeable;
@@ -87,19 +88,19 @@ class CreateCustomerUserCaseTest {
         customerCreateDto.setMobile(mobile);
         customerCreateDto.setPassword(password);
 
-        final var customerDomain = new CustomerDomain();
-        customerDomain.setId(id);
-        customerDomain.setName(name);
-        customerDomain.setCpf(cpf);
-        customerDomain.setEmail(email);
-        customerDomain.setMobile(mobile);
-        customerDomain.setPassword(password);
-        customerDomain.setCreateAt(createAt);
-        customerDomain.setModifiedAt(modifiedAt);
+        final var customerModel = new CustomerModel();
+        customerModel.setId(id);
+        customerModel.setName(name);
+        customerModel.setCpf(cpf);
+        customerModel.setEmail(email);
+        customerModel.setMobile(mobile);
+        customerModel.setPassword(password);
+        customerModel.setCreateAt(createAt);
+        customerModel.setModifiedAt(modifiedAt);
 
         //### Given - Mocks
         when(iExistsRepositoryPort.exists(Mockito.any())).thenReturn(false);
-        when(iCreateRepositoryPort.saveItem(Mockito.any(CustomerDomain.class))).thenReturn(customerDomain);
+        when(iCreateRepositoryPort.saveItem(Mockito.any(CustomerModel.class))).thenReturn(customerModel);
 
         //### When
         final var customerDtoUseCase = createCustomerUserCase.createItem(customerCreateDto);
@@ -107,8 +108,8 @@ class CreateCustomerUserCaseTest {
         //### Then
         verify(iCustomerMapper, times(1)).toDomain(Mockito.any(CustomerCreateDto.class));
         verify(iExistsRepositoryPort, times(1)).exists(Mockito.any());
-        verify(iCreateRepositoryPort, times(1)).saveItem(Mockito.any(CustomerDomain.class));
-        verify(iCustomerMapper, times(1)).toDto(Mockito.any(CustomerDomain.class));
+        verify(iCreateRepositoryPort, times(1)).saveItem(Mockito.any(CustomerModel.class));
+        verify(iCustomerMapper, times(1)).toDto(Mockito.any(CustomerModel.class));
 
         assertThat(customerDtoUseCase).usingRecursiveComparison().isNotNull();
 
@@ -141,8 +142,8 @@ class CreateCustomerUserCaseTest {
         assertThrows(ElementExistsException.class, () -> createCustomerUserCase.createItem(customerCreateDto));
 
         //### Then
-        verify(iCreateRepositoryPort, never()).saveItem(Mockito.any(CustomerDomain.class));
-        verify(iCustomerMapper, never()).toDto(Mockito.any(CustomerDomain.class));
+        verify(iCreateRepositoryPort, never()).saveItem(Mockito.any(CustomerModel.class));
+        verify(iCustomerMapper, never()).toDto(Mockito.any(CustomerModel.class));
 
     }
 }

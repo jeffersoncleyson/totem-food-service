@@ -2,23 +2,29 @@ package com.totem.food.application.usecases.payment;
 
 import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.ports.in.dtos.payment.PaymentFilterDto;
+import com.totem.food.application.ports.in.mappers.order.totem.IOrderMapper;
+import com.totem.food.application.ports.in.mappers.payment.IPaymentMapper;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
-import com.totem.food.domain.order.totem.OrderDomain;
-import com.totem.food.domain.payment.PaymentDomain;
+import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
+import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
+import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import lombok.SneakyThrows;
 import mock.domain.OrderDomainMock;
-import mock.domain.PaymentDomainMock;
+import mock.models.OrderModelMock;
+import mock.models.PaymentModelMock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.Closeable;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,27 +40,30 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class UpdatePaymentUseCaseTest {
 
+    @Spy
+    private IPaymentMapper iPaymentMapper = Mappers.getMapper(IPaymentMapper.class);
+    @Spy
+    private IOrderMapper iOrderMapper = Mappers.getMapper(IOrderMapper.class);
     @Mock
-    private ISearchRepositoryPort<PaymentFilterDto, PaymentDomain> iSearchRepositoryPort;
+    private ISearchRepositoryPort<PaymentFilterDto, PaymentModel> iSearchRepositoryPort;
 
     @Mock
-    private IUpdateRepositoryPort<PaymentDomain> iUpdateRepositoryPort;
+    private IUpdateRepositoryPort<PaymentModel> iUpdateRepositoryPort;
 
     @Mock
-    private ISearchUniqueRepositoryPort<Optional<OrderDomain>> iSearchUniqueRepositoryPort;
+    private ISearchUniqueRepositoryPort<Optional<OrderModel>> iSearchUniqueRepositoryPort;
 
     @Mock
-    private IUpdateRepositoryPort<OrderDomain> iUpdateOrderRepositoryPort;
+    private IUpdateRepositoryPort<OrderModel> iUpdateOrderRepositoryPort;
 
     private UpdatePaymentUseCase updatePaymentUseCase;
 
-    @Mock
-    private Closeable closeable;
+    private AutoCloseable closeable;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        updatePaymentUseCase = new UpdatePaymentUseCase(iSearchRepositoryPort, iUpdateRepositoryPort, iSearchUniqueRepositoryPort, iUpdateOrderRepositoryPort);
+        closeable = MockitoAnnotations.openMocks(this);
+        updatePaymentUseCase = new UpdatePaymentUseCase(iPaymentMapper, iOrderMapper, iSearchRepositoryPort, iUpdateRepositoryPort, iSearchUniqueRepositoryPort, iUpdateOrderRepositoryPort);
     }
 
     @SneakyThrows
@@ -67,11 +76,11 @@ class UpdatePaymentUseCaseTest {
     void updateItemWhenPaymentStatusCompleted() {
 
         //## Mock - Objects
-        var paymentDomain = PaymentDomainMock.getPaymentStatusCompletedMock();
+        var paymentModel = PaymentModelMock.getPaymentStatusCompletedMock();
         var paymentFilterDto = PaymentFilterDto.builder().orderId("1").token("token").build();
 
         //## Given
-        when(iSearchRepositoryPort.findAll(any())).thenReturn(paymentDomain);
+        when(iSearchRepositoryPort.findAll(any())).thenReturn(paymentModel);
 
         //## When
         var updateItem = updatePaymentUseCase.updateItem(paymentFilterDto, anyString());
@@ -85,12 +94,12 @@ class UpdatePaymentUseCaseTest {
     void updateItemWhenPaymentStatusPending() {
 
         //## Mock - Objects
-        var paymentDomain = PaymentDomainMock.getPaymentStatusPendingMock();
+        var paymentModel = PaymentModelMock.getPaymentStatusPendingMock();
         var paymentFilterDto = PaymentFilterDto.builder().orderId("1").token("token").build();
-        var orderDomain = OrderDomainMock.getStatusWaitingPaymentMock();
+        var orderDomain = OrderModelMock.orderModel(OrderStatusEnumDomain.WAITING_PAYMENT);
 
         //## Given
-        when(iSearchRepositoryPort.findAll(any())).thenReturn(paymentDomain);
+        when(iSearchRepositoryPort.findAll(any())).thenReturn(paymentModel);
         when(iSearchUniqueRepositoryPort.findById(anyString())).thenReturn(Optional.ofNullable(orderDomain));
 
         //## When
@@ -98,8 +107,8 @@ class UpdatePaymentUseCaseTest {
 
         //## Then
         assertTrue(updateItem);
-        verify(iUpdateOrderRepositoryPort, times(1)).updateItem(orderDomain);
-        verify(iUpdateRepositoryPort, times(1)).updateItem(paymentDomain);
+        verify(iUpdateOrderRepositoryPort, times(1)).updateItem(Mockito.any(OrderModel.class));
+        verify(iUpdateRepositoryPort, times(1)).updateItem(Mockito.any(PaymentModel.class));
 
     }
 
@@ -107,12 +116,12 @@ class UpdatePaymentUseCaseTest {
     void elementNotFoundExceptionWhenSearchUniqueById() {
 
         //## Mock - Objects
-        var paymentDomain = PaymentDomainMock.getPaymentStatusPendingMock();
+        var paymentModel = PaymentModelMock.getPaymentStatusPendingMock();
         var paymentFilterDto = PaymentFilterDto.builder().orderId("1").token("token").build();
-        var orderDomain = OrderDomainMock.getStatusWaitingPaymentMock();
+        var orderDomain = OrderModelMock.orderModel(OrderStatusEnumDomain.WAITING_PAYMENT);
 
         //## Given
-        when(iSearchRepositoryPort.findAll(any())).thenReturn(paymentDomain);
+        when(iSearchRepositoryPort.findAll(any())).thenReturn(paymentModel);
         when(iSearchUniqueRepositoryPort.findById(anyString())).thenReturn(Optional.empty());
 
         //## When
@@ -122,7 +131,7 @@ class UpdatePaymentUseCaseTest {
         //## Then
         assertEquals(exception.getMessage(), "Order with orderId: [1] not found");
         verify(iUpdateOrderRepositoryPort, never()).updateItem(orderDomain);
-        verify(iUpdateRepositoryPort, never()).updateItem(paymentDomain);
+        verify(iUpdateRepositoryPort, never()).updateItem(paymentModel);
 
     }
 

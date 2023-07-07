@@ -1,6 +1,7 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.payment.repository;
 
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
+import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.domain.payment.PaymentDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepository;
 import com.totem.food.framework.adapters.out.persistence.mongo.payment.entity.PaymentEntity;
@@ -13,7 +14,7 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @Component
-public class SearchUniquePaymentRepositoryAdapter implements ISearchUniqueRepositoryPort<Optional<PaymentDomain>> {
+public class SearchUniquePaymentRepositoryAdapter implements ISearchUniqueRepositoryPort<Optional<PaymentModel>> {
 
 	@Repository
 	protected interface PaymentRepositoryMongoDB extends BaseRepository<PaymentEntity, String> {
@@ -23,8 +24,8 @@ public class SearchUniquePaymentRepositoryAdapter implements ISearchUniqueReposi
 	private final IPaymentEntityMapper iPaymentMapper;
 
 	@Override
-	public Optional<PaymentDomain> findById(String id) {
-		return repository.findById(id).map(iPaymentMapper::toDomain);
+	public Optional<PaymentModel> findById(String id) {
+		return repository.findById(id).map(iPaymentMapper::toModel);
 	}
 
 }

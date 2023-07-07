@@ -4,6 +4,7 @@ import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.ports.in.dtos.customer.CustomerDto;
 import com.totem.food.application.ports.in.mappers.customer.ICustomerMapper;
 import com.totem.food.application.ports.out.persistence.commons.ILoginRepositoryPort;
+import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
 import com.totem.food.domain.customer.CustomerDomain;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
@@ -41,7 +42,7 @@ class LoginCustomerUserCaseTest {
     private ICustomerMapper iCustomerMapper = Mappers.getMapper(ICustomerMapper.class);
 
     @Mock
-    ILoginRepositoryPort<Optional<CustomerDomain>> iSearchUniqueRepositoryPort;
+    ILoginRepositoryPort<Optional<CustomerModel>> iSearchUniqueRepositoryPort;
 
     private LoginCustomerUserCase loginCustomerUserCase;
     private AutoCloseable closeable;
@@ -80,28 +81,28 @@ class LoginCustomerUserCaseTest {
         customerDto.setModifiedAt(modifiedAt);
         customerDto.setCreateAt(createAt);
 
-        final var customerDomain = new CustomerDomain();
-        customerDomain.setId(id);
-        customerDomain.setName(name);
-        customerDomain.setCpf(cpf);
-        customerDomain.setEmail(email);
-        customerDomain.setMobile(mobile);
-        customerDomain.setPassword(password);
-        customerDomain.setCreateAt(createAt);
-        customerDomain.setModifiedAt(modifiedAt);
+        final var customerModel = new CustomerModel();
+        customerModel.setId(id);
+        customerModel.setName(name);
+        customerModel.setCpf(cpf);
+        customerModel.setEmail(email);
+        customerModel.setMobile(mobile);
+        customerModel.setPassword(password);
+        customerModel.setCreateAt(createAt);
+        customerModel.setModifiedAt(modifiedAt);
 
         //### Given - Mocks
-        when(iSearchUniqueRepositoryPort.findByCadastro(anyString(), anyString())).thenReturn(Optional.of(customerDomain));
+        when(iSearchUniqueRepositoryPort.findByCadastro(anyString(), anyString())).thenReturn(Optional.of(customerModel));
 
         //### When
         final var customerDtoUseCas = loginCustomerUserCase.login(cpf, password);
 
         //### Then
-        verify(iCustomerMapper, times(1)).toDto(any(CustomerDomain.class));
+        verify(iCustomerMapper, times(1)).toDto(any(CustomerModel.class));
 
         assertThat(customerDtoUseCas).usingRecursiveComparison().isNotNull();
 
-        assertEquals(customerDtoUseCas.getCpf(), customerDomain.getCpf());
+        assertEquals(customerDtoUseCas.getCpf(), customerModel.getCpf());
         assertNotNull(customerDtoUseCas.getCreateAt());
         assertNotNull(customerDtoUseCas.getModifiedAt());
     }
@@ -118,7 +119,7 @@ class LoginCustomerUserCaseTest {
 
         //### Then
         Assertions.assertEquals(exception.getMessage(), "Incorrect user or password");
-        verify(iCustomerMapper, never()).toDto(any(CustomerDomain.class));
+        verify(iCustomerMapper, never()).toDto(any(CustomerModel.class));
 
     }
 }

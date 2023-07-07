@@ -1,5 +1,6 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.payment.mapper;
 
+import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.domain.payment.PaymentDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.payment.entity.PaymentEntity;
 import org.mapstruct.Mapper;
@@ -12,8 +13,8 @@ import org.mapstruct.ReportingPolicy;
 public interface IPaymentEntityMapper {
 
 	@Mapping(source = "status.key", target = "status")
-	PaymentEntity toEntity(PaymentDomain input);
+	PaymentEntity toEntity(PaymentModel input);
 
-	PaymentDomain toDomain(PaymentEntity input);
+	PaymentModel toModel(PaymentEntity input);
 
 }

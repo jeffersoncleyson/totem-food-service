@@ -13,13 +13,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.Closeable;
-import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -66,7 +64,7 @@ class SearchCategoryRepositoryAdapterTest {
 
         //## Then
         Assertions.assertEquals(result.get(0).getName(), categoryDomain.getName());
-        verify(iCategoryEntityMapper, times(1)).toDomain(any(CategoryEntity.class));
+        verify(iCategoryEntityMapper, times(1)).toModel(any(CategoryEntity.class));
 
     }
 
@@ -86,7 +84,7 @@ class SearchCategoryRepositoryAdapterTest {
 
         //## Then
         Assertions.assertEquals(result.get(0).getName(), categoryDomain.getName());
-        verify(iCategoryEntityMapper, times(1)).toDomain(any(CategoryEntity.class));
+        verify(iCategoryEntityMapper, times(1)).toModel(any(CategoryEntity.class));
 
     }
 }

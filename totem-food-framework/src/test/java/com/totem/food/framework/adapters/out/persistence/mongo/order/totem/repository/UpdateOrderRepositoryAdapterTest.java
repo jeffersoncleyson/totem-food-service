@@ -1,11 +1,14 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.order.totem.repository;
 
+import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
+import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import com.totem.food.domain.order.totem.OrderDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.order.totem.entity.OrderEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.order.totem.mapper.IOrderEntityMapper;
 import lombok.SneakyThrows;
 import mocks.domains.OrderDomainMock;
 import mocks.entity.OrderEntityMock;
+import mocks.models.OrderModelMock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -59,7 +62,7 @@ class UpdateOrderRepositoryAdapterTest {
         //### Given - Objects and Values
         final var id = UUID.randomUUID().toString();
         var orderEntity = OrderEntityMock.getMock();
-        var orderDomain = OrderDomainMock.getStatusNewMock();
+        var orderDomain = OrderModelMock.getOrderModel(OrderStatusEnumDomain.NEW);
 
         //### Given
         when(repository.save(Mockito.any(OrderEntity.class))).thenReturn(orderEntity);
@@ -68,9 +71,9 @@ class UpdateOrderRepositoryAdapterTest {
         final var orderDomainSaved = updateOrderRepositoryAdapter.updateItem(orderDomain);
 
         //### Then
-        verify(iOrderEntityMapper, times(1)).toEntity(Mockito.any(OrderDomain.class));
+        verify(iOrderEntityMapper, times(1)).toEntity(Mockito.any(OrderModel.class));
         verify(repository, times(1)).save(Mockito.any(OrderEntity.class));
-        verify(iOrderEntityMapper, times(1)).toDomain(Mockito.any(OrderEntity.class));
+        verify(iOrderEntityMapper, times(1)).toModel(Mockito.any(OrderEntity.class));
 
         assertThat(orderDomain)
                 .usingRecursiveComparison()

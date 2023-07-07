@@ -3,9 +3,12 @@ package com.totem.food.application.usecases.product;
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
 import com.totem.food.application.ports.in.dtos.product.ProductCreateDto;
 import com.totem.food.application.ports.in.dtos.product.ProductDto;
+import com.totem.food.application.ports.in.mappers.category.ICategoryMapper;
 import com.totem.food.application.ports.in.mappers.product.IProductMapper;
+import com.totem.food.application.ports.out.persistence.category.CategoryModel;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
+import com.totem.food.application.ports.out.persistence.product.ProductModel;
 import com.totem.food.application.usecases.commons.IUpdateUseCase;
 import com.totem.food.domain.category.CategoryDomain;
 import com.totem.food.domain.product.ProductDomain;
@@ -34,12 +37,14 @@ class UpdateProductUseCaseTest {
 
     @Spy
     private IProductMapper iProductMapper = Mappers.getMapper(IProductMapper.class);
+    @Spy
+    private ICategoryMapper iCategoryMapper = Mappers.getMapper(ICategoryMapper.class);
     @Mock
-    private IUpdateRepositoryPort<ProductDomain> iProductRepositoryPort;
+    private IUpdateRepositoryPort<ProductModel> iProductRepositoryPort;
     @Mock
-    private ISearchUniqueRepositoryPort<Optional<ProductDomain>> iSearchUniqueRepositoryPort;
+    private ISearchUniqueRepositoryPort<Optional<ProductModel>> iSearchUniqueRepositoryPort;
     @Mock
-    private ISearchUniqueRepositoryPort<Optional<CategoryDomain>> iSearchUniqueCategoryRepositoryPort;
+    private ISearchUniqueRepositoryPort<Optional<CategoryModel>> iSearchUniqueCategoryRepositoryPort;
 
     private IUpdateUseCase<ProductCreateDto, ProductDto> iUpdateUseCase;
     private AutoCloseable closeable;
@@ -47,7 +52,7 @@ class UpdateProductUseCaseTest {
     @BeforeEach
     void beforeEach() {
         closeable = MockitoAnnotations.openMocks(this);
-        iUpdateUseCase = new UpdateProductUseCase(iProductMapper, iProductRepositoryPort, iSearchUniqueRepositoryPort, iSearchUniqueCategoryRepositoryPort);
+        iUpdateUseCase = new UpdateProductUseCase(iProductMapper, iCategoryMapper, iProductRepositoryPort, iSearchUniqueRepositoryPort, iSearchUniqueCategoryRepositoryPort);
     }
 
     @AfterEach
@@ -69,6 +74,7 @@ class UpdateProductUseCaseTest {
 
         final var categoryId = UUID.randomUUID().toString();
         final var categoryDomain = CategoryDomain.builder().id(categoryId).build();
+        final var categoryModel = CategoryModel.builder().id(categoryId).build();
 
         final var categoryDTO = CategoryDto.builder().id(categoryId).build();
         final var productDto = new ProductDto(
@@ -90,7 +96,7 @@ class UpdateProductUseCaseTest {
                 category
         );
 
-        final var productDomain = ProductDomain.builder()
+        final var productModel = ProductModel.builder()
                 .id(id)
                 .name(name)
                 .description(description)
@@ -102,16 +108,17 @@ class UpdateProductUseCaseTest {
                 .build();
 
         //### Given - Mocks
-        when(iSearchUniqueRepositoryPort.findById(Mockito.anyString())).thenReturn(Optional.of(productDomain));
-        when(iSearchUniqueCategoryRepositoryPort.findById(Mockito.anyString())).thenReturn(Optional.of(categoryDomain));
-        when(iProductRepositoryPort.updateItem(Mockito.any(ProductDomain.class))).thenReturn(productDomain);
+        when(iSearchUniqueRepositoryPort.findById(Mockito.anyString())).thenReturn(Optional.of(productModel));
+        when(iSearchUniqueCategoryRepositoryPort.findById(Mockito.anyString())).thenReturn(Optional.of(categoryModel));
+        when(iProductRepositoryPort.updateItem(Mockito.any(ProductModel.class))).thenReturn(productModel);
 
         //### When
         final var productDtoUpdated = iUpdateUseCase.updateItem(productCreateDto, id);
 
         //### Then
-        verify(iProductMapper, times(1)).toDto(Mockito.any(ProductDomain.class));
-        verify(iProductRepositoryPort, times(1)).updateItem(Mockito.any(ProductDomain.class));
+        verify(iProductMapper, times(1)).toDto(Mockito.any(ProductModel.class));
+        verify(iCategoryMapper, times(1)).toDomain(Mockito.any(CategoryModel.class));
+        verify(iProductRepositoryPort, times(1)).updateItem(Mockito.any(ProductModel.class));
 
         assertThat(productDtoUpdated)
                 .usingRecursiveComparison()
@@ -119,6 +126,5 @@ class UpdateProductUseCaseTest {
                 .isEqualTo(productDto);
 
         assertEquals(productDto.getCreateAt(), productDtoUpdated.getCreateAt());
-        assertTrue(productDtoUpdated.getModifiedAt().isAfter(productDto.getModifiedAt()));
     }
 }

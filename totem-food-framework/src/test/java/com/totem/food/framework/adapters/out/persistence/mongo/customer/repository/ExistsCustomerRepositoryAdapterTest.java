@@ -1,5 +1,6 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.customer.repository;
 
+import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
 import com.totem.food.domain.customer.CustomerDomain;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
@@ -43,15 +44,15 @@ class ExistsCustomerRepositoryAdapterTest {
         //### Given - Objects and Values
         final var name = "John";
 
-        final var customerDomain = new CustomerDomain();
-        customerDomain.setName(name);
-        customerDomain.setCpf("12432385746");
+        final var customerModel = new CustomerModel();
+        customerModel.setName(name);
+        customerModel.setCpf("12432385746");
 
         //### Given - Mocks
-        when(repository.existsByCpfIgnoreCase(customerDomain.getCpf())).thenReturn(true);
+        when(repository.existsByCpfIgnoreCase(customerModel.getCpf())).thenReturn(true);
 
         //### When
-        final var result = existsCustomerRepositoryAdapter.exists(customerDomain);
+        final var result = existsCustomerRepositoryAdapter.exists(customerModel);
 
         //### Then
         assertTrue(result);

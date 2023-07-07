@@ -1,16 +1,14 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.payment.repository;
 
 import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
+import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.domain.payment.PaymentDomain;
-import com.totem.food.domain.product.ProductDomain;
-import com.totem.food.framework.adapters.out.persistence.mongo.order.totem.repository.UpdateOrderRepositoryAdapter;
 import com.totem.food.framework.adapters.out.persistence.mongo.payment.entity.PaymentEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.payment.mapper.IPaymentEntityMapper;
-import com.totem.food.framework.adapters.out.persistence.mongo.product.entity.ProductEntity;
 import lombok.SneakyThrows;
 import mocks.domains.PaymentDomainMock;
-import mocks.dtos.PaymentMocks;
 import mocks.entity.PaymentEntityMock;
+import mocks.models.PaymentModelMock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +21,6 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -36,7 +33,7 @@ class UpdatePaymentRepositoryAdapterTest {
     @Spy
     private IPaymentEntityMapper iPaymentEntityMapper = Mappers.getMapper(IPaymentEntityMapper.class);
 
-    private IUpdateRepositoryPort<PaymentDomain> iUpdateRepositoryPort;
+    private IUpdateRepositoryPort<PaymentModel> iUpdateRepositoryPort;
     private AutoCloseable autoCloseable;
 
     @BeforeEach
@@ -55,7 +52,7 @@ class UpdatePaymentRepositoryAdapterTest {
     void updateItem() {
 
         //## Given
-        final var paymentDomain = PaymentDomainMock.getPaymentDomain(PaymentDomain.PaymentStatus.PENDING);
+        final var paymentDomain = PaymentModelMock.getPaymentDomain(PaymentDomain.PaymentStatus.PENDING);
         final var paymentEntity = PaymentEntityMock.getPaymentEntity(PaymentDomain.PaymentStatus.PENDING);
 
         //## Given Mocks
@@ -65,8 +62,8 @@ class UpdatePaymentRepositoryAdapterTest {
         final var paymentDomainUpdated = iUpdateRepositoryPort.updateItem(paymentDomain);
 
         //## Then
-        verify(iPaymentEntityMapper, times(1)).toEntity(Mockito.any(PaymentDomain.class));
-        verify(iPaymentEntityMapper, times(1)).toDomain(Mockito.any(PaymentEntity.class));
+        verify(iPaymentEntityMapper, times(1)).toEntity(Mockito.any(PaymentModel.class));
+        verify(iPaymentEntityMapper, times(1)).toModel(Mockito.any(PaymentEntity.class));
         verify(repository, times(1)).save(Mockito.any(PaymentEntity.class));
 
         final var paymentEntityUpdated = iPaymentEntityMapper.toEntity(paymentDomainUpdated);

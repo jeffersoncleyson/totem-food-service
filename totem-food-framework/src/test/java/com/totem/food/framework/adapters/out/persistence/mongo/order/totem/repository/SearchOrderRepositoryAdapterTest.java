@@ -18,6 +18,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -41,12 +42,11 @@ class SearchOrderRepositoryAdapterTest {
 
     private SearchOrderRepositoryAdapter searchOrderRepositoryAdapter;
 
-    @Mock
     private AutoCloseable autoCloseable;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        autoCloseable = MockitoAnnotations.openMocks(this);
         searchOrderRepositoryAdapter = new SearchOrderRepositoryAdapter(repository, iOrderEntityMapper);
     }
 
@@ -93,7 +93,7 @@ class SearchOrderRepositoryAdapterTest {
         //## When
         var result = searchOrderRepositoryAdapter.findAll(filter);
 
-        result.forEach(OrderDomain::updateOrderReceivedAt);
+        result.forEach(orderModel -> orderModel.setModifiedAt(ZonedDateTime.now(ZoneOffset.UTC)));
 
         //## Then
         assertThat(result)
@@ -122,7 +122,7 @@ class SearchOrderRepositoryAdapterTest {
         //## When
         var result = searchOrderRepositoryAdapter.findAll(filter);
 
-        result.forEach(OrderDomain::updateOrderReceivedAt);
+        result.forEach(orderModel -> orderModel.setModifiedAt(ZonedDateTime.now(ZoneOffset.UTC)));
 
         //## Then
         assertThat(result)

@@ -2,6 +2,7 @@ package com.totem.food.framework.adapters.out.persistence.mongo.payment.reposito
 
 import com.totem.food.application.ports.in.dtos.payment.PaymentFilterDto;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
+import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import com.totem.food.domain.payment.PaymentDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.payment.mapper.IPaymentEntityMapper;
@@ -32,7 +33,7 @@ class SearchPaymentRepositoryAdapterTest {
     @Spy
     private IPaymentEntityMapper iPaymentMapper = Mappers.getMapper(IPaymentEntityMapper.class);
 
-    private ISearchRepositoryPort<PaymentFilterDto, PaymentDomain> iSearchRepositoryPort;
+    private ISearchRepositoryPort<PaymentFilterDto, PaymentModel> iSearchRepositoryPort;
     private AutoCloseable autoCloseable;
 
     @BeforeEach
@@ -65,7 +66,7 @@ class SearchPaymentRepositoryAdapterTest {
 
         //## Then
         verify(repository, times(1)).findByFilter(Mockito.any(), Mockito.any());
-        verify(iPaymentMapper, times(1)).toDomain(Mockito.any());
+        verify(iPaymentMapper, times(1)).toModel(Mockito.any());
 
         final var paymentEntityConverted = iPaymentMapper.toEntity(paymentDomain);
         assertThat(paymentEntityConverted)
@@ -92,7 +93,7 @@ class SearchPaymentRepositoryAdapterTest {
 
         //## Then
         verify(repository, times(1)).findPaymentByOrderAndStatus(Mockito.any(), Mockito.any());
-        verify(iPaymentMapper, times(1)).toDomain(Mockito.any());
+        verify(iPaymentMapper, times(1)).toModel(Mockito.any());
 
         final var paymentEntityConverted = iPaymentMapper.toEntity(paymentDomain);
         assertThat(paymentEntityConverted)
@@ -114,7 +115,7 @@ class SearchPaymentRepositoryAdapterTest {
         assertNull(paymentDomain);
         verify(repository, times(0)).findByFilter(Mockito.any(), Mockito.any());
         verify(repository, times(0)).findPaymentByOrderAndStatus(Mockito.any(), Mockito.any());
-        verify(iPaymentMapper, times(0)).toDomain(Mockito.any());
+        verify(iPaymentMapper, times(0)).toModel(Mockito.any());
 
     }
 }

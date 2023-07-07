@@ -9,6 +9,8 @@ import com.totem.food.application.ports.out.email.ISendEmailPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
+import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
+import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.IUpdateStatusUseCase;
 import com.totem.food.domain.customer.CustomerDomain;
@@ -24,21 +26,23 @@ import java.util.Optional;
 public class UpdateStatusOrderUseCase implements IUpdateStatusUseCase<OrderDto> {
 
     private final IOrderMapper iOrderMapper;
-    private final ISearchUniqueRepositoryPort<Optional<OrderDomain>> iSearchUniqueRepositoryPort;
-    private final IUpdateRepositoryPort<OrderDomain> iProductRepositoryPort;
+    private final ISearchUniqueRepositoryPort<Optional<OrderModel>> iSearchUniqueRepositoryPort;
+    private final IUpdateRepositoryPort<OrderModel> iProductRepositoryPort;
     private final ISendEmailPort<EmailNotificationDto, Boolean> iSendEmailPort;
-    private final ISearchRepositoryPort<PaymentFilterDto, PaymentDomain> iSearchPaymentRepositoryPort;
+    private final ISearchRepositoryPort<PaymentFilterDto, PaymentModel> iSearchPaymentRepositoryPort;
 
     @Override
     public OrderDto updateStatus(String id, String status) {
 
-        final var orderDomainOpt = iSearchUniqueRepositoryPort.findById(id);
+        final var orderModelOptional = iSearchUniqueRepositoryPort.findById(id);
 
-        final var domain = orderDomainOpt.orElseThrow(() -> new ElementNotFoundException(String.format("Order [%s] not found", id)));
+        final var model = orderModelOptional.orElseThrow(() -> new ElementNotFoundException(String.format("Order [%s] not found", id)));
 
-        if (domain.getStatus().equals(OrderStatusEnumDomain.from(status))) {
-            return iOrderMapper.toDto(domain);
+        if (model.getStatus().equals(OrderStatusEnumDomain.from(status))) {
+            return iOrderMapper.toDto(model);
         }
+
+        final var domain = iOrderMapper.toDomain(model);
 
         domain.updateOrderStatus(OrderStatusEnumDomain.from(status));
         domain.updateModifiedAt();
@@ -51,10 +55,11 @@ public class UpdateStatusOrderUseCase implements IUpdateStatusUseCase<OrderDto> 
 
         }
 
-        final var domainSaved = iProductRepositoryPort.updateItem(domain);
+        final var domainValidated = iOrderMapper.toModel(domain);
+        final var domainSaved = iProductRepositoryPort.updateItem(domainValidated);
 
         if (domainSaved.getStatus().equals(OrderStatusEnumDomain.READY)) {
-            Optional.of(domainSaved).map(OrderDomain::getCustomer).map(CustomerDomain::getEmail)
+            Optional.of(domainSaved).map(OrderModel::getCustomer).map(CustomerDomain::getEmail)
                     .ifPresent(email -> {
                         final var subject = String.format("[%s] Pedido %s", "Totem Food Service", id);
                         final var message = String.format("Pedido %s acabou de ser finalizado pela cozinha, em instantes o atendente ira chama-lo!", id);

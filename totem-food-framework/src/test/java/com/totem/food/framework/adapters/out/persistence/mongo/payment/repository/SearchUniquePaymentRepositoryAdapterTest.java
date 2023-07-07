@@ -1,6 +1,7 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.payment.repository;
 
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
+import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.domain.payment.PaymentDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.payment.entity.PaymentEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.payment.mapper.IPaymentEntityMapper;
@@ -30,7 +31,7 @@ class SearchUniquePaymentRepositoryAdapterTest {
     @Spy
     private IPaymentEntityMapper iPaymentEntityMapper = Mappers.getMapper(IPaymentEntityMapper.class);
 
-    private ISearchUniqueRepositoryPort<Optional<PaymentDomain>> iSearchUniqueRepositoryPort;
+    private ISearchUniqueRepositoryPort<Optional<PaymentModel>> iSearchUniqueRepositoryPort;
     private AutoCloseable closeable;
 
     @BeforeEach

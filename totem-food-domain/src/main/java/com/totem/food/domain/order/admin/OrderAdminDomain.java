@@ -30,7 +30,7 @@ public class OrderAdminDomain {
     private ZonedDateTime receivedAt;
     private long waitTime;
 
-    public void calcWaitTime(){
+    public OrderAdminDomain calcWaitTime(){
         if(isOrderInProgress()){
             final var duration = Duration.between( receivedAt , ZonedDateTime.now(ZoneOffset.UTC));
             this.waitTime = duration.toMinutes();
@@ -40,6 +40,7 @@ public class OrderAdminDomain {
         } else {
             this.waitTime = 0;
         }
+        return this;
     }
 
     private boolean isOrderFinalized() {

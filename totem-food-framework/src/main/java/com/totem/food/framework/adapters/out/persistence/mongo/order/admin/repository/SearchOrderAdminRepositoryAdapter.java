@@ -2,7 +2,7 @@ package com.totem.food.framework.adapters.out.persistence.mongo.order.admin.repo
 
 import com.totem.food.application.ports.in.dtos.order.admin.OrderAdminFilterDto;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
-import com.totem.food.domain.order.admin.OrderAdminDomain;
+import com.totem.food.application.ports.out.persistence.order.admin.OrderAdminModel;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepository;
 import com.totem.food.framework.adapters.out.persistence.mongo.order.admin.entity.OrderAdminEntity;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Component
-public class SearchOrderAdminRepositoryAdapter implements ISearchRepositoryPort<OrderAdminFilterDto, List<OrderAdminDomain>> {
+public class SearchOrderAdminRepositoryAdapter implements ISearchRepositoryPort<OrderAdminFilterDto, List<OrderAdminModel>> {
 
     @Repository
     protected interface OrderRepositoryMongoDB extends BaseRepository<OrderAdminEntity, String> {
@@ -37,16 +37,16 @@ public class SearchOrderAdminRepositoryAdapter implements ISearchRepositoryPort<
     private final IOrderAdminEntityMapper iOrderEntityMapper;
 
     @Override
-    public List<OrderAdminDomain> findAll(OrderAdminFilterDto filter) {
+    public List<OrderAdminModel> findAll(OrderAdminFilterDto filter) {
         if (CollectionUtils.isNotEmpty(filter.getStatus())) {
             final var status = filter.getStatus().stream().map(OrderStatusEnumDomain::from)
                     .map(s -> s.key)
                     .collect(Collectors.toSet());
             return repository.findByStatus(status)
                     .stream()
-                    .map(iOrderEntityMapper::toDomain)
+                    .map(iOrderEntityMapper::toModel)
                     .toList();
         }
-        return repository.findAll().stream().map(iOrderEntityMapper::toDomain).toList();
+        return repository.findAll().stream().map(iOrderEntityMapper::toModel).toList();
     }
 }

@@ -2,12 +2,12 @@ package com.totem.food.framework.adapters.out.persistence.mongo.product.reposito
 
 import com.totem.food.application.ports.in.dtos.product.ProductFilterDto;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
+import com.totem.food.application.ports.out.persistence.product.ProductModel;
 import com.totem.food.domain.product.ProductDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.category.entity.CategoryEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.product.entity.ProductEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.product.mapper.IProductEntityMapper;
 import org.apache.commons.collections4.CollectionUtils;
-import org.assertj.core.util.Arrays;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +21,6 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
-import javax.management.Query;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -42,7 +41,7 @@ class SearchProductRepositoryAdapterTest {
     @Mock
     private MongoTemplate mongoTemplate;
 
-    private ISearchRepositoryPort<ProductFilterDto, List<ProductDomain>> iSearchRepositoryPort;
+    private ISearchRepositoryPort<ProductFilterDto, List<ProductModel>> iSearchRepositoryPort;
     private AutoCloseable closeable;
 
     @BeforeEach
@@ -93,7 +92,7 @@ class SearchProductRepositoryAdapterTest {
         final var productDomainList = iSearchRepositoryPort.findAll(productFilterDto);
 
         //### Then
-        verify(iProductEntityMapper, times(1)).toDomain(Mockito.any(ProductEntity.class));
+        verify(iProductEntityMapper, times(1)).toModel(Mockito.any(ProductEntity.class));
         verify(repository, times(1)).findByFilter(Mockito.anyString());
 
 
@@ -140,7 +139,7 @@ class SearchProductRepositoryAdapterTest {
         final var productDomainList = iSearchRepositoryPort.findAll(productFilterDto);
 
         //### Then
-        verify(iProductEntityMapper, times(1)).toDomain(Mockito.any(ProductEntity.class));
+        verify(iProductEntityMapper, times(1)).toModel(Mockito.any(ProductEntity.class));
         verify(repository, times(1)).findAllByIds(Mockito.any());
 
 
@@ -190,7 +189,7 @@ class SearchProductRepositoryAdapterTest {
         final var productDomainList = iSearchRepositoryPort.findAll(productFilterDto);
 
         //### Then
-        verify(iProductEntityMapper, times(1)).toDomain(Mockito.any(ProductEntity.class));
+        verify(iProductEntityMapper, times(1)).toModel(Mockito.any(ProductEntity.class));
         verify(mongoTemplate, times(1)).find(Mockito.any(), Mockito.any());
 
 

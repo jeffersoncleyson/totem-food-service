@@ -1,7 +1,7 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.order.totem.repository;
 
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
-import com.totem.food.domain.order.totem.OrderDomain;
+import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
 import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepository;
 import com.totem.food.framework.adapters.out.persistence.mongo.order.totem.entity.OrderEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.order.totem.mapper.IOrderEntityMapper;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 @AllArgsConstructor
 @Component
-public class CreateOrderRepositoryAdapter implements ICreateRepositoryPort<OrderDomain> {
+public class CreateOrderRepositoryAdapter implements ICreateRepositoryPort<OrderModel> {
 
 	@Repository
 	protected interface OrderRepositoryMongoDB extends BaseRepository<OrderEntity, String> {
@@ -22,10 +22,10 @@ public class CreateOrderRepositoryAdapter implements ICreateRepositoryPort<Order
 	private final IOrderEntityMapper iOrderEntityMapper;
 
 	@Override
-	public OrderDomain saveItem(OrderDomain item) {
+	public OrderModel saveItem(OrderModel item) {
 		final var entity = iOrderEntityMapper.toEntity(item);
 		final var savedEntity = repository.save(entity);
-		return iOrderEntityMapper.toDomain(savedEntity);
+		return iOrderEntityMapper.toModel(savedEntity);
 	}
 
 }

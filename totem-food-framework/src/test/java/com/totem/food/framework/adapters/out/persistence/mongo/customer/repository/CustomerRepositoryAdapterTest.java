@@ -50,7 +50,7 @@ class CustomerRepositoryAdapterTest {
 
         //## Then
         assertThat(listCategoryDomain).usingRecursiveComparison().isEqualTo(customersEntity);
-        verify(iCustomerEntityMapper, times(2)).toDomain(any(CustomerEntity.class));
+        verify(iCustomerEntityMapper, times(2)).toModel(any(CustomerEntity.class));
     }
 
 }

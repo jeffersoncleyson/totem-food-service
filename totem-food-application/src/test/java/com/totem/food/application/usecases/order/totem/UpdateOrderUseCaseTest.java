@@ -1,20 +1,20 @@
 package com.totem.food.application.usecases.order.totem;
 
 import com.totem.food.application.exceptions.ElementNotFoundException;
-import com.totem.food.application.ports.in.dtos.combo.ComboFilterDto;
 import com.totem.food.application.ports.in.dtos.order.totem.OrderUpdateDto;
 import com.totem.food.application.ports.in.dtos.product.ProductFilterDto;
 import com.totem.food.application.ports.in.mappers.order.totem.IOrderMapper;
+import com.totem.food.application.ports.in.mappers.product.IProductMapper;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
-import com.totem.food.domain.combo.ComboDomain;
-import com.totem.food.domain.order.totem.OrderDomain;
-import com.totem.food.domain.product.ProductDomain;
+import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
+import com.totem.food.application.ports.out.persistence.product.ProductModel;
+import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import lombok.SneakyThrows;
-import mock.domain.ComboDomainMock;
-import mock.domain.OrderDomainMock;
 import mock.domain.ProductDomainMock;
+import mock.models.OrderModelMock;
+import mock.models.ProductModelMock;
 import mock.ports.in.dto.OrderUpdateDtoMock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +26,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.Closeable;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +33,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UpdateOrderUseCaseTest {
@@ -42,27 +44,26 @@ class UpdateOrderUseCaseTest {
     @Spy
     private IOrderMapper iOrderMapper = Mappers.getMapper(IOrderMapper.class);
 
-    @Mock
-    private ISearchUniqueRepositoryPort<Optional<OrderDomain>> iSearchUniqueRepositoryPort;
+    @Spy
+    private IProductMapper iProductMapper = Mappers.getMapper(IProductMapper.class);
 
     @Mock
-    private ISearchRepositoryPort<ComboFilterDto, List<ComboDomain>> iSearchComboDomainRepositoryPort;
+    private ISearchUniqueRepositoryPort<Optional<OrderModel>> iSearchUniqueRepositoryPort;
 
     @Mock
-    private ISearchRepositoryPort<ProductFilterDto, List<ProductDomain>> iSearchProductRepositoryPort;
+    private ISearchRepositoryPort<ProductFilterDto, List<ProductModel>> iSearchProductRepositoryPort;
 
     @Mock
-    private IUpdateRepositoryPort<OrderDomain> iProductRepositoryPort;
+    private IUpdateRepositoryPort<OrderModel> iProductRepositoryPort;
 
     private UpdateOrderUseCase updateOrderUseCase;
 
-    @Mock
-    private Closeable closeable;
+    private AutoCloseable closeable;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        updateOrderUseCase = new UpdateOrderUseCase(iOrderMapper, iSearchUniqueRepositoryPort, iSearchComboDomainRepositoryPort, iSearchProductRepositoryPort, iProductRepositoryPort);
+        closeable = MockitoAnnotations.openMocks(this);
+        updateOrderUseCase = new UpdateOrderUseCase(iOrderMapper, iProductMapper, iSearchUniqueRepositoryPort, iSearchProductRepositoryPort, iProductRepositoryPort);
     }
 
     @SneakyThrows
@@ -92,32 +93,28 @@ class UpdateOrderUseCaseTest {
 
         //## Mock - Object
         var productDomain = ProductDomainMock.getMock();
-        var comboDomain = ComboDomainMock.getMock();
-        var orderUpdateDto = OrderUpdateDtoMock.getMock(productDomain.getId(), comboDomain.getId());
+        var productModel = ProductModelMock.getMock();
+        productModel.setId(productDomain.getId());
 
-        var orderDomainOpt = OrderDomainMock.getStatusNewMock();
-        orderDomainOpt.setCombos(List.of(comboDomain));
+        var orderUpdateDto = OrderUpdateDtoMock.getMock(productDomain.getId());
+
+        var orderDomainOpt = OrderModelMock.orderModel(OrderStatusEnumDomain.NEW);
         orderDomainOpt.setProducts(List.of(productDomain));
 
         //## Given
         when(iSearchUniqueRepositoryPort.findById(anyString()))
                 .thenReturn(Optional.of(orderDomainOpt));
         when(iSearchProductRepositoryPort.findAll(any(ProductFilterDto.class)))
-                .thenReturn(List.of(productDomain));
-        when(iSearchComboDomainRepositoryPort.findAll(any(ComboFilterDto.class)))
-                .thenReturn(List.of(comboDomain));
+                .thenReturn(List.of(productModel));
 
-        orderDomainOpt.calculatePrice();
-        orderDomainOpt.updateModifiedAt();
-
-        when(iProductRepositoryPort.updateItem(any(OrderDomain.class))).thenReturn(orderDomainOpt);
+        when(iProductRepositoryPort.updateItem(any(OrderModel.class))).thenReturn(orderDomainOpt);
 
         //## When
         var orderDto = updateOrderUseCase.updateItem(orderUpdateDto, anyString());
 
         //## Then
         assertThat(orderDto).usingRecursiveComparison().isNotNull();
-        verify(iOrderMapper, times(1)).toDto(any(OrderDomain.class));
+        verify(iOrderMapper, times(1)).toDto(any(OrderModel.class));
 
     }
 }

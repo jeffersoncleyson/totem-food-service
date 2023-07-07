@@ -1,6 +1,7 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.customer.repository;
 
 import com.totem.food.application.ports.out.persistence.commons.IRemoveRepositoryPort;
+import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
 import com.totem.food.domain.customer.CustomerDomain;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +20,7 @@ class DeleteCustomerRepositoryAdapterTest {
     @Mock
     private DeleteCustomerRepositoryAdapter.CustomerRepositoryMongoDB repository;
 
-    private IRemoveRepositoryPort<CustomerDomain> iRemoveRepositoryPort;
+    private IRemoveRepositoryPort<CustomerModel> iRemoveRepositoryPort;
     private AutoCloseable closeable;
 
     @BeforeEach

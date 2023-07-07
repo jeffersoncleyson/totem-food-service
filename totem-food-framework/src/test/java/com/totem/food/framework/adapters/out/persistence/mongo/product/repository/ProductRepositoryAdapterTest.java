@@ -1,5 +1,6 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.product.repository;
 
+import com.totem.food.application.ports.out.persistence.product.ProductModel;
 import com.totem.food.domain.category.CategoryDomain;
 import com.totem.food.domain.product.ProductDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.category.entity.CategoryEntity;
@@ -65,7 +66,7 @@ class ProductRepositoryAdapterTest {
         final var categoryId = UUID.randomUUID().toString();
         final var categoryDomain = CategoryDomain.builder().id(categoryId).build();
 
-        final var productDomain = ProductDomain.builder()
+        final var productModel = ProductModel.builder()
                 .name(name)
                 .description(description)
                 .image(image)
@@ -91,19 +92,19 @@ class ProductRepositoryAdapterTest {
         when(repository.save(Mockito.any(ProductEntity.class))).thenReturn(productEntity);
 
         //### When
-        final var productDomainSaved = productRepositoryAdapter.saveItem(productDomain);
+        final var productDomainSaved = productRepositoryAdapter.saveItem(productModel);
 
         //### Then
-        verify(iProductEntityMapper, times(1)).toEntity(Mockito.any(ProductDomain.class));
+        verify(iProductEntityMapper, times(1)).toEntity(Mockito.any(ProductModel.class));
         verify(repository, times(1)).save(Mockito.any(ProductEntity.class));
-        verify(iProductEntityMapper, times(1)).toDomain(Mockito.any(ProductEntity.class));
+        verify(iProductEntityMapper, times(1)).toModel(Mockito.any(ProductEntity.class));
 
-        assertThat(productDomain)
+        assertThat(productModel)
                 .usingRecursiveComparison()
                 .ignoringFields("id")
                 .isEqualTo(productDomainSaved);
 
-        assertNull(productDomain.getId());
+        assertNull(productModel.getId());
         assertNotNull(productDomainSaved.getId());
         assertEquals(id, productDomainSaved.getId());
     }

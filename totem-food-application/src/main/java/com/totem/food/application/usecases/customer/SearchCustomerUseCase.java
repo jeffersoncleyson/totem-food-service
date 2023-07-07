@@ -4,6 +4,7 @@ import com.totem.food.application.ports.in.dtos.customer.CustomerDto;
 import com.totem.food.application.ports.in.dtos.customer.CustomerFilterDto;
 import com.totem.food.application.ports.in.mappers.customer.ICustomerMapper;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
+import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
 import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.ISearchUseCase;
 import com.totem.food.domain.customer.CustomerDomain;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 public class SearchCustomerUseCase implements ISearchUseCase<CustomerFilterDto, List<CustomerDto>> {
 
     private final ICustomerMapper iCustomerMapper;
-    private final ISearchRepositoryPort<CustomerFilterDto, List<CustomerDomain>> iCustomerRepositoryPort;
+    private final ISearchRepositoryPort<CustomerFilterDto, List<CustomerModel>> iCustomerRepositoryPort;
 
     @Override
     public List<CustomerDto> items(CustomerFilterDto customerFilterDto) {

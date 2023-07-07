@@ -1,6 +1,6 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.category.mapper;
 
-import com.totem.food.domain.category.CategoryDomain;
+import com.totem.food.application.ports.out.persistence.category.CategoryModel;
 import com.totem.food.framework.adapters.out.persistence.mongo.category.entity.CategoryEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
@@ -11,7 +11,7 @@ import org.mapstruct.ReportingPolicy;
 	unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ICategoryEntityMapper {
 
-	CategoryEntity toEntity(CategoryDomain input);
+	CategoryEntity toEntity(CategoryModel input);
 
-	CategoryDomain toDomain(CategoryEntity input);
+	CategoryModel toModel(CategoryEntity input);
 }

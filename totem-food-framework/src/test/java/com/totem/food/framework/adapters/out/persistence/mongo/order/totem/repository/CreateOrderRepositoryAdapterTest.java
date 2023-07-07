@@ -1,11 +1,14 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.order.totem.repository;
 
+import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
+import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import com.totem.food.domain.order.totem.OrderDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.order.totem.entity.OrderEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.order.totem.mapper.IOrderEntityMapper;
 import lombok.SneakyThrows;
 import mocks.domains.OrderDomainMock;
 import mocks.entity.OrderEntityMock;
+import mocks.models.OrderModelMock;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,7 +60,7 @@ class CreateOrderRepositoryAdapterTest {
         var orderEntity = OrderEntityMock.getMock();
         orderEntity.setId("745e557e-fe6d-4c6d-8ef4-44222c92612b");
         orderEntity.getCustomer().setId("edc49fd2-a59d-402b-b1b3-fc05d9e1287d");
-        var orderDomain = OrderDomainMock.getStatusNewMock();
+        var orderDomain = OrderModelMock.getOrderModel(OrderStatusEnumDomain.NEW);
         orderDomain.getCustomer().setId("edc49fd2-a59d-402b-b1b3-fc05d9e1287d");
         orderDomain.setId("745e557e-fe6d-4c6d-8ef4-44222c92612b");
 
@@ -67,13 +70,11 @@ class CreateOrderRepositoryAdapterTest {
         //## When
         var result = createOrderRepositoryAdapter.saveItem(orderDomain);
 
-        result.updateOrderReceivedAt();
-
         //## Then
         Assertions.assertThat(result).usingRecursiveComparison()
                 .ignoringFieldsOfTypes(ZonedDateTime.class)
                 .isEqualTo(orderDomain);
-        verify(iOrderEntityMapper, times(1)).toEntity(any(OrderDomain.class));
-        verify(iOrderEntityMapper, times(1)).toDomain(any(OrderEntity.class));
+        verify(iOrderEntityMapper, times(1)).toEntity(any(OrderModel.class));
+        verify(iOrderEntityMapper, times(1)).toModel(any(OrderEntity.class));
     }
 }

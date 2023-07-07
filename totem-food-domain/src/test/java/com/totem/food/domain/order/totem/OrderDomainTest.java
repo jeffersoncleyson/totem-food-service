@@ -1,6 +1,5 @@
 package com.totem.food.domain.order.totem;
 
-import com.totem.food.domain.combo.ComboDomain;
 import com.totem.food.domain.exceptions.InvalidStatusTransition;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import com.totem.food.domain.product.ProductDomain;
@@ -34,23 +33,6 @@ class OrderDomainTest {
 
         //## When
         order.clearProducts();
-
-        //## Then
-        assertNull(order.getProducts());
-    }
-
-    @Test
-    void clearCombos() {
-
-        //## Given
-        var order = OrderDomain.builder()
-                .combos(List.of(new ComboDomain()))
-                .build();
-
-        assertNotNull(order.getCombos());
-
-        //## When
-        order.clearCombos();
 
         //## Then
         assertNull(order.getProducts());
@@ -116,35 +98,9 @@ class OrderDomainTest {
         assertEquals(0.0, order.getPrice());
     }
 
-    @Test
-    void calculatePriceWithOnlyCombos() {
-
-        //## Given
-        var combo1 = new ComboDomain();
-        combo1.setId(UUID.randomUUID().toString());
-        combo1.setName("Combo da Casa");
-        combo1.setPrice(10.0);
-
-        var combo2 = new ComboDomain();
-        combo2.setId(UUID.randomUUID().toString());
-        combo2.setName("Mega Combo");
-        combo2.setPrice(25.0);
-
-        List<ComboDomain> combos = Arrays.asList(combo1, combo2);
-
-        var order = OrderDomain.builder()
-                .combos(combos)
-                .build();
-
-        //## When
-        order.calculatePrice();
-
-        //## Then
-        assertEquals(35.0, order.getPrice());
-    }
 
     @Test
-    void calculatePriceWithProductsAndCombos() {
+    void calculatePriceWithProducts() {
 
         //## Given
         var product1 = new ProductDomain();
@@ -157,29 +113,17 @@ class OrderDomainTest {
         product2.setName("Coca-Cola");
         product2.setPrice(2.99);
 
-        var combo1 = new ComboDomain();
-        combo1.setId(UUID.randomUUID().toString());
-        combo1.setName("Combo da Casa");
-        combo1.setPrice(10.0);
-
-        var combo2 = new ComboDomain();
-        combo2.setId(UUID.randomUUID().toString());
-        combo2.setName("Mega Combo");
-        combo2.setPrice(25.0);
-
         List<ProductDomain> products = Arrays.asList(product1, product2);
-        List<ComboDomain> combos = Arrays.asList(combo1, combo2);
 
         var order = OrderDomain.builder()
                 .products(products)
-                .combos(combos)
                 .build();
 
         //## When
         order.calculatePrice();
 
         //## Then
-        assertEquals(47.98, order.getPrice());
+        assertEquals(12.98, order.getPrice());
     }
 
     @Test

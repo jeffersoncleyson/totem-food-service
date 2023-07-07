@@ -1,7 +1,6 @@
 package com.totem.food.framework.adapters.in.rest.order.totem;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.totem.food.application.ports.in.dtos.combo.ComboDto;
 import com.totem.food.application.ports.in.dtos.order.totem.ItemQuantityDto;
 import com.totem.food.application.ports.in.dtos.order.totem.OrderCreateDto;
 import com.totem.food.application.ports.in.dtos.order.totem.OrderDto;
@@ -97,18 +96,12 @@ class TotemOrderRestApiAdapterTest {
         //## Mock - Object
         var orderCreateDto = new OrderCreateDto();
         orderCreateDto.setCustomerId("123");
-        orderCreateDto.setCombos(List.of(new ItemQuantityDto(1, "combo")));
         orderCreateDto.setProducts(List.of(new ItemQuantityDto(1, "produto")));
-
-        var comboDto = new ComboDto();
-        comboDto.setName("Casa");
-        comboDto.setPrice(BigDecimal.valueOf(25.0));
 
         var orderDto = new OrderDto();
         orderDto.setId("1");
         orderDto.setCustomerId("123");
         orderDto.setProducts(List.of(ProductDto.builder().id("1").build()));
-        orderDto.setCombos(List.of(comboDto));
         orderDto.setStatus("NEW");
         orderDto.setPrice(25.0);
 
@@ -148,15 +141,10 @@ class TotemOrderRestApiAdapterTest {
     void listAll(String endpoint) throws Exception {
 
         //## Mock - Object
-        var comboDto = new ComboDto();
-        comboDto.setName("Casa");
-        comboDto.setPrice(BigDecimal.valueOf(25.0));
-
         var orderDto = new OrderDto();
         orderDto.setId("1");
         orderDto.setCustomerId("123");
         orderDto.setProducts(List.of(ProductDto.builder().id("1").build()));
-        orderDto.setCombos(List.of(comboDto));
         orderDto.setStatus("NEW");
         orderDto.setPrice(25.0);
 
@@ -200,15 +188,10 @@ class TotemOrderRestApiAdapterTest {
     void update(String endpoint) throws Exception {
 
         //## Mock - Object
-        var comboDto = new ComboDto();
-        comboDto.setName("Casa");
-        comboDto.setPrice(BigDecimal.valueOf(25.0));
-
         var orderDto = new OrderDto();
         orderDto.setId("1");
         orderDto.setCustomerId("123");
         orderDto.setProducts(List.of(ProductDto.builder().id("1").build()));
-        orderDto.setCombos(List.of(comboDto));
         orderDto.setStatus("NEW");
         orderDto.setPrice(25.0);
 
@@ -249,15 +232,10 @@ class TotemOrderRestApiAdapterTest {
     void updateStatus(String endpoint) throws Exception {
 
         //## Mock - Object
-        var comboDto = new ComboDto();
-        comboDto.setName("Casa");
-        comboDto.setPrice(BigDecimal.valueOf(25.0));
-
         var orderDto = new OrderDto();
         orderDto.setId("1");
         orderDto.setCustomerId("123");
         orderDto.setProducts(List.of(ProductDto.builder().id("1").build()));
-        orderDto.setCombos(List.of(comboDto));
         orderDto.setStatus(WAITING_PAYMENT.toString());
         orderDto.setPrice(25.0);
 

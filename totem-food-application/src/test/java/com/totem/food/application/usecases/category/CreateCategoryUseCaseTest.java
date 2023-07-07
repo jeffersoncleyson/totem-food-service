@@ -4,10 +4,10 @@ import com.totem.food.application.exceptions.ElementExistsException;
 import com.totem.food.application.ports.in.dtos.category.CategoryCreateDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
 import com.totem.food.application.ports.in.mappers.category.ICategoryMapper;
+import com.totem.food.application.ports.out.persistence.category.CategoryModel;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.IExistsRepositoryPort;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
-import com.totem.food.domain.category.CategoryDomain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,10 +33,10 @@ class CreateCategoryUseCaseTest {
     @Spy
     private ICategoryMapper iCategoryMapper = Mappers.getMapper(ICategoryMapper.class);
     @Mock
-    private ICreateRepositoryPort<CategoryDomain> iCreateRepositoryPort;
+    private ICreateRepositoryPort<CategoryModel> iCreateRepositoryPort;
 
     @Mock
-    private IExistsRepositoryPort<CategoryDomain, Boolean> iSearchRepositoryPort;
+    private IExistsRepositoryPort<CategoryModel, Boolean> iSearchRepositoryPort;
 
     private ICreateUseCase<CategoryCreateDto, CategoryDto> iCreateUseCase;
 
@@ -51,8 +51,8 @@ class CreateCategoryUseCaseTest {
     void createItem() {
 
         //## Given
-        final var categoryDomain = new CategoryDomain("123", "Name", ZonedDateTime.now(ZoneOffset.UTC), ZonedDateTime.now(ZoneOffset.UTC));
-        when(iCreateRepositoryPort.saveItem(Mockito.any(CategoryDomain.class))).thenReturn(categoryDomain);
+        final var categoryDomain = new CategoryModel("123", "Name", ZonedDateTime.now(ZoneOffset.UTC), ZonedDateTime.now(ZoneOffset.UTC));
+        when(iCreateRepositoryPort.saveItem(Mockito.any(CategoryModel.class))).thenReturn(categoryDomain);
 
         //## When
         final var categoryCreateDto = new CategoryCreateDto("Name");

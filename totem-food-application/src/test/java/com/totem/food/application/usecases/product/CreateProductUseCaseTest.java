@@ -3,9 +3,12 @@ package com.totem.food.application.usecases.product;
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
 import com.totem.food.application.ports.in.dtos.product.ProductCreateDto;
 import com.totem.food.application.ports.in.dtos.product.ProductDto;
+import com.totem.food.application.ports.in.mappers.category.ICategoryMapper;
 import com.totem.food.application.ports.in.mappers.product.IProductMapper;
+import com.totem.food.application.ports.out.persistence.category.CategoryModel;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
+import com.totem.food.application.ports.out.persistence.product.ProductModel;
 import com.totem.food.domain.category.CategoryDomain;
 import com.totem.food.domain.product.ProductDomain;
 import lombok.SneakyThrows;
@@ -36,12 +39,14 @@ class CreateProductUseCaseTest {
 
     @Spy
     private IProductMapper iProductMapper = Mappers.getMapper(IProductMapper.class);
+    @Spy
+    private ICategoryMapper iCategoryMapper = Mappers.getMapper(ICategoryMapper.class);
 
     @Mock
-    private ICreateRepositoryPort<ProductDomain> iProductRepositoryPort;
+    private ICreateRepositoryPort<ProductModel> iProductRepositoryPort;
 
     @Mock
-    private ISearchUniqueRepositoryPort<Optional<CategoryDomain>> iSearchRepositoryPort;
+    private ISearchUniqueRepositoryPort<Optional<CategoryModel>> iSearchRepositoryPort;
 
     private CreateProductUseCase createProductUseCase;
     private AutoCloseable closeable;
@@ -49,7 +54,7 @@ class CreateProductUseCaseTest {
     @BeforeEach
     void beforeEach() {
         closeable = MockitoAnnotations.openMocks(this);
-        createProductUseCase = new CreateProductUseCase(iProductMapper, iProductRepositoryPort, iSearchRepositoryPort);
+        createProductUseCase = new CreateProductUseCase(iProductMapper, iCategoryMapper, iProductRepositoryPort, iSearchRepositoryPort);
     }
 
     @SneakyThrows
@@ -93,7 +98,8 @@ class CreateProductUseCaseTest {
         );
 
         final var categoryDomain = CategoryDomain.builder().id(categoryId).build();
-        final var productDomain = ProductDomain.builder()
+        final var categoryModel = CategoryModel.builder().id(categoryId).build();
+        final var productDomain = ProductModel.builder()
                 .id(id)
                 .name(name)
                 .description(description)
@@ -105,17 +111,18 @@ class CreateProductUseCaseTest {
                 .build();
 
         //### Given - Mocks
-        when(iSearchRepositoryPort.findById(Mockito.anyString())).thenReturn(Optional.of(categoryDomain));
-        when(iProductRepositoryPort.saveItem(Mockito.any(ProductDomain.class))).thenReturn(productDomain);
+        when(iSearchRepositoryPort.findById(Mockito.anyString())).thenReturn(Optional.of(categoryModel));
+        when(iProductRepositoryPort.saveItem(Mockito.any(ProductModel.class))).thenReturn(productDomain);
 
         //### When
         final var productDtoUseCase = createProductUseCase.createItem(productCreateDto);
 
         //### Then
         verify(iProductMapper, times(1)).toDomain(Mockito.any(ProductCreateDto.class));
+        verify(iCategoryMapper, times(1)).toDomain(Mockito.any(CategoryModel.class));
         verify(iSearchRepositoryPort, times(1)).findById(Mockito.anyString());
-        verify(iProductRepositoryPort, times(1)).saveItem(Mockito.any(ProductDomain.class));
-        verify(iProductMapper, times(1)).toDto(Mockito.any(ProductDomain.class));
+        verify(iProductRepositoryPort, times(1)).saveItem(Mockito.any(ProductModel.class));
+        verify(iProductMapper, times(1)).toDto(Mockito.any(ProductModel.class));
 
         assertThat(productDtoUseCase)
                 .usingRecursiveComparison()

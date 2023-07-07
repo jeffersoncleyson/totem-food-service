@@ -1,6 +1,5 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.order.totem.entity;
 
-import com.totem.food.framework.adapters.out.persistence.mongo.combo.entity.ComboEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.customer.entity.CustomerEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.product.entity.ProductEntity;
 import lombok.AllArgsConstructor;
@@ -31,9 +30,6 @@ public class OrderEntity {
 
     @DBRef
     private List<ProductEntity> products;
-
-    @DBRef
-    private List<ComboEntity> combos;
 
     private String status;
 

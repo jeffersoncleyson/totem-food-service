@@ -2,19 +2,21 @@ package com.totem.food.application.usecases.order.totem;
 
 import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.exceptions.InvalidInput;
-import com.totem.food.application.ports.in.dtos.combo.ComboFilterDto;
 import com.totem.food.application.ports.in.dtos.order.totem.ItemQuantityDto;
 import com.totem.food.application.ports.in.dtos.order.totem.OrderCreateDto;
 import com.totem.food.application.ports.in.dtos.order.totem.OrderDto;
 import com.totem.food.application.ports.in.dtos.product.ProductFilterDto;
+import com.totem.food.application.ports.in.mappers.customer.ICustomerMapper;
 import com.totem.food.application.ports.in.mappers.order.totem.IOrderMapper;
+import com.totem.food.application.ports.in.mappers.product.IProductMapper;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
+import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
+import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
+import com.totem.food.application.ports.out.persistence.product.ProductModel;
 import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
-import com.totem.food.domain.combo.ComboDomain;
-import com.totem.food.domain.customer.CustomerDomain;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import com.totem.food.domain.order.totem.OrderDomain;
 import com.totem.food.domain.product.ProductDomain;
@@ -25,7 +27,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -33,10 +34,11 @@ import java.util.stream.Collectors;
 public class CreateOrderUseCase implements ICreateUseCase<OrderCreateDto, OrderDto> {
 
     private final IOrderMapper iOrderMapper;
-    private final ICreateRepositoryPort<OrderDomain> iCreateRepositoryPort;
-    private final ISearchUniqueRepositoryPort<Optional<CustomerDomain>> iSearchUniqueCustomerRepositoryPort;
-    private final ISearchRepositoryPort<ProductFilterDto, List<ProductDomain>> iSearchProductRepositoryPort;
-    private final ISearchRepositoryPort<ComboFilterDto, List<ComboDomain>> iSearchDomainRepositoryPort;
+    private final ICustomerMapper iCustomerMapper;
+    private final IProductMapper iProductMapper;
+    private final ICreateRepositoryPort<OrderModel> iCreateRepositoryPort;
+    private final ISearchUniqueRepositoryPort<Optional<CustomerModel>> iSearchUniqueCustomerRepositoryPort;
+    private final ISearchRepositoryPort<ProductFilterDto, List<ProductModel>> iSearchProductRepositoryPort;
 
     @Override
     public OrderDto createItem(OrderCreateDto item) {
@@ -49,54 +51,24 @@ public class CreateOrderUseCase implements ICreateUseCase<OrderCreateDto, OrderD
 
         setCustomer(item, domain);
         setProductsToDomain(item, domain);
-        setCombosToDomain(item, domain);
 
         domain.updateOrderStatus(OrderStatusEnumDomain.NEW);
         domain.calculatePrice();
         domain.fillDates();
 
-        final var domainSaved = iCreateRepositoryPort.saveItem(domain);
+        final var model = iOrderMapper.toModel(domain);
+        final var domainSaved = iCreateRepositoryPort.saveItem(model);
         return iOrderMapper.toDto(domainSaved);
     }
 
     private void setCustomer(OrderCreateDto item, OrderDomain domain) {
 
         if(StringUtils.isNotEmpty(item.getCustomerId())) {
-            final var customerDomain = iSearchUniqueCustomerRepositoryPort.findById(item.getCustomerId())
+            final var customerModel = iSearchUniqueCustomerRepositoryPort.findById(item.getCustomerId())
                     .orElseThrow(() -> new ElementNotFoundException(String.format("Customer [%s] not found", item.getCustomerId())));
-
+            final var customerDomain = iCustomerMapper.toDomain(customerModel);
             domain.setCustomer(customerDomain);
         }
-    }
-
-    private void setCombosToDomain(OrderCreateDto item, OrderDomain domain) {
-        if(CollectionUtils.isNotEmpty(item.getCombos())){
-
-            final var ids = item.getCombos().stream().map(ItemQuantityDto::getId).toList();
-            final var productFilterDto = ComboFilterDto.builder().ids(ids).build();
-            final var combos = iSearchDomainRepositoryPort.findAll(productFilterDto);
-
-            if(CollectionUtils.size(item.getCombos()) != CollectionUtils.size(combos)){
-                throw new ElementNotFoundException(String.format("Combos [%s] some combos are invalid", ids));
-            }
-
-            final var comboDomainToAdd = getComboDomains(item, combos);
-
-            domain.setCombos(comboDomainToAdd);
-        }
-    }
-
-    // TODO - Refatorar este método
-    private static List<ComboDomain> getComboDomains(OrderCreateDto item, List<ComboDomain> combos) {
-        final var comboDomainMap = combos.stream().collect(Collectors.toMap(ComboDomain::getId, Function.identity()));
-        final var comboDomainToAdd = new ArrayList<ComboDomain>();
-
-        for (ItemQuantityDto itemX : item.getCombos()) {
-            for (int i = 0; i < itemX.getQtd(); i++) {
-                comboDomainToAdd.add(comboDomainMap.get(itemX.getId()));
-            }
-        }
-        return comboDomainToAdd;
     }
 
     private void setProductsToDomain(OrderCreateDto item, OrderDomain domain) {
@@ -116,8 +88,8 @@ public class CreateOrderUseCase implements ICreateUseCase<OrderCreateDto, OrderD
     }
 
     // TODO - Refatorar este método
-    private List<ProductDomain> getProductDomains(OrderCreateDto item, List<ProductDomain> products) {
-        final var productDomainMap = products.stream().collect(Collectors.toMap(ProductDomain::getId, product -> product));
+    private List<ProductDomain> getProductDomains(OrderCreateDto item, List<ProductModel> products) {
+        final var productDomainMap = products.stream().collect(Collectors.toMap(ProductModel::getId, iProductMapper::toDomain));
         final var productsDomainToAdd = new ArrayList<ProductDomain>();
 
         for (ItemQuantityDto itemX : item.getProducts()) {

@@ -1,10 +1,13 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.product.repository;
 
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
+import com.totem.food.application.ports.out.persistence.product.ProductModel;
 import com.totem.food.domain.product.ProductDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.product.entity.ProductEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.product.mapper.IProductEntityMapper;
+import lombok.SneakyThrows;
 import mocks.entity.ProductEntityMock;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,13 +37,19 @@ class SearchUniqueProductRepositoryAdapterTest {
     @Mock
     private MongoTemplate mongoTemplate;
 
-    private ISearchUniqueRepositoryPort<Optional<ProductDomain>> iSearchUniqueRepositoryPort;
+    private ISearchUniqueRepositoryPort<Optional<ProductModel>> iSearchUniqueRepositoryPort;
     private AutoCloseable closeable;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        closeable = MockitoAnnotations.openMocks(this);
         this.iSearchUniqueRepositoryPort = new SearchUniqueProductRepositoryAdapter(repository, iProductEntityMapper);
+    }
+
+    @SneakyThrows
+    @AfterEach
+    void tearDown(){
+        closeable.close();
     }
 
     @Test
@@ -55,7 +64,7 @@ class SearchUniqueProductRepositoryAdapterTest {
 
         //## Then
         assertTrue(productDomain.isPresent());
-        verify(iProductEntityMapper, times(1)).toDomain(any(ProductEntity.class));
+        verify(iProductEntityMapper, times(1)).toModel(any(ProductEntity.class));
 
     }
 }

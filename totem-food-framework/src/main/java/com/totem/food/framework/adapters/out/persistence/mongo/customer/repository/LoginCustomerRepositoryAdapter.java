@@ -1,6 +1,7 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.customer.repository;
 
 import com.totem.food.application.ports.out.persistence.commons.ILoginRepositoryPort;
+import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
 import com.totem.food.domain.customer.CustomerDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepository;
 import com.totem.food.framework.adapters.out.persistence.mongo.customer.entity.CustomerEntity;
@@ -13,7 +14,7 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @Component
-public class LoginCustomerRepositoryAdapter implements ILoginRepositoryPort<Optional<CustomerDomain>> {
+public class LoginCustomerRepositoryAdapter implements ILoginRepositoryPort<Optional<CustomerModel>> {
 
     @Repository
     protected interface CustomerRepositoryMongoDB extends BaseRepository<CustomerEntity, String> {
@@ -24,8 +25,8 @@ public class LoginCustomerRepositoryAdapter implements ILoginRepositoryPort<Opti
     private final ICustomerEntityMapper iCustomerEntityMapper;
 
     @Override
-    public Optional<CustomerDomain> findByCadastro(String cpf, String password) {
+    public Optional<CustomerModel> findByCadastro(String cpf, String password) {
         var customerEntity = repository.findByCpfAndPassword(cpf, password);
-        return Optional.ofNullable(iCustomerEntityMapper.toDomain(customerEntity));
+        return Optional.ofNullable(iCustomerEntityMapper.toModel(customerEntity));
     }
 }

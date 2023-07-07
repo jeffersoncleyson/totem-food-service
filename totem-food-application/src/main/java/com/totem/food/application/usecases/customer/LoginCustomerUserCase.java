@@ -5,6 +5,7 @@ import com.totem.food.application.ports.in.dtos.customer.CustomerDto;
 import com.totem.food.application.ports.in.mappers.customer.ICustomerMapper;
 import com.totem.food.application.ports.in.utils.Utils;
 import com.totem.food.application.ports.out.persistence.commons.ILoginRepositoryPort;
+import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
 import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.ILoginUseCase;
 import com.totem.food.domain.customer.CustomerDomain;
@@ -17,7 +18,7 @@ import java.util.Optional;
 public class LoginCustomerUserCase implements ILoginUseCase<CustomerDto> {
 
     private final ICustomerMapper iCustomerMapper;
-    private final ILoginRepositoryPort<Optional<CustomerDomain>> iSearchUniqueRepositoryPort;
+    private final ILoginRepositoryPort<Optional<CustomerModel>> iSearchUniqueRepositoryPort;
 
     @Override
     public CustomerDto login(String id, String password) {

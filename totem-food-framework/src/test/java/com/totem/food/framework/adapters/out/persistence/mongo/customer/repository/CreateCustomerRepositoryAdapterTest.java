@@ -1,5 +1,6 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.customer.repository;
 
+import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
 import com.totem.food.domain.customer.CustomerDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.customer.entity.CustomerEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.customer.mapper.ICustomerEntityMapper;
@@ -63,15 +64,15 @@ class CreateCustomerRepositoryAdapterTest {
         final var modifiedAt = ZonedDateTime.now(ZoneOffset.UTC);
         final var createAt = ZonedDateTime.now(ZoneOffset.UTC);
 
-        final var customerDomain = new CustomerDomain();
-        customerDomain.setId(id);
-        customerDomain.setName(name);
-        customerDomain.setCpf(cpf);
-        customerDomain.setEmail(email);
-        customerDomain.setMobile(mobile);
-        customerDomain.setPassword(password);
-        customerDomain.setCreateAt(createAt);
-        customerDomain.setModifiedAt(modifiedAt);
+        final var customerModel = new CustomerModel();
+        customerModel.setId(id);
+        customerModel.setName(name);
+        customerModel.setCpf(cpf);
+        customerModel.setEmail(email);
+        customerModel.setMobile(mobile);
+        customerModel.setPassword(password);
+        customerModel.setCreateAt(createAt);
+        customerModel.setModifiedAt(modifiedAt);
 
         final var customerEntity = new CustomerEntity();
         customerEntity.setId(id);
@@ -87,12 +88,12 @@ class CreateCustomerRepositoryAdapterTest {
         when(repository.save(Mockito.any(CustomerEntity.class))).thenReturn(customerEntity);
 
         //### When
-        final var customerDomainSaved = createCustomerRepositoryAdapter.saveItem(customerDomain);
+        final var customerDomainSaved = createCustomerRepositoryAdapter.saveItem(customerModel);
 
         //### Then
-        verify(iCustomerEntityMapper, times(1)).toEntity(Mockito.any(CustomerDomain.class));
+        verify(iCustomerEntityMapper, times(1)).toEntity(Mockito.any(CustomerModel.class));
         verify(repository, times(1)).save(Mockito.any(CustomerEntity.class));
-        verify(iCustomerEntityMapper, times(1)).toDomain(Mockito.any(CustomerEntity.class));
+        verify(iCustomerEntityMapper, times(1)).toModel(Mockito.any(CustomerEntity.class));
 
         assertThat(customerDomainSaved)
                 .usingRecursiveComparison()

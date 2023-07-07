@@ -1,7 +1,7 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.category.repository;
 
+import com.totem.food.application.ports.out.persistence.category.CategoryModel;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
-import com.totem.food.domain.category.CategoryDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.category.entity.CategoryEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.category.mapper.ICategoryEntityMapper;
 import lombok.SneakyThrows;
@@ -30,7 +30,7 @@ class SearchUniqueCategoryRepositoryAdapterTest {
     @Spy
     private ICategoryEntityMapper iCategoryEntityMapper = Mappers.getMapper(ICategoryEntityMapper.class);
 
-    private ISearchUniqueRepositoryPort<Optional<CategoryDomain>> iSearchUniqueRepositoryPort;
+    private ISearchUniqueRepositoryPort<Optional<CategoryModel>> iSearchUniqueRepositoryPort;
     private AutoCloseable closeable;
 
     @BeforeEach

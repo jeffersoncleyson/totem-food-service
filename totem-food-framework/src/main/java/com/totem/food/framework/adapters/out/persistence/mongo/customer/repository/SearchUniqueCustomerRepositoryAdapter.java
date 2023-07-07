@@ -1,6 +1,7 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.customer.repository;
 
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
+import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
 import com.totem.food.domain.customer.CustomerDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepository;
 import com.totem.food.framework.adapters.out.persistence.mongo.customer.entity.CustomerEntity;
@@ -14,7 +15,7 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @Component
-public class SearchUniqueCustomerRepositoryAdapter implements ISearchUniqueRepositoryPort<Optional<CustomerDomain>> {
+public class SearchUniqueCustomerRepositoryAdapter implements ISearchUniqueRepositoryPort<Optional<CustomerModel>> {
 
     @Repository
     protected interface CustomerRepositoryMongoDB extends BaseRepository<CustomerEntity, String> {
@@ -25,9 +26,9 @@ public class SearchUniqueCustomerRepositoryAdapter implements ISearchUniqueRepos
     private final ICustomerEntityMapper iCustomerEntityMapper;
 
     @Override
-    public Optional<CustomerDomain> findById(String id) {
+    public Optional<CustomerModel> findById(String id) {
         if (StringUtils.isNotEmpty(id)) {
-            return repository.findById(id).map(iCustomerEntityMapper::toDomain);
+            return repository.findById(id).map(iCustomerEntityMapper::toModel);
         }
         return Optional.empty();
     }

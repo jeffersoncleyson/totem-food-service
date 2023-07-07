@@ -17,7 +17,6 @@ public class OrderEntityMock {
                 .id(new ObjectId().toHexString())
                 .customer(CustomerEntityMock.getMock())
                 .products(List.of(ProductEntityMock.getMock()))
-                .combos(List.of(ComboEntityMock.getMock()))
                 .status(String.valueOf(NEW))
                 .price(25.0)
                 .modifiedAt(ZonedDateTime.now(ZoneOffset.UTC))

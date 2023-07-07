@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Jefferson\",\n    \"email\": \"jef.cleyson@gmail.com\",\n    \"cpf\": \"12585824659\",\n    \"mobile\": \"35999089866\",\n    \"password\": \"123456\"\n}",
+							"raw": "{\n    \"name\": \"Jefferson\",\n    \"email\": \"jef@gmail.com\",\n    \"cpf\": \"43285823239\",\n    \"mobile\": \"11966081162\",\n    \"password\": \"123456\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -64,6 +64,42 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "/totem/customer/:customerId",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "cpf",
+								"value": "12585824659",
+								"type": "text"
+							},
+							{
+								"key": "password",
+								"value": "123456",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{backend}}/totem/customer/:customerId",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"totem",
+								"customer",
+								":customerId"
+							],
+							"variable": [
+								{
+									"key": "customerId",
+									"value": "64a1f7a5ed3da311b18b0b62"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -77,7 +113,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Acompanhamento\"\n}",
+							"raw": "{\n    \"name\": \"Sobremesa\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -142,7 +178,7 @@
 							"variable": [
 								{
 									"key": "categoryId",
-									"value": "6494c00c46ab85304f1d8182"
+									"value": "64a1ee96b6b6b8721473e10d"
 								}
 							]
 						}
@@ -167,7 +203,7 @@
 							"variable": [
 								{
 									"key": "categoryId",
-									"value": "6494bf2f46ab85304f1d8181"
+									"value": "64a1ee96b6b6b8721473e10d"
 								}
 							]
 						}
@@ -186,7 +222,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"X-TUDO\",\n    \"description\": \"Pão com gergilim, hamburger 200g, tomate\",\n    \"image\": \"https://s2.glbimg.com/x4W3eb8dGwiiv6MEzxk6qMeukSs=/smart/e.glbimg.com/og/ed/f/original/2021/05/28/receitas-para-acompanhar-batata-frita.jpg\",\n    \"price\": 25,\n    \"category\": \"649ba3992ac1382377bd0440\"\n}",
+							"raw": "{\n    \"name\": \"Sunday\",\n    \"description\": \"Pão com gergilim, hamburger 200g, tomate\",\n    \"image\": \"https://s2.glbimg.com/x4W3eb8dGwiiv6MEzxk6qMeukSs=/smart/e.glbimg.com/og/ed/f/original/2021/05/28/receitas-para-acompanhar-batata-frita.jpg\",\n    \"price\": 15,\n    \"category\": \"64a765241a4d140bb25fbb64\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -246,7 +282,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{backend}}/administrative/product",
+							"raw": "{{backend}}/administrative/product?categoryId=649f656e93ecc62de1ffa263",
 							"host": [
 								"{{backend}}"
 							],
@@ -257,12 +293,11 @@
 							"query": [
 								{
 									"key": "categoryId",
-									"value": "6494c00c46ab85304f1d8182",
-									"disabled": true
+									"value": "649f656e93ecc62de1ffa263"
 								},
 								{
 									"key": "categoryId",
-									"value": "649b6799f28cf303b08ebb95",
+									"value": "649f658d93ecc62de1ffa264",
 									"disabled": true
 								}
 							]
@@ -307,7 +342,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"products\": [\n        {\"id\": \"649ba39f2ac1382377bd0441\", \"qtd\": 2}\n    ],\n    \"combos\": []\n}",
+							"raw": "{\n    \"customerId\": \"64a7652f1a4d140bb25fbb65\",\n    \"products\": [\n        {\n            \"id\": \"64a7653b1a4d140bb25fbb66\",\n            \"qtd\": 2\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -334,7 +369,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"products\": [\n        \"6494c68d1f3ffa4175e155b1\",\n        \"6494c7c41f3ffa4175e155b4\",\n        \"6494c8661f3ffa4175e155b5\"\n    ],\n    \"combos\": []\n}",
+							"raw": "{\n    \"products\": [\n        {\n            \"id\": \"64a7653b1a4d140bb25fbb66\",\n            \"qtd\": 2\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -354,7 +389,7 @@
 							"variable": [
 								{
 									"key": "orderId",
-									"value": "6494ca5ea9ae77422fdcff23"
+									"value": "64a765521a4d140bb25fbb67"
 								}
 							]
 						}
@@ -367,7 +402,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{backend}}/totem/order?status=RECEIVED&status=WAITING_PAYMENT",
+							"raw": "{{backend}}/totem/order",
 							"host": [
 								"{{backend}}"
 							],
@@ -377,17 +412,24 @@
 							],
 							"query": [
 								{
+									"key": "customerId",
+									"value": "64a7652f1a4d140bb25fbb65",
+									"disabled": true
+								},
+								{
 									"key": "orderId",
-									"value": "649cdabfb76e142c8b405916",
+									"value": "64a765521a4d140bb25fbb67",
 									"disabled": true
 								},
 								{
 									"key": "status",
-									"value": "RECEIVED"
+									"value": "NEW",
+									"disabled": true
 								},
 								{
 									"key": "status",
-									"value": "WAITING_PAYMENT"
+									"value": "FINALIZED",
+									"disabled": true
 								}
 							]
 						}
@@ -414,11 +456,11 @@
 							"variable": [
 								{
 									"key": "orderId",
-									"value": "649ceca16bfb285e95b39fd4"
+									"value": "64a765521a4d140bb25fbb67"
 								},
 								{
 									"key": "statusName",
-									"value": "WAITING_PAYMENT"
+									"value": "READY"
 								}
 							]
 						}
@@ -437,7 +479,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"orderId\": \"649ceca16bfb285e95b39fd4\"\n}",
+							"raw": "{\n    \"orderId\": \"64a765521a4d140bb25fbb67\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -475,7 +517,7 @@
 							"variable": [
 								{
 									"key": "paymentId",
-									"value": "649cdbab6a4b740c65e326d0"
+									"value": "649f695493ecc62de1ffa26c"
 								}
 							]
 						}
@@ -489,7 +531,7 @@
 						"header": [
 							{
 								"key": "token",
-								"value": "b52f31dd-0373-4dcb-a206-0f68b77f002b",
+								"value": "64078c78-fc83-4be4-8e78-25c91bb99dce",
 								"type": "text"
 							}
 						],
@@ -508,7 +550,7 @@
 							"variable": [
 								{
 									"key": "orderId",
-									"value": "649ceca16bfb285e95b39fd4"
+									"value": "64a765521a4d140bb25fbb67"
 								}
 							]
 						}
@@ -554,7 +596,7 @@
 								},
 								{
 									"key": "orderId",
-									"value": "6496f21126e09a01c307a482",
+									"value": "64a765521a4d140bb25fbb67",
 									"disabled": true
 								},
 								{
@@ -606,7 +648,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{backend}}/administrative/orders?status=RECEIVED",
+							"raw": "{{backend}}/administrative/orders",
 							"host": [
 								"{{backend}}"
 							],
@@ -617,7 +659,8 @@
 							"query": [
 								{
 									"key": "status",
-									"value": "RECEIVED"
+									"value": "RECEIVED",
+									"disabled": true
 								},
 								{
 									"key": "status",

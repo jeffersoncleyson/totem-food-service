@@ -1,25 +1,24 @@
-package com.totem.food.application.ports.in.dtos.combo;
+package com.totem.food.application.ports.out.persistence.customer;
 
-import com.totem.food.application.ports.in.dtos.product.ProductDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ComboDto {
+public class CustomerModel {
 
+    private String id;
     private String name;
-    private BigDecimal price;
-    private List<ProductDto> products;
+    private String cpf;
+    private String email;
+    private String mobile;
+    private String password;
     private ZonedDateTime modifiedAt;
     private ZonedDateTime createAt;
-
 }

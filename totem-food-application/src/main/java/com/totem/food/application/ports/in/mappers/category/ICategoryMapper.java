@@ -2,6 +2,7 @@ package com.totem.food.application.ports.in.mappers.category;
 
 import com.totem.food.application.ports.in.dtos.category.CategoryCreateDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
+import com.totem.food.application.ports.out.persistence.category.CategoryModel;
 import com.totem.food.domain.category.CategoryDomain;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
@@ -14,5 +15,9 @@ public interface ICategoryMapper {
 
     CategoryDomain toDomain(CategoryCreateDto input);
 
-    CategoryDto toDto(CategoryDomain input);
+    CategoryDto toDto(CategoryModel input);
+
+    CategoryModel toModel(CategoryDomain input);
+
+    CategoryDomain toDomain(CategoryModel input);
 }

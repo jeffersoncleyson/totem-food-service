@@ -1,7 +1,7 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.category.repository;
 
+import com.totem.food.application.ports.out.persistence.category.CategoryModel;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
-import com.totem.food.domain.category.CategoryDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.category.entity.CategoryEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.category.mapper.ICategoryEntityMapper;
 import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepository;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 @AllArgsConstructor
 @Component
-public class CreateCategoryRepositoryAdapter implements ICreateRepositoryPort<CategoryDomain> {
+public class CreateCategoryRepositoryAdapter implements ICreateRepositoryPort<CategoryModel> {
 
     @Repository
     protected interface CategoryRepositoryMongoDB extends BaseRepository<CategoryEntity, String> {
@@ -22,10 +22,10 @@ public class CreateCategoryRepositoryAdapter implements ICreateRepositoryPort<Ca
     private final ICategoryEntityMapper iCategoryEntityMapper;
 
     @Override
-    public CategoryDomain saveItem(CategoryDomain item) {
+    public CategoryModel saveItem(CategoryModel item) {
         final var categoryEntity = iCategoryEntityMapper.toEntity(item);
         final var savedCategoryEntity = repository.save(categoryEntity);
-        return iCategoryEntityMapper.toDomain(savedCategoryEntity);
+        return iCategoryEntityMapper.toModel(savedCategoryEntity);
     }
 
 }

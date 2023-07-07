@@ -2,6 +2,7 @@ package com.totem.food.framework.adapters.out.web.payment.request;
 
 import com.totem.food.application.exceptions.ExternalCommunicationInvalid;
 import com.totem.food.application.ports.in.dtos.payment.PaymentQRCodeDto;
+import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.application.ports.out.web.ISendRequestPort;
 import com.totem.food.domain.payment.PaymentDomain;
 import com.totem.food.framework.adapters.out.web.payment.config.PaymentConfigs;
@@ -19,7 +20,7 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @Component
-public class SendPaymentExternalRequestAdapter implements ISendRequestPort<PaymentDomain, PaymentQRCodeDto> {
+public class SendPaymentExternalRequestAdapter implements ISendRequestPort<PaymentModel, PaymentQRCodeDto> {
 
     private final RestTemplate restTemplate;
     private final IPaymentRequestMapper iPaymentRequestMapper;
@@ -27,7 +28,7 @@ public class SendPaymentExternalRequestAdapter implements ISendRequestPort<Payme
     private final PaymentConfigs paymentConfigs;
 
     @Override
-    public PaymentQRCodeDto sendRequest(PaymentDomain item) {
+    public PaymentQRCodeDto sendRequest(PaymentModel item) {
 
         final var entity = iPaymentRequestMapper.toEntity(item);
 

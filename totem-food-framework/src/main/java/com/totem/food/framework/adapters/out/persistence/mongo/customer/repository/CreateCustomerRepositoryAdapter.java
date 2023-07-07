@@ -1,6 +1,7 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.customer.repository;
 
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
+import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
 import com.totem.food.domain.customer.CustomerDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepository;
 import com.totem.food.framework.adapters.out.persistence.mongo.customer.entity.CustomerEntity;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 @AllArgsConstructor
 @Component
-public class CreateCustomerRepositoryAdapter implements ICreateRepositoryPort<CustomerDomain> {
+public class CreateCustomerRepositoryAdapter implements ICreateRepositoryPort<CustomerModel> {
 
     @Repository
     protected interface CustomerRepositoryMongoDB extends BaseRepository<CustomerEntity, String> {
@@ -22,9 +23,9 @@ public class CreateCustomerRepositoryAdapter implements ICreateRepositoryPort<Cu
     private final ICustomerEntityMapper iCustomerEntityMapper;
 
     @Override
-    public CustomerDomain saveItem(CustomerDomain item) {
+    public CustomerModel saveItem(CustomerModel item) {
         final var entity = iCustomerEntityMapper.toEntity(item);
         final var savedEntity = repository.save(entity);
-        return iCustomerEntityMapper.toDomain(savedEntity);
+        return iCustomerEntityMapper.toModel(savedEntity);
     }
 }

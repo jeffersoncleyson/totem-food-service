@@ -1,7 +1,7 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.category.repository;
 
+import com.totem.food.application.ports.out.persistence.category.CategoryModel;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
-import com.totem.food.domain.category.CategoryDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.category.entity.CategoryEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.category.mapper.ICategoryEntityMapper;
 import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepository;
@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @Component
-public class SearchUniqueCategoryRepositoryAdapter implements ISearchUniqueRepositoryPort<Optional<CategoryDomain>> {
+public class SearchUniqueCategoryRepositoryAdapter implements ISearchUniqueRepositoryPort<Optional<CategoryModel>> {
 
     @Repository
     protected interface CategoryRepositoryMongoDB extends BaseRepository<CategoryEntity, String> {
@@ -24,8 +24,8 @@ public class SearchUniqueCategoryRepositoryAdapter implements ISearchUniqueRepos
     private final ICategoryEntityMapper iCategoryEntityMapper;
 
     @Override
-    public Optional<CategoryDomain> findById(String id) {
-        return repository.findById(id).map(iCategoryEntityMapper::toDomain);
+    public Optional<CategoryModel> findById(String id) {
+        return repository.findById(id).map(iCategoryEntityMapper::toModel);
     }
 
 }

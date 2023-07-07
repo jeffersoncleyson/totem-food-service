@@ -3,9 +3,9 @@ package com.totem.food.application.usecases.category;
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryFilterDto;
 import com.totem.food.application.ports.in.mappers.category.ICategoryMapper;
+import com.totem.food.application.ports.out.persistence.category.CategoryModel;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.usecases.commons.ISearchUseCase;
-import com.totem.food.domain.category.CategoryDomain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +29,7 @@ class SearchCategoryUseCaseTest {
     private ICategoryMapper iCategoryMapper = Mappers.getMapper(ICategoryMapper.class);
 
     @Mock
-    private ISearchRepositoryPort<CategoryFilterDto, List<CategoryDomain>> iSearchRepositoryPort;
+    private ISearchRepositoryPort<CategoryFilterDto, List<CategoryModel>> iSearchRepositoryPort;
 
     private ISearchUseCase<CategoryFilterDto, List<CategoryDto>> iSearchUseCase;
 
@@ -43,7 +43,7 @@ class SearchCategoryUseCaseTest {
     void items() {
 
         //## Given
-        final var categoryDomain = new CategoryDomain("123", "Name", ZonedDateTime.now(ZoneOffset.UTC), ZonedDateTime.now(ZoneOffset.UTC));
+        final var categoryDomain = new CategoryModel("123", "Name", ZonedDateTime.now(ZoneOffset.UTC), ZonedDateTime.now(ZoneOffset.UTC));
         final var domains = List.of(categoryDomain, categoryDomain);
         final var categoryFilter = new CategoryFilterDto("Name");
         when(iSearchRepositoryPort.findAll(categoryFilter)).thenReturn(domains);

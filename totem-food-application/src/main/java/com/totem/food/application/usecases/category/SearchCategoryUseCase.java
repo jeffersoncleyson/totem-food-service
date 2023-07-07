@@ -3,10 +3,10 @@ package com.totem.food.application.usecases.category;
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
 import com.totem.food.application.ports.in.dtos.category.CategoryFilterDto;
 import com.totem.food.application.ports.in.mappers.category.ICategoryMapper;
+import com.totem.food.application.ports.out.persistence.category.CategoryModel;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.ISearchUseCase;
-import com.totem.food.domain.category.CategoryDomain;
 import lombok.AllArgsConstructor;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class SearchCategoryUseCase implements ISearchUseCase<CategoryFilterDto, List<CategoryDto>> {
 
     private final ICategoryMapper iCategoryMapper;
-    private final ISearchRepositoryPort<CategoryFilterDto, List<CategoryDomain>> iSearchRepositoryPort;
+    private final ISearchRepositoryPort<CategoryFilterDto, List<CategoryModel>> iSearchRepositoryPort;
 
     @Override
     public List<CategoryDto> items(CategoryFilterDto filter) {

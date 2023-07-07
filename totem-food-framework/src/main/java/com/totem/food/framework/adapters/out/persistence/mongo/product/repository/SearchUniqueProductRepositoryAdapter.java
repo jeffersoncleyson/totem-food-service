@@ -1,7 +1,7 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.product.repository;
 
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
-import com.totem.food.domain.product.ProductDomain;
+import com.totem.food.application.ports.out.persistence.product.ProductModel;
 import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepository;
 import com.totem.food.framework.adapters.out.persistence.mongo.product.entity.ProductEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.product.mapper.IProductEntityMapper;
@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @Component
-public class SearchUniqueProductRepositoryAdapter implements ISearchUniqueRepositoryPort<Optional<ProductDomain>> {
+public class SearchUniqueProductRepositoryAdapter implements ISearchUniqueRepositoryPort<Optional<ProductModel>> {
 
 	@Repository
 	protected interface ProductRepositoryMongoDB extends BaseRepository<ProductEntity, String> {
@@ -23,7 +23,7 @@ public class SearchUniqueProductRepositoryAdapter implements ISearchUniqueReposi
 	private final IProductEntityMapper iProductEntityMapper;
 
 	@Override
-	public Optional<ProductDomain> findById(String id) {
-		return repository.findById(id).map(iProductEntityMapper::toDomain);
+	public Optional<ProductModel> findById(String id) {
+		return repository.findById(id).map(iProductEntityMapper::toModel);
 	}
 }

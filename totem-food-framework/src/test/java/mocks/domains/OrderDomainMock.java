@@ -14,7 +14,6 @@ public class OrderDomainMock {
                 .id("1")
                 .customer(CustomerDomainMock.getMock())
                 .products(List.of(ProductDomainMock.getMock()))
-                .combos(List.of(ComboDomainMock.getMock()))
                 .price(25.0)
                 .status(OrderStatusEnumDomain.NEW)
                 .modifiedAt(ZonedDateTime.parse("2023-04-03T13:28:20.606-03:00"))

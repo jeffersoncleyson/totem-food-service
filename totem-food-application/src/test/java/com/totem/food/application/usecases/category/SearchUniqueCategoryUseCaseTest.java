@@ -2,9 +2,9 @@ package com.totem.food.application.usecases.category;
 
 import com.totem.food.application.ports.in.dtos.category.CategoryDto;
 import com.totem.food.application.ports.in.mappers.category.ICategoryMapper;
+import com.totem.food.application.ports.out.persistence.category.CategoryModel;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.usecases.commons.ISearchUniqueUseCase;
-import com.totem.food.domain.category.CategoryDomain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +33,7 @@ class SearchUniqueCategoryUseCaseTest {
     private ICategoryMapper iCategoryMapper = Mappers.getMapper(ICategoryMapper.class);
 
     @Mock
-    private ISearchUniqueRepositoryPort<Optional<CategoryDomain>> iSearchRepositoryPort;
+    private ISearchUniqueRepositoryPort<Optional<CategoryModel>> iSearchRepositoryPort;
 
     private ISearchUniqueUseCase<String, CategoryDto> iSearchUseCase;
 
@@ -47,7 +47,7 @@ class SearchUniqueCategoryUseCaseTest {
     void item() {
 
         //## Given
-        final var categoryDomain = new CategoryDomain("123", "Name", ZonedDateTime.now(ZoneOffset.UTC), ZonedDateTime.now(ZoneOffset.UTC));
+        final var categoryDomain = new CategoryModel("123", "Name", ZonedDateTime.now(ZoneOffset.UTC), ZonedDateTime.now(ZoneOffset.UTC));
         when(iSearchRepositoryPort.findById(anyString())).thenReturn(Optional.of(categoryDomain));
 
         //## When

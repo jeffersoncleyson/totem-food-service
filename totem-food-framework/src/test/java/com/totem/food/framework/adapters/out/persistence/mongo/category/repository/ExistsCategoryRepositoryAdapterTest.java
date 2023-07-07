@@ -2,6 +2,7 @@ package com.totem.food.framework.adapters.out.persistence.mongo.category.reposit
 
 import lombok.SneakyThrows;
 import mocks.domains.CategoryDomainMock;
+import mocks.models.CategoryModelMock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,13 +45,13 @@ class ExistsCategoryRepositoryAdapterTest {
     void exists() {
 
         //## Mock - Object
-        var categoryDomain = CategoryDomainMock.getMock();
+        var categoryModel = CategoryModelMock.getMock();
 
         //## Given
         when(repository.existsByNameIgnoreCase(anyString())).thenReturn(true);
 
         //## When
-        var result = existsCategoryRepositoryAdapter.exists(categoryDomain);
+        var result = existsCategoryRepositoryAdapter.exists(categoryModel);
 
         //## Then
         assertTrue(result);

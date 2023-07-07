@@ -1,11 +1,11 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.category.repository;
 
-import com.totem.food.domain.category.CategoryDomain;
+import com.totem.food.application.ports.out.persistence.category.CategoryModel;
 import com.totem.food.framework.adapters.out.persistence.mongo.category.entity.CategoryEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.category.mapper.ICategoryEntityMapper;
 import lombok.SneakyThrows;
 import mocks.adapters.out.persistence.mongo.category.entity.CategoryEntityMock;
-import mocks.domains.CategoryDomainMock;
+import mocks.models.CategoryModelMock;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,18 +57,18 @@ class CreateCategoryRepositoryAdapterTest {
 
         //## Mock - Objects
         var categoryEntity = CategoryEntityMock.getMock();
-        var categoryDomain = CategoryDomainMock.getMock();
+        var categoryModel = CategoryModelMock.getMock();
 
         //## Given
-        when(iCategoryEntityMapper.toEntity(any(CategoryDomain.class))).thenReturn(categoryEntity);
+        when(iCategoryEntityMapper.toEntity(any(CategoryModel.class))).thenReturn(categoryEntity);
         when(repository.save(any(CategoryEntity.class))).thenReturn(categoryEntity);
 
         //## When
-        var result = createCategoryRepositoryAdapter.saveItem(categoryDomain);
+        var result = createCategoryRepositoryAdapter.saveItem(categoryModel);
 
         //## Then
-        Assertions.assertThat(result).usingRecursiveComparison().ignoringFieldsOfTypes(ZonedDateTime.class).isEqualTo(categoryDomain);
-        Mockito.verify(iCategoryEntityMapper, times(1)).toDomain(any(CategoryEntity.class));
+        Assertions.assertThat(result).usingRecursiveComparison().ignoringFieldsOfTypes(ZonedDateTime.class).isEqualTo(categoryModel);
+        Mockito.verify(iCategoryEntityMapper, times(1)).toModel(any(CategoryEntity.class));
 
     }
 }
