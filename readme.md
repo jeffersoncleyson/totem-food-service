@@ -125,6 +125,7 @@ O comando abaixo inicia todos os componentes da infraestrutura
 ```
 docker-compose -f docker-compose.yaml up -d --build
 ```
+> Observação: Para maior agilidade nos testes da aplicação pode-se executar o 'docker-compose-docker-hub.yaml' onde se encontra as aplicações em sua última versão.
 
 2. Verificar se todos os componentes estão em execução
 ```
