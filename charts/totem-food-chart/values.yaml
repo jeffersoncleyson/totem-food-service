@@ -36,5 +36,13 @@ ingress:
     value: /v1
     type: Prefix
 
+hpa:
+  min_replicas: 2
+  max_replicas: 10
+  target:
+    avg:
+      memory: 50
+      cpu: 50
+
 env:
   name: dev

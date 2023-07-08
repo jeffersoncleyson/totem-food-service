@@ -1,0 +1,24 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Release.Name }}-totem-food
+  labels:
+    app.kubernetes.io/component: {{ .Release.Name }}-totem-food
+    app.kubernetes.io/instance: {{ .Release.Name }}-totem-food
+    app.kubernetes.io/name: {{ .Release.Name }}-totem-food
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: {{ .Release.Name }}-totem-food
+    apiVersion: apps/v1
+  minReplicas: {{ .Values.hpa.min_replicas }}
+  maxReplicas: {{ .Values.hpa.max_replicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ .Values.hpa.target.avg.memory }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ .Values.hpa.target.avg.cpu }}
