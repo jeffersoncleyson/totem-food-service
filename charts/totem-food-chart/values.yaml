@@ -1,0 +1,34 @@
+replicaCount: 1
+
+image:
+  repository: jeffersoncleyson/totem-food-service
+  tag: "v1.0.1"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+
+secrets:
+  database:
+    host: bW9uZ28tZGV2
+    port: MjcwMTc=
+    dbname: bW9uZ29kYi5zdmMuY2x1c3Rlci5sb2NhbA==
+    username: cm9vdA==
+    password: cXdlMTIz
+    auth: YWRtaW4=
+  email:
+    host: bWFpbGhvZy5zdmMuY2x1c3Rlci5sb2NhbA==
+    port: MTAyNQ==
+    username: dXNlcm5hbWU=
+    password: cGFzc3dvcmQ=
+    auth:
+      enabled: ZmFsc2U=
+    tls:
+      enabled: ZmFsc2U=
+    email: Y29udGF0b0B0b3RlbS5mb29kLnNlcnZpY2UuY29tLmJy
+  payment:
+    gateway:
+      url: aHR0cDovL3BheW1lbnQtZ2F0ZXdheS5zdmMuY2x1c3Rlci5sb2NhbDo1MDAwL3YxL29ubGluZS1wYXltZW50
+
+env:
+  name: dev

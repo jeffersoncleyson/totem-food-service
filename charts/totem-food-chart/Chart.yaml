@@ -1,0 +1,5 @@
+apiVersion: v2
+name: totem-food-chart
+description: Totem Food Service - Help food stores to organize their orders, clients, payments, products and products' categories
+version: 0.1.0
+appVersion: "v1.0.1"
