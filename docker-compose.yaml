@@ -35,12 +35,12 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      SPRING.DATA.MONGODB.HOST: mongo-dev
-      SPRING.DATA.MONGODB.PORT: 27017
-      SPRING.DATA.MONGODB.DATABASE: totem-food
-      SPRING.DATA.MONGODB.USERNAME: root
-      SPRING.DATA.MONGODB.PASSWORD: qwe123
-      SPRING.DATA.MONGODB.AUTHENTICATION_DATABASE: admin
+      SPRING_DATA_MONGODB_HOST: mongo-dev
+      SPRING_DATA_MONGODB_PORT: 27017
+      SPRING_DATA_MONGODB_DATABASE: totem-food
+      SPRING_DATA_MONGODB_USERNAME: root
+      SPRING_DATA_MONGODB_PASSWORD: qwe123
+      SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
       PAYMENT_GATEWAY_URL: http://payment-gateway:5000/v1/online-payment
       SMTP_HOST: mailhog
       SMTP_PORT: 1025
