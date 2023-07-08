@@ -30,5 +30,11 @@ secrets:
     gateway:
       url: aHR0cDovL3BheW1lbnQtZ2F0ZXdheS5zdmMuY2x1c3Rlci5sb2NhbDo1MDAwL3YxL29ubGluZS1wYXltZW50
 
+## https://towardsdatascience.com/how-to-set-up-ingress-controller-in-aws-eks-d745d9107307
+ingress:
+  path:
+    value: /v1
+    type: Prefix
+
 env:
   name: dev
