@@ -31,6 +31,10 @@ public class SearchOrderRepositoryAdapter implements ISearchRepositoryPort<Order
 
         @Query("{'status': {$in: ?0}}")
         List<OrderEntity> findByStatus(Set<String> status);
+
+        @Query("{'customer' :{'$ref' : 'customer' , '$id' : ?0}}")
+        List<OrderEntity> findByFilterAndOrderByCreateAtDesc(ObjectId customerId);
+
     }
 
     private final SearchOrderRepositoryAdapter.OrderRepositoryMongoDB repository;
@@ -38,6 +42,12 @@ public class SearchOrderRepositoryAdapter implements ISearchRepositoryPort<Order
 
     @Override
     public List<OrderModel> findAll(OrderFilterDto filter) {
+
+        if (StringUtils.isNotEmpty(filter.getCustomerId()) && Boolean.TRUE.equals(filter.getSorted()))
+            return repository.findByFilterAndOrderByCreateAtDesc(new ObjectId(filter.getCustomerId()))
+                    .stream()
+                    .map(iOrderEntityMapper::toModel)
+                    .toList();
 
         if (StringUtils.isNotEmpty(filter.getCustomerId()))
             return repository.findByFilter(new ObjectId(filter.getCustomerId()))
