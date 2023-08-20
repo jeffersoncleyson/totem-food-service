@@ -78,6 +78,7 @@ class SearchOrderUseCaseTest {
     @Test
     void sortedOrderByStatusWhenSortedFlagIsTrue() {
 
+        //## Mock - Object
         var filter = OrderFilterDto.builder().customerId("123").sorted(true).build();
 
         var order1 = createOrder("1", "NEW");
@@ -88,6 +89,7 @@ class SearchOrderUseCaseTest {
 
         List<OrderDto> orderDtos = List.of(order1, order2, order3, order4, order5);
 
+        //## Given
         when(iSearchOrderRepositoryPort.findAll(filter)).thenReturn(List.of(
                 OrderModel.builder().id("1").status(OrderStatusEnumDomain.NEW).build(),
                 OrderModel.builder().id("2").status(OrderStatusEnumDomain.READY).build(),
@@ -95,8 +97,10 @@ class SearchOrderUseCaseTest {
                 OrderModel.builder().id("4").status(OrderStatusEnumDomain.IN_PREPARATION).build(),
                 OrderModel.builder().id("5").status(OrderStatusEnumDomain.FINALIZED).build()));
 
+        //## When
         var result = searchOrderUseCase.items(filter);
 
+        //## Then
         assertNotNull(result);
         assertEquals(3, result.size());
         assertEquals(orderDtos.get(1).getStatus(), result.get(0).getStatus());
