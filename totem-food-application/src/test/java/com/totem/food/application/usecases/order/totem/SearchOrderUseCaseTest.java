@@ -93,7 +93,7 @@ class SearchOrderUseCaseTest {
                 OrderModel.builder().id("2").status(OrderStatusEnumDomain.READY).build(),
                 OrderModel.builder().id("3").status(OrderStatusEnumDomain.RECEIVED).build(),
                 OrderModel.builder().id("4").status(OrderStatusEnumDomain.IN_PREPARATION).build(),
-                OrderModel.builder().id("4").status(OrderStatusEnumDomain.FINALIZED).build()));
+                OrderModel.builder().id("5").status(OrderStatusEnumDomain.FINALIZED).build()));
 
         var result = searchOrderUseCase.items(filter);
 
