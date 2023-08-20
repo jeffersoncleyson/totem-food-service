@@ -1,7 +1,6 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.order.totem.repository;
 
 import com.totem.food.application.ports.in.dtos.order.totem.OrderFilterDto;
-import com.totem.food.domain.order.totem.OrderDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.order.totem.mapper.IOrderEntityMapper;
 import lombok.SneakyThrows;
 import mocks.domains.OrderDomainMock;
@@ -9,7 +8,6 @@ import mocks.entity.OrderEntityMock;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
@@ -159,6 +157,38 @@ class SearchOrderRepositoryAdapterTest {
         assertThat(result.get(0).getStatus()).isEqualTo(orderDomain.getStatus());
 
         verify(repository, times(1)).findByStatus(filter.getStatus());
+    }
+
+    @Test
+    void findAllWhenFilterByCustomerIdAndSortedStatusTrue() {
+
+        //## Mock - Object
+        var hexString = new ObjectId().toHexString();
+        var filter = OrderFilterDto.builder()
+                .customerId(hexString)
+                .sorted(true)
+                .build();
+        var orderDomain = OrderDomainMock.getStatusNewMock();
+        orderDomain.setId("0aa85a99-82bd-47b6-9f11-74b63f424d72");
+        orderDomain.getCustomer().setId("ad852cd2-fd7d-4377-b868-40508b58f384");
+        var orderEntity = OrderEntityMock.getMock();
+        orderEntity.setId("0aa85a99-82bd-47b6-9f11-74b63f424d72");
+        orderEntity.getCustomer().setId("ad852cd2-fd7d-4377-b868-40508b58f384");
+
+        //## Given
+        when(repository.findByFilterAndOrderByCreateAtDesc(any(ObjectId.class))).thenReturn(List.of(orderEntity));
+
+        //## When
+        var result = searchOrderRepositoryAdapter.findAll(filter);
+
+        result.forEach(orderModel -> orderModel.setModifiedAt(ZonedDateTime.now(ZoneOffset.UTC)));
+
+        //## Then
+        assertThat(result)
+                .usingRecursiveComparison()
+                .ignoringFieldsOfTypes(ZonedDateTime.class)
+                .isEqualTo(List.of(orderDomain));
+        verify(repository, times(1)).findByFilterAndOrderByCreateAtDesc(any());
     }
 
 }
