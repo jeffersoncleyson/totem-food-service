@@ -15,7 +15,6 @@ import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.IUpdateStatusUseCase;
 import com.totem.food.domain.customer.CustomerDomain;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
-import com.totem.food.domain.order.totem.OrderDomain;
 import com.totem.food.domain.payment.PaymentDomain;
 import lombok.AllArgsConstructor;
 

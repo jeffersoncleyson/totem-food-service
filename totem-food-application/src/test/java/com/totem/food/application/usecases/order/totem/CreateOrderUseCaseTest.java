@@ -1,6 +1,5 @@
 package com.totem.food.application.usecases.order.totem;
 
-import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.exceptions.InvalidInput;
 import com.totem.food.application.ports.in.dtos.product.ProductFilterDto;
 import com.totem.food.application.ports.in.mappers.customer.ICustomerMapper;
@@ -36,7 +35,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

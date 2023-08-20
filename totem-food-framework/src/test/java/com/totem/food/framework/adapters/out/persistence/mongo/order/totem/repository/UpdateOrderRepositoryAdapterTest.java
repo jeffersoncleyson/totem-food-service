@@ -2,11 +2,9 @@ package com.totem.food.framework.adapters.out.persistence.mongo.order.totem.repo
 
 import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
-import com.totem.food.domain.order.totem.OrderDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.order.totem.entity.OrderEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.order.totem.mapper.IOrderEntityMapper;
 import lombok.SneakyThrows;
-import mocks.domains.OrderDomainMock;
 import mocks.entity.OrderEntityMock;
 import mocks.models.OrderModelMock;
 import org.junit.jupiter.api.AfterEach;

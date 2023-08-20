@@ -1,7 +1,11 @@
 package com.totem.food.application.ports.out.persistence.product;
 
 import com.totem.food.domain.category.CategoryDomain;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.ZonedDateTime;
 

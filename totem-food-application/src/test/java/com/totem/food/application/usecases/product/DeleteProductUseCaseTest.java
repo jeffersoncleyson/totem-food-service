@@ -4,7 +4,6 @@ import com.totem.food.application.ports.in.dtos.product.ProductDto;
 import com.totem.food.application.ports.out.persistence.commons.IRemoveRepositoryPort;
 import com.totem.food.application.ports.out.persistence.product.ProductModel;
 import com.totem.food.application.usecases.commons.IDeleteUseCase;
-import com.totem.food.domain.product.ProductDomain;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
