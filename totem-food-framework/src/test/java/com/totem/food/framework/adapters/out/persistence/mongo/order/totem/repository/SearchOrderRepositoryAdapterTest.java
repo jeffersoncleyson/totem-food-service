@@ -159,36 +159,4 @@ class SearchOrderRepositoryAdapterTest {
         verify(repository, times(1)).findByStatus(filter.getStatus());
     }
 
-    @Test
-    void findAllWhenFilterByCustomerIdAndSortedStatusTrue() {
-
-        //## Mock - Object
-        var hexString = new ObjectId().toHexString();
-        var filter = OrderFilterDto.builder()
-                .customerId(hexString)
-                .sorted(true)
-                .build();
-        var orderDomain = OrderDomainMock.getStatusNewMock();
-        orderDomain.setId("0aa85a99-82bd-47b6-9f11-74b63f424d72");
-        orderDomain.getCustomer().setId("ad852cd2-fd7d-4377-b868-40508b58f384");
-        var orderEntity = OrderEntityMock.getMock();
-        orderEntity.setId("0aa85a99-82bd-47b6-9f11-74b63f424d72");
-        orderEntity.getCustomer().setId("ad852cd2-fd7d-4377-b868-40508b58f384");
-
-        //## Given
-        when(repository.findByFilterAndOrderByCreateAtDesc(any(ObjectId.class))).thenReturn(List.of(orderEntity));
-
-        //## When
-        var result = searchOrderRepositoryAdapter.findAll(filter);
-
-        result.forEach(orderModel -> orderModel.setModifiedAt(ZonedDateTime.now(ZoneOffset.UTC)));
-
-        //## Then
-        assertThat(result)
-                .usingRecursiveComparison()
-                .ignoringFieldsOfTypes(ZonedDateTime.class)
-                .isEqualTo(List.of(orderDomain));
-        verify(repository, times(1)).findByFilterAndOrderByCreateAtDesc(any());
-    }
-
 }

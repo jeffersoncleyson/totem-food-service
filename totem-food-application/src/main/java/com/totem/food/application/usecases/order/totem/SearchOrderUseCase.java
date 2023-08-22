@@ -11,7 +11,7 @@ import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import lombok.AllArgsConstructor;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -30,25 +30,31 @@ public class SearchOrderUseCase implements ISearchUseCase<OrderFilterDto, List<O
     @Override
     public List<OrderDto> items(OrderFilterDto filter) {
 
-        if (Boolean.TRUE.equals(filter.getSorted())) return sortedOrderByStatus(filter);
+        if (Boolean.TRUE.equals(filter.getOnlyTreadmill())) {
+            return sortedOrderByStatus(filter);
+        }
 
-        return iSearchOrderRepositoryPort.findAll(filter)
-                .stream()
-                .map(iOrderMapper::toDto)
-                .collect(Collectors.toCollection(ArrayList::new));
+        return getOrders(filter);
     }
 
     private List<OrderDto> sortedOrderByStatus(OrderFilterDto filter) {
 
-        Map<String, List<OrderDto>> orderDtosMap = iSearchOrderRepositoryPort.findAll(filter).stream()
-                .map(iOrderMapper::toDto)
+        Map<String, List<OrderDto>> orderDtosMap = getOrders(filter).stream()
+                .sorted(Comparator.comparing(OrderDto::getCreateAt))
                 .collect(Collectors.groupingBy(OrderDto::getStatus));
 
         List<OrderDto> orders = new ArrayList<>();
-        for (OrderStatusEnumDomain status : Arrays.asList(READY, IN_PREPARATION, RECEIVED)) {
+        for (OrderStatusEnumDomain status : List.of(READY, IN_PREPARATION, RECEIVED)) {
             orders.addAll(orderDtosMap.getOrDefault(status.key, new ArrayList<>()));
         }
 
         return orders;
+    }
+
+    private ArrayList<OrderDto> getOrders(OrderFilterDto filter) {
+        return iSearchOrderRepositoryPort.findAll(filter)
+                .stream()
+                .map(iOrderMapper::toDto)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }

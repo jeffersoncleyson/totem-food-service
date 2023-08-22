@@ -19,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -79,7 +80,7 @@ class SearchOrderUseCaseTest {
     void sortedOrderByStatusWhenSortedFlagIsTrue() {
 
         //## Mock - Object
-        var filter = OrderFilterDto.builder().customerId("123").sorted(true).build();
+        var filter = OrderFilterDto.builder().customerId("123").onlyTreadmill(true).build();
 
         var order1 = createOrder("1", "NEW");
         var order2 = createOrder("2", "READY");
@@ -91,11 +92,11 @@ class SearchOrderUseCaseTest {
 
         //## Given
         when(iSearchOrderRepositoryPort.findAll(filter)).thenReturn(List.of(
-                OrderModel.builder().id("1").status(OrderStatusEnumDomain.NEW).build(),
-                OrderModel.builder().id("2").status(OrderStatusEnumDomain.READY).build(),
-                OrderModel.builder().id("3").status(OrderStatusEnumDomain.RECEIVED).build(),
-                OrderModel.builder().id("4").status(OrderStatusEnumDomain.IN_PREPARATION).build(),
-                OrderModel.builder().id("5").status(OrderStatusEnumDomain.FINALIZED).build()));
+                OrderModel.builder().id("1").status(OrderStatusEnumDomain.NEW).createAt(ZonedDateTime.now()).build(),
+                OrderModel.builder().id("2").status(OrderStatusEnumDomain.READY).createAt(ZonedDateTime.now().plusMinutes(1)).build(),
+                OrderModel.builder().id("3").status(OrderStatusEnumDomain.RECEIVED).createAt(ZonedDateTime.now()).build(),
+                OrderModel.builder().id("4").status(OrderStatusEnumDomain.IN_PREPARATION).createAt(ZonedDateTime.now()).build(),
+                OrderModel.builder().id("5").status(OrderStatusEnumDomain.FINALIZED).createAt(ZonedDateTime.now().plusMinutes(3)).build()));
 
         //## When
         var result = searchOrderUseCase.items(filter);
