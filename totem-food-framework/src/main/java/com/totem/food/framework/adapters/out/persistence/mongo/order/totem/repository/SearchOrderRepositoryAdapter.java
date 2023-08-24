@@ -31,6 +31,7 @@ public class SearchOrderRepositoryAdapter implements ISearchRepositoryPort<Order
 
         @Query("{'status': {$in: ?0}}")
         List<OrderEntity> findByStatus(Set<String> status);
+
     }
 
     private final SearchOrderRepositoryAdapter.OrderRepositoryMongoDB repository;

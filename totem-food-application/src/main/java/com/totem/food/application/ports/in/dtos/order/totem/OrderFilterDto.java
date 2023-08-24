@@ -12,5 +12,6 @@ public class OrderFilterDto {
     private String customerId;
     private String orderId;
     private Set<String> status;
+    private Boolean onlyTreadmill;
 
 }
