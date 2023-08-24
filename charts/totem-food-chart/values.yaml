@@ -10,25 +10,25 @@ service:
 
 secrets:
   database:
-    host: bW9uZ28tZGV2
-    port: MjcwMTc=
-    dbname: bW9uZ29kYi5zdmMuY2x1c3Rlci5sb2NhbA==
-    username: cm9vdA==
-    password: cXdlMTIz
-    auth: YWRtaW4=
+    host: mongo-mongodb-service.default.svc.cluster.local
+    port: 27017
+    dbname: totem-food
+    username: root
+    password: qwe123
+    auth: admin
   email:
-    host: bWFpbGhvZy5zdmMuY2x1c3Rlci5sb2NhbA==
-    port: MTAyNQ==
-    username: dXNlcm5hbWU=
-    password: cGFzc3dvcmQ=
+    host: mailhog-mailhog-service.default.svc.cluster.local
+    port: 1025
+    username: username
+    password: password
     auth:
-      enabled: ZmFsc2U=
+      enabled: false
     tls:
-      enabled: ZmFsc2U=
-    email: Y29udGF0b0B0b3RlbS5mb29kLnNlcnZpY2UuY29tLmJy
+      enabled: false
+    email: contato@totem.food.service.com.br
   payment:
     gateway:
-      url: aHR0cDovL3BheW1lbnQtZ2F0ZXdheS5zdmMuY2x1c3Rlci5sb2NhbDo1MDAwL3YxL29ubGluZS1wYXltZW50
+      url: http://payment-payment-gateway-service.default.svc.cluster.local:5000/v1/online-payment
 
 ## https://towardsdatascience.com/how-to-set-up-ingress-controller-in-aws-eks-d745d9107307
 ingress:
@@ -37,7 +37,7 @@ ingress:
     type: Prefix
 
 hpa:
-  min_replicas: 2
+  min_replicas: 1
   max_replicas: 10
   target:
     avg:
