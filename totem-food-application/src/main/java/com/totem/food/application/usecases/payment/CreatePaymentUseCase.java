@@ -14,14 +14,11 @@ import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.application.ports.out.web.ISendRequestPort;
 import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
-import com.totem.food.domain.customer.CustomerDomain;
 import com.totem.food.domain.exceptions.InvalidStatusException;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
-import com.totem.food.domain.order.totem.OrderDomain;
 import com.totem.food.domain.payment.PaymentDomain;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.mapstruct.factory.Mappers;
 
 import java.util.Optional;
 import java.util.UUID;

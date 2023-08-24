@@ -6,7 +6,6 @@ import com.totem.food.application.exceptions.ExternalCommunicationInvalid;
 import com.totem.food.application.ports.in.dtos.payment.PaymentQRCodeDto;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.application.ports.out.web.ISendRequestPort;
-import com.totem.food.domain.payment.PaymentDomain;
 import com.totem.food.framework.adapters.out.web.payment.config.PaymentConfigs;
 import com.totem.food.framework.adapters.out.web.payment.entity.PaymentResponseEntity;
 import com.totem.food.framework.adapters.out.web.payment.mapper.IPaymentRequestMapper;

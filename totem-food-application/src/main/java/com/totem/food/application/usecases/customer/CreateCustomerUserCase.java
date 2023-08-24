@@ -9,7 +9,6 @@ import com.totem.food.application.ports.out.persistence.commons.IExistsRepositor
 import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
 import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
-import com.totem.food.domain.customer.CustomerDomain;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor

@@ -5,7 +5,6 @@ import com.totem.food.application.ports.in.dtos.customer.CustomerDto;
 import com.totem.food.application.ports.in.mappers.customer.ICustomerMapper;
 import com.totem.food.application.ports.out.persistence.commons.ILoginRepositoryPort;
 import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
-import com.totem.food.domain.customer.CustomerDomain;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;

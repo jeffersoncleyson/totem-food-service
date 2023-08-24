@@ -1,7 +1,6 @@
 package com.totem.food.framework.adapters.in.rest.payment;
 
 import com.totem.food.application.ports.in.dtos.payment.PaymentFilterDto;
-import com.totem.food.application.ports.in.dtos.product.ProductCreateDto;
 import com.totem.food.application.usecases.commons.IUpdateUseCase;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +25,6 @@ import static com.totem.food.framework.adapters.in.rest.constants.Routes.TOTEM_P
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("test")

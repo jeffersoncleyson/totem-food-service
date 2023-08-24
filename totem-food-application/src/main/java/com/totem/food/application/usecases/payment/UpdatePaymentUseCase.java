@@ -12,7 +12,6 @@ import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.IUpdateUseCase;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
-import com.totem.food.domain.order.totem.OrderDomain;
 import com.totem.food.domain.payment.PaymentDomain;
 import lombok.AllArgsConstructor;
 
