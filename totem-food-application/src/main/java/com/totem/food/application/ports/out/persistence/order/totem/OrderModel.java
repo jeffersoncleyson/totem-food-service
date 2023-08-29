@@ -3,7 +3,11 @@ package com.totem.food.application.ports.out.persistence.order.totem;
 import com.totem.food.domain.customer.CustomerDomain;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import com.totem.food.domain.product.ProductDomain;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.ZonedDateTime;
 import java.util.List;

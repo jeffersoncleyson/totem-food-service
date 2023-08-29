@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: {{ .Release.Name }}-mailhog
+    app.kubernetes.io/name: {{ .Release.Name }}-mailhog
+  name: {{ .Release.Name }}-mailhog
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}-mailhog
+      app.kubernetes.io/name: {{ .Release.Name }}-mailhog
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-mailhog
+        app.kubernetes.io/instance: {{ .Release.Name }}-mailhog
+        app.kubernetes.io/name: {{ .Release.Name }}-mailhog
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+          - containerPort: 1025
+            name: smtp
+            protocol: TCP
+          - containerPort: 8025
+            name: dashboard
+            protocol: TCP
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 200m
+            memory: 256Mi
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30

@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-payment-gateway-service
+  labels:
+    app.kubernetes.io/instance: {{ .Release.Name }}-payment-gateway
+    app.kubernetes.io/name: {{ .Release.Name }}-payment-gateway
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 5000
+      targetPort: http
+  selector:
+    app.kubernetes.io/instance: {{ .Release.Name }}-payment-gateway
+    app.kubernetes.io/name: {{ .Release.Name }}-payment-gateway
+  type: {{ .Values.service.type }}
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  internalTrafficPolicy: Cluster

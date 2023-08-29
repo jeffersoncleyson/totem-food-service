@@ -6,7 +6,6 @@ import com.totem.food.domain.payment.PaymentDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.payment.entity.PaymentEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.payment.mapper.IPaymentEntityMapper;
 import lombok.SneakyThrows;
-import mocks.domains.PaymentDomainMock;
 import mocks.entity.PaymentEntityMock;
 import mocks.models.PaymentModelMock;
 import org.junit.jupiter.api.AfterEach;

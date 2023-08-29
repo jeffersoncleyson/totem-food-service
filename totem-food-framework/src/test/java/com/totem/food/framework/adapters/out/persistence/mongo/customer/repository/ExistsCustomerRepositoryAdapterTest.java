@@ -1,7 +1,6 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.customer.repository;
 
 import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
-import com.totem.food.domain.customer.CustomerDomain;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

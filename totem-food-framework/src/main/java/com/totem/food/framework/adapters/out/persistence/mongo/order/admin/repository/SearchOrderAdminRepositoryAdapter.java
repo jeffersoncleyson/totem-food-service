@@ -31,6 +31,7 @@ public class SearchOrderAdminRepositoryAdapter implements ISearchRepositoryPort<
         List<OrderAdminEntity> findByStatus(Set<String> status);
 
         List<OrderAdminEntity> findAll();
+
     }
 
     private final SearchOrderAdminRepositoryAdapter.OrderRepositoryMongoDB repository;

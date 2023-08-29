@@ -430,6 +430,11 @@
 									"key": "status",
 									"value": "FINALIZED",
 									"disabled": true
+								},
+								{
+									"key": "onlyTreadmill",
+									"value": "true",
+									"disabled": true
 								}
 							]
 						}
@@ -665,6 +670,11 @@
 								{
 									"key": "status",
 									"value": "WAITING_PAYMENT",
+									"disabled": true
+								},
+								{
+									"key": "onlyTreadmill",
+									"value": "true",
 									"disabled": true
 								}
 							]

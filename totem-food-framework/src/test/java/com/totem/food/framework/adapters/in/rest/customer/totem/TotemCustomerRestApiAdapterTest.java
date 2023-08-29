@@ -2,7 +2,6 @@ package com.totem.food.framework.adapters.in.rest.customer.totem;
 
 import com.totem.food.application.ports.in.dtos.customer.CustomerCreateDto;
 import com.totem.food.application.ports.in.dtos.customer.CustomerDto;
-import com.totem.food.application.ports.in.dtos.product.ProductDto;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
 import com.totem.food.application.usecases.commons.IDeleteUseCase;
 import com.totem.food.framework.test.utils.TestUtils;
@@ -27,10 +26,10 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;

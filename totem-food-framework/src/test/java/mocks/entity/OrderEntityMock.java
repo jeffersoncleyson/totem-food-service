@@ -6,7 +6,6 @@ import org.bson.types.ObjectId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import static com.totem.food.domain.order.enums.OrderStatusEnumDomain.NEW;
 

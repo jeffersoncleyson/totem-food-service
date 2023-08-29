@@ -10,7 +10,6 @@ import com.totem.food.application.ports.out.persistence.commons.ICreateRepositor
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.product.ProductModel;
 import com.totem.food.domain.category.CategoryDomain;
-import com.totem.food.domain.product.ProductDomain;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
