@@ -10,14 +10,14 @@ service:
 
 secrets:
   database:
-    host: mongo-mongodb-service.default.svc.cluster.local
+    host: mongo-mongodb-service.totem-apps.svc.cluster.local
     port: 27017
     dbname: totem-food
     username: root
     password: qwe123
     auth: admin
   email:
-    host: mailhog-mailhog-service.default.svc.cluster.local
+    host: mailhog-mailhog-service.totem-apps.svc.cluster.local
     port: 1025
     username: username
     password: password
@@ -28,7 +28,7 @@ secrets:
     email: contato@totem.food.service.com.br
   payment:
     gateway:
-      url: http://payment-payment-gateway-service.default.svc.cluster.local:5000/v1/online-payment
+      url: http://payment-payment-gateway-service.totem-apps.svc.cluster.local:5000/v1/online-payment
 
 ## https://towardsdatascience.com/how-to-set-up-ingress-controller-in-aws-eks-d745d9107307
 ingress:

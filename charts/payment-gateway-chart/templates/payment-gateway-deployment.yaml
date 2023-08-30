@@ -33,7 +33,13 @@ spec:
           requests:
             cpu: 200m
             memory: 256Mi
-
+        volumeMounts:
+          - name: config-mock
+            mountPath: /app/mocks
+      volumes:
+        - name: config-mock
+          configMap:
+            name: {{ .Release.Name }}-payment-gateway-configmap
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
