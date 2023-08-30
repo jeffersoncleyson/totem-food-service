@@ -11,7 +11,6 @@ import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import lombok.SneakyThrows;
-import mock.domain.OrderDomainMock;
 import mock.models.OrderModelMock;
 import mock.models.PaymentModelMock;
 import org.junit.jupiter.api.AfterEach;

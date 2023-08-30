@@ -1,7 +1,6 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.order.totem.repository;
 
 import com.totem.food.application.ports.in.dtos.order.totem.OrderFilterDto;
-import com.totem.food.domain.order.totem.OrderDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.order.totem.mapper.IOrderEntityMapper;
 import lombok.SneakyThrows;
 import mocks.domains.OrderDomainMock;
@@ -9,7 +8,6 @@ import mocks.entity.OrderEntityMock;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;

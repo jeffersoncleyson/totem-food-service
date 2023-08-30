@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "44c95624-d08e-442b-9558-002036efefd8",
-		"name": "Entrega Fase 1",
+		"name": "Entrega Fase 1 e 2",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "16179794"
 	},
@@ -430,6 +430,11 @@
 									"key": "status",
 									"value": "FINALIZED",
 									"disabled": true
+								},
+								{
+									"key": "onlyTreadmill",
+									"value": "true",
+									"disabled": true
 								}
 							]
 						}
@@ -665,6 +670,11 @@
 								{
 									"key": "status",
 									"value": "WAITING_PAYMENT",
+									"disabled": true
+								},
+								{
+									"key": "onlyTreadmill",
+									"value": "true",
 									"disabled": true
 								}
 							]

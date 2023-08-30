@@ -2,7 +2,6 @@ package com.totem.food.framework.adapters.out.persistence.mongo.payment.reposito
 
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
-import com.totem.food.domain.payment.PaymentDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.payment.entity.PaymentEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.payment.mapper.IPaymentEntityMapper;
 import lombok.SneakyThrows;

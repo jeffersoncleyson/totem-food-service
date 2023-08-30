@@ -1,0 +1,17 @@
+replicaCount: 1
+
+image:
+  repository: mongo
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+
+secrets:
+  root:
+    username: cm9vdA==
+    password: cXdlMTIz
+
+env:
+  name: dev

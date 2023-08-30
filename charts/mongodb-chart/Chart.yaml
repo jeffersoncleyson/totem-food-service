@@ -1,0 +1,6 @@
+apiVersion: v2
+name: mongodb-chart
+description: NoSQL Database
+version: 0.1.0
+appVersion: "latest"
+icon: https://www.mongodb.com/assets/images/global/favicon.ico

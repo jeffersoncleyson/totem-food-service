@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: {{ .Release.Name }}-mongodb
+    app.kubernetes.io/name: {{ .Release.Name }}-mongodb
+  name: {{ .Release.Name }}-mongodb
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}-mongodb
+      app.kubernetes.io/name: {{ .Release.Name }}-mongodb
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-mongodb
+        app.kubernetes.io/instance: {{ .Release.Name }}-mongodb
+        app.kubernetes.io/name: {{ .Release.Name }}-mongodb
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        envFrom:
+          - secretRef:
+              name: {{ .Release.Name }}-mongodb-secrets
+        ports:
+          - containerPort: 27017
+            name: http
+            protocol: TCP
+        resources:
+          limits:
+            cpu: 2000m
+            memory: 2Gi
+          requests:
+            cpu: 500m
+            memory: 1Gi
+
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30

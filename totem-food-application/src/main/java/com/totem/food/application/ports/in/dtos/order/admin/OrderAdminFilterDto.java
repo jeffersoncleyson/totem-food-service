@@ -10,5 +10,6 @@ import java.util.Set;
 public class OrderAdminFilterDto {
 
     private Set<String> status;
+    private Boolean onlyTreadmill;
 
 }

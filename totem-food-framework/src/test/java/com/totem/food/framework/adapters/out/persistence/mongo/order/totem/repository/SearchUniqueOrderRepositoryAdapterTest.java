@@ -2,7 +2,6 @@ package com.totem.food.framework.adapters.out.persistence.mongo.order.totem.repo
 
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
-import com.totem.food.domain.order.totem.OrderDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.order.totem.entity.OrderEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.order.totem.mapper.IOrderEntityMapper;
 import lombok.SneakyThrows;

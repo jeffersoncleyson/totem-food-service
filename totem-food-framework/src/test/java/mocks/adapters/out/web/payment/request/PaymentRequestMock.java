@@ -1,7 +1,6 @@
 package mocks.adapters.out.web.payment.request;
 
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
-import com.totem.food.domain.order.totem.OrderDomain;
 import com.totem.food.domain.payment.PaymentDomain;
 import lombok.NoArgsConstructor;
 import mocks.domains.CustomerDomainMock;

@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-mailhog-service
+  labels:
+    app.kubernetes.io/instance: {{ .Release.Name }}-mailhog
+    app.kubernetes.io/name: {{ .Release.Name }}-mailhog
+spec:
+  ports:
+    - name: smtp
+      protocol: TCP
+      port: 1025
+      targetPort: smtp
+    - name: dashboard
+      protocol: TCP
+      port: 8025
+      targetPort: dashboard
+  selector:
+    app.kubernetes.io/instance: {{ .Release.Name }}-mailhog
+    app.kubernetes.io/name: {{ .Release.Name }}-mailhog
+  type: {{ .Values.service.type }}
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  internalTrafficPolicy: Cluster

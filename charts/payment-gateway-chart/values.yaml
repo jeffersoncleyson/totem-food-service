@@ -1,0 +1,12 @@
+replicaCount: 1
+
+image:
+  repository: jeffersoncleyson/payment-gateway
+  tag: "v1.0.0"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+
+env:
+  name: dev

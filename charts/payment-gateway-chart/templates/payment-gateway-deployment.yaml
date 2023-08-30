@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: {{ .Release.Name }}-payment-gateway
+    app.kubernetes.io/name: {{ .Release.Name }}-payment-gateway
+  name: {{ .Release.Name }}-payment-gateway
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}-payment-gateway
+      app.kubernetes.io/name: {{ .Release.Name }}-payment-gateway
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-payment-gateway
+        app.kubernetes.io/instance: {{ .Release.Name }}-payment-gateway
+        app.kubernetes.io/name: {{ .Release.Name }}-payment-gateway
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+          - containerPort: 5000
+            name: http
+            protocol: TCP
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 200m
+            memory: 256Mi
+        volumeMounts:
+          - name: config-mock
+            mountPath: /app/mocks
+      volumes:
+        - name: config-mock
+          configMap:
+            name: {{ .Release.Name }}-payment-gateway-configmap
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
