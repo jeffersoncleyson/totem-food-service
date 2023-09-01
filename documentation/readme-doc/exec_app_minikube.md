@@ -13,8 +13,8 @@ Cada helm chart é responsável por subir uma aplicação, ao final do processo 
 
 - MongoDB **
 - MailHog **
-- Payment Gateway ***
-- Totem Food Service ***
+- Payment Gateway **
+- Totem Food Service **
 
 ** Helm Charts se encontram na pasta [charts](../../charts)
 
@@ -39,6 +39,9 @@ minikube node add
 ```
 
 3. Mostra todos os contextos do kube config
+```
+kubectl config get-contexts
+```
 ```
 CURRENT   NAME                                                                         CLUSTER                                                                      AUTHINFO                                                                     NAMESPACE
           arn:aws:eks:sa-east-1:xxx3yyyyy:cluster/developing        arn:aws:eks:sa-east-1:xxx3yyyyy:cluster/developing        arn:aws:eks:sa-east-1:xxx3yyyyy:cluster/developing        
