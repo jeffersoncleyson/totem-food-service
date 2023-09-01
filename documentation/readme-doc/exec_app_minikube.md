@@ -40,9 +40,6 @@ minikube node add
 
 3. Mostra todos os contextos do kube config
 ```
-kubectl config get-contexts
-```
-```
 CURRENT   NAME                                                                         CLUSTER                                                                      AUTHINFO                                                                     NAMESPACE
           arn:aws:eks:sa-east-1:xxx3yyyyy:cluster/developing        arn:aws:eks:sa-east-1:xxx3yyyyy:cluster/developing        arn:aws:eks:sa-east-1:xxx3yyyyy:cluster/developing        
 *         minikube                                                                     minikube                                                                     minikube                                                                     default
