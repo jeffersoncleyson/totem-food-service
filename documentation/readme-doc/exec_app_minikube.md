@@ -13,8 +13,8 @@ Cada helm chart é responsável por subir uma aplicação, ao final do processo 
 
 - MongoDB **
 - MailHog **
-- Payment Gateway ***
-- Totem Food Service ***
+- Payment Gateway **
+- Totem Food Service **
 
 ** Helm Charts se encontram na pasta [charts](../../charts)
 
