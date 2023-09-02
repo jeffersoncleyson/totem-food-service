@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: jeffersoncleyson/totem-food-service
-  tag: "v1.0.1"
+  tag: "v2.0.0"
   pullPolicy: IfNotPresent
 
 service:
