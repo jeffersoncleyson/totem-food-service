@@ -24,12 +24,6 @@ public interface ICustomerMapper {
 
     CustomerModel toModel(CustomerDomain input);
 
-    @Mapping(source = "password", target = "password", qualifiedByName = "hashingPassword")
     CustomerDomain toDomain(CustomerCreateDto input);
-
-    @Named("hashingPassword")
-    default String hashingPassword(String password) {
-        return Utils.hash256(password);
-    }
 
 }

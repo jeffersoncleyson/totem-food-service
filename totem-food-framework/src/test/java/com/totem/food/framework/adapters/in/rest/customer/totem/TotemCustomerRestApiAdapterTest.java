@@ -1,7 +1,9 @@
 package com.totem.food.framework.adapters.in.rest.customer.totem;
 
+import com.totem.food.application.ports.in.dtos.customer.CustomerConfirmDto;
 import com.totem.food.application.ports.in.dtos.customer.CustomerCreateDto;
 import com.totem.food.application.ports.in.dtos.customer.CustomerDto;
+import com.totem.food.application.usecases.commons.IConfirmUseCase;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
 import com.totem.food.application.usecases.commons.IDeleteUseCase;
 import com.totem.food.framework.test.utils.TestUtils;
@@ -44,6 +46,8 @@ class TotemCustomerRestApiAdapterTest {
     private ICreateUseCase<CustomerCreateDto, CustomerDto> createCustomerUseCase;
     @Mock
     private IDeleteUseCase<String, CustomerDto> iDeleteUseCase;
+    @Mock
+    private IConfirmUseCase<Boolean, CustomerConfirmDto> iConfirmUseCase;
 
     private MockMvc mockMvc;
 
@@ -52,7 +56,7 @@ class TotemCustomerRestApiAdapterTest {
     @BeforeEach
     void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
-        final var totemCustomerRestApiAdapter = new TotemCustomerRestApiAdapter(createCustomerUseCase, iDeleteUseCase);
+        final var totemCustomerRestApiAdapter = new TotemCustomerRestApiAdapter(createCustomerUseCase, iDeleteUseCase, iConfirmUseCase);
         mockMvc = MockMvcBuilders.standaloneSetup(totemCustomerRestApiAdapter).build();
     }
 

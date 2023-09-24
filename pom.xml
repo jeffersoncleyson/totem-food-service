@@ -145,6 +145,26 @@
                 <version>${assertj-core.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>cognitoidentity</artifactId>
+                <version>2.20.109</version>
+            </dependency>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>cognitoidentityprovider</artifactId>
+                <version>2.20.109</version>
+            </dependency>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>sso</artifactId>
+                <version>2.20.109</version>
+            </dependency>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>ssooidc</artifactId>
+                <version>2.20.109</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <build>

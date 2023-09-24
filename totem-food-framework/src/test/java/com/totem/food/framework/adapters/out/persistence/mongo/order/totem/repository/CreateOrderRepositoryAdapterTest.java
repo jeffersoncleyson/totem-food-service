@@ -57,7 +57,7 @@ class CreateOrderRepositoryAdapterTest {
         //## Mock - Object
         var orderEntity = OrderEntityMock.getMock();
         orderEntity.setId("745e557e-fe6d-4c6d-8ef4-44222c92612b");
-        orderEntity.getCustomer().setId("edc49fd2-a59d-402b-b1b3-fc05d9e1287d");
+        orderEntity.setCpf("edc49fd2-a59d-402b-b1b3-fc05d9e1287d");
         var orderDomain = OrderModelMock.getOrderModel(OrderStatusEnumDomain.NEW);
         orderDomain.getCustomer().setId("edc49fd2-a59d-402b-b1b3-fc05d9e1287d");
         orderDomain.setId("745e557e-fe6d-4c6d-8ef4-44222c92612b");

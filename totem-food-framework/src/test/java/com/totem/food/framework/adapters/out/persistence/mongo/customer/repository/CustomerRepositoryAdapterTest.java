@@ -3,6 +3,7 @@ package com.totem.food.framework.adapters.out.persistence.mongo.customer.reposit
 import com.totem.food.application.ports.in.dtos.customer.CustomerFilterDto;
 import com.totem.food.framework.adapters.out.persistence.mongo.customer.entity.CustomerEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.customer.mapper.ICustomerEntityMapper;
+import com.totem.food.framework.adapters.out.web.cognito.request.SearchCustomerRepositoryAdapter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.env.Environment;
 
 import java.util.List;
 
@@ -29,12 +31,12 @@ class CustomerRepositoryAdapterTest {
     private ICustomerEntityMapper iCustomerEntityMapper = Mappers.getMapper(ICustomerEntityMapper.class);
 
     @Mock
-    private SearchCustomerRepositoryAdapter.CustomerRepositoryMongoDB repository;
+    private Environment env;
 
     @BeforeEach
     public void beforeEach() {
         MockitoAnnotations.openMocks(this);
-        customerRepositoryAdapter = new SearchCustomerRepositoryAdapter(repository, iCustomerEntityMapper);
+        customerRepositoryAdapter = new SearchCustomerRepositoryAdapter(env, iCustomerEntityMapper);
     }
 
     @Test
@@ -43,7 +45,6 @@ class CustomerRepositoryAdapterTest {
         //## Given
         final var customersEntity = List.of(getMock(), getMock());
         final var customerFilter = new CustomerFilterDto("Name");
-        when(repository.findAll()).thenReturn(customersEntity);
 
         //## When
         var listCategoryDomain = customerRepositoryAdapter.findAll(customerFilter);

@@ -148,7 +148,7 @@ class TotemOrderRestApiAdapterTest {
         orderDto.setPrice(25.0);
 
         var orderFilterDto = OrderFilterDto.builder()
-                .customerId("123")
+                .cpf("123")
                 .orderId("1")
                 .status(Set.of("NEW"))
                 .build();
@@ -157,7 +157,7 @@ class TotemOrderRestApiAdapterTest {
         when(iSearchProductUseCase.items(any(OrderFilterDto.class))).thenReturn(Collections.singletonList(orderDto));
 
         final var httpServletRequest = get(endpoint)
-                .queryParam("customerId", orderFilterDto.getCustomerId());
+                .queryParam("customerId", orderFilterDto.getCpf());
 
         //### When
         final var resultActions = mockMvc.perform(httpServletRequest);

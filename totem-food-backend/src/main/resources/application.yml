@@ -46,3 +46,10 @@ app:
   version: ^project.version^
   name: ^project.name^
   description: ^project.description^
+
+
+cognito:
+  userPool:
+    id: "us-east-1_rokv4Vo0G"
+    clientId: "898uctqs2rhphnpd1gboes1bs"
+    clientSecret: "1grqth8uitv6d2u3vgadc2oi9cfth57f8jq4til42fh6a91bs58d"
