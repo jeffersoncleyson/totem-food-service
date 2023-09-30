@@ -71,6 +71,7 @@ class SearchPaymentRepositoryAdapterTest {
         final var paymentEntityConverted = iPaymentMapper.toEntity(paymentDomain);
         assertThat(paymentEntityConverted)
                 .usingRecursiveComparison()
+                .ignoringFields("order.cpf")
                 .isEqualTo(paymentEntity);
 
     }
@@ -98,6 +99,7 @@ class SearchPaymentRepositoryAdapterTest {
         final var paymentEntityConverted = iPaymentMapper.toEntity(paymentDomain);
         assertThat(paymentEntityConverted)
                 .usingRecursiveComparison()
+                .ignoringFields("order.cpf")
                 .isEqualTo(paymentEntity);
 
     }

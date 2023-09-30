@@ -14,8 +14,8 @@ public class DeleteCustomerUseCase implements IDeleteUseCase<String, CustomerDto
     private final IRemoveRepositoryPort<CustomerModel> iRemoveRepositoryPort;
 
     @Override
-    public CustomerDto removeItem(String id) {
-        iRemoveRepositoryPort.removeItem(id);
+    public CustomerDto removeItem(String authorization) {
+        iRemoveRepositoryPort.removeItem(authorization);
         return null;
     }
 }

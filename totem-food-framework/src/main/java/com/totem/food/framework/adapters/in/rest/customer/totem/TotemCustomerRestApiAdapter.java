@@ -39,7 +39,7 @@ public class TotemCustomerRestApiAdapter implements ICreateRestApiPort<CustomerC
     }
 
     @Override
-    @DeleteMapping(CUSTOMER_ID)
+    @DeleteMapping
     public ResponseEntity<Void> deleteById(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorization) {
         iDeleteUseCase.removeItem(authorization);
         return ResponseEntity.noContent().build();

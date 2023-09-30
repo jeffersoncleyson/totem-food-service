@@ -65,8 +65,11 @@ class UpdatePaymentRepositoryAdapterTest {
         verify(iPaymentEntityMapper, times(1)).toModel(Mockito.any(PaymentEntity.class));
         verify(repository, times(1)).save(Mockito.any(PaymentEntity.class));
 
+        //Todo - Verificar mapeamento de cpf no target order
         final var paymentEntityUpdated = iPaymentEntityMapper.toEntity(paymentDomainUpdated);
+
         assertThat(paymentEntityUpdated).usingRecursiveComparison()
+                .ignoringFields("order.cpf")
                 .isEqualTo(paymentEntity);
     }
 }

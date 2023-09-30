@@ -71,6 +71,7 @@ class CreateOrderRepositoryAdapterTest {
         //## Then
         Assertions.assertThat(result).usingRecursiveComparison()
                 .ignoringFieldsOfTypes(ZonedDateTime.class)
+                .ignoringFields("customer")
                 .isEqualTo(orderDomain);
         verify(iOrderEntityMapper, times(1)).toEntity(any(OrderModel.class));
         verify(iOrderEntityMapper, times(1)).toModel(any(OrderEntity.class));

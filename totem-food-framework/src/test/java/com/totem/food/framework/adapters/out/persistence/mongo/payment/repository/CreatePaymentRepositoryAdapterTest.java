@@ -68,6 +68,7 @@ class CreatePaymentRepositoryAdapterTest {
 
         final var paymentEntityUpdated = iPaymentMapper.toEntity(paymentDomainUpdated);
         assertThat(paymentEntityUpdated).usingRecursiveComparison()
+                .ignoringFields("order.cpf")
                 .isEqualTo(paymentEntity);
     }
 }

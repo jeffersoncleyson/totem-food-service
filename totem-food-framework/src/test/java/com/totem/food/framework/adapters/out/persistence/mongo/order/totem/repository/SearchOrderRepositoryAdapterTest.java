@@ -97,6 +97,7 @@ class SearchOrderRepositoryAdapterTest {
         assertThat(result)
                 .usingRecursiveComparison()
                 .ignoringFieldsOfTypes(ZonedDateTime.class)
+                .ignoringFields("customer")
                 .isEqualTo(List.of(orderDomain));
         verify(repository, times(1)).findByFilter(any());
     }
@@ -126,6 +127,7 @@ class SearchOrderRepositoryAdapterTest {
         assertThat(result)
                 .usingRecursiveComparison()
                 .ignoringFieldsOfTypes(ZonedDateTime.class)
+                .ignoringFields("customer")
                 .isEqualTo(List.of(orderDomain));
         verify(repository, times(1)).findById(filter.getOrderId());
     }

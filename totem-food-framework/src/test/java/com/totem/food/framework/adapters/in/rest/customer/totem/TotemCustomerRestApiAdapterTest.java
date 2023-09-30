@@ -18,6 +18,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.cloud.openfeign.security.OAuth2AccessTokenInterceptor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -127,16 +129,17 @@ class TotemCustomerRestApiAdapterTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = "/v1/totem/customer/{customerId}")
+    @ValueSource(strings = "/v1/totem/customer")
     void deleteCustomer(String endpoint) throws Exception {
-
-        //## Given
-        final var id = new ObjectId().toHexString();
 
         //### Given - Mocks
         when(iDeleteUseCase.removeItem(Mockito.anyString())).thenReturn(null);
 
-        final var httpServletRequest = delete(endpoint, id);
+        final var httpServletRequest = delete(endpoint)
+                .header(
+                        OAuth2AccessTokenInterceptor.AUTHORIZATION,
+                        OAuth2AccessTokenInterceptor.BEARER.concat(" access_token")
+                );
 
         //### When
         final var resultActions = mockMvc.perform(httpServletRequest);
