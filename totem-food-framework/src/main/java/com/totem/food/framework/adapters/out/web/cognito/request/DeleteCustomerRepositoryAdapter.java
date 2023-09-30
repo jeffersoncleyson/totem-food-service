@@ -4,6 +4,7 @@ import com.totem.food.application.ports.out.persistence.commons.IRemoveRepositor
 import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
 import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepository;
 import com.totem.food.framework.adapters.out.persistence.mongo.customer.entity.CustomerEntity;
+import com.totem.food.framework.adapters.out.web.cognito.config.CognitoClient;
 import com.totem.food.framework.adapters.out.web.cognito.utils.CognitoUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,7 @@ import java.util.Optional;
 @Component
 public class DeleteCustomerRepositoryAdapter implements IRemoveRepositoryPort<CustomerModel> {
 
+	private final CognitoClient cognitoClient;
 	private static final String BEARER_ = "Bearer ";
 
 	@Override
@@ -33,16 +35,13 @@ public class DeleteCustomerRepositoryAdapter implements IRemoveRepositoryPort<Cu
 				.map(t -> t.replace(BEARER_, ""))
 				.orElseThrow();
 
-		try (CognitoIdentityProviderClient cognitoClient = CognitoIdentityProviderClient.builder()
-				.region(Region.US_EAST_1)
-				.credentialsProvider(ProfileCredentialsProvider.create("soat1"))
-				.build()) {
+		try (CognitoIdentityProviderClient client = cognitoClient.connect()) {
 
 			DeleteUserRequest deleteRequest = DeleteUserRequest.builder()
 					.accessToken(token)
 					.build();
 
-			cognitoClient.deleteUser(deleteRequest);
+			client.deleteUser(deleteRequest);
 
 		} catch (CognitoIdentityProviderException e) {
 			throw new RuntimeException(e);

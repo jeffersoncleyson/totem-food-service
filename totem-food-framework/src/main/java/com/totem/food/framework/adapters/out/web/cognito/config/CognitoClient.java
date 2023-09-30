@@ -1,0 +1,30 @@
+package com.totem.food.framework.adapters.out.web.cognito.config;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.RequestScope;
+import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
+
+import java.util.Objects;
+
+@Component
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class CognitoClient {
+
+    private CognitoIdentityProviderClient client;
+
+    public CognitoIdentityProviderClient connect(){
+        if(Objects.nonNull(this.client)){
+            return this.client;
+        }
+        return CognitoIdentityProviderClient.builder()
+                .region(Region.US_EAST_1)
+                .credentialsProvider(ProfileCredentialsProvider.create("soat1"))
+                .build();
+    }
+}

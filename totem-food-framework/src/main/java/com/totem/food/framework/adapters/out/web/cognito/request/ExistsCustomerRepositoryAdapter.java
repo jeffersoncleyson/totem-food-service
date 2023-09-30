@@ -2,6 +2,7 @@ package com.totem.food.framework.adapters.out.web.cognito.request;
 
 import com.totem.food.application.ports.out.persistence.commons.IExistsRepositoryPort;
 import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
+import com.totem.food.framework.adapters.out.web.cognito.config.CognitoClient;
 import com.totem.food.framework.adapters.out.web.cognito.utils.CognitoUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -18,19 +19,18 @@ import java.util.Optional;
 @Component
 public class ExistsCustomerRepositoryAdapter implements IExistsRepositoryPort<CustomerModel, Boolean> {
 
+    private final CognitoClient cognitoClient;
     private final String userPoolId;
 
-    public ExistsCustomerRepositoryAdapter(Environment env) {
+    public ExistsCustomerRepositoryAdapter(Environment env, CognitoClient cognitoClient) {
         this.userPoolId = env.getProperty("cognito.userPool.id");
+        this.cognitoClient = cognitoClient;
     }
 
 
     @Override
     public Boolean exists(CustomerModel item) {
-        try (CognitoIdentityProviderClient cognitoClient = CognitoIdentityProviderClient.builder()
-                .region(Region.US_EAST_1)
-                .credentialsProvider(ProfileCredentialsProvider.create("soat1"))
-                .build()) {
+        try (CognitoIdentityProviderClient client = cognitoClient.connect()) {
 
             String filter = "username = \"%s\"".formatted(item.getCpf());
             ListUsersRequest usersRequest = ListUsersRequest.builder()
@@ -38,7 +38,7 @@ public class ExistsCustomerRepositoryAdapter implements IExistsRepositoryPort<Cu
                     .filter(filter)
                     .build();
 
-            ListUsersResponse response = cognitoClient.listUsers(usersRequest);
+            ListUsersResponse response = client.listUsers(usersRequest);
             Optional<UserType> user = response.users().stream().findFirst();
 
             if(user.isPresent()){

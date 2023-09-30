@@ -5,6 +5,7 @@ import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
 import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepository;
 import com.totem.food.framework.adapters.out.persistence.mongo.customer.entity.CustomerEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.customer.mapper.ICustomerEntityMapper;
+import com.totem.food.framework.adapters.out.web.cognito.config.CognitoClient;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.env.Environment;
@@ -22,21 +23,18 @@ import java.util.stream.Collectors;
 @Component
 public class SearchUniqueCustomerRepositoryAdapter implements ISearchUniqueRepositoryPort<Optional<CustomerModel>> {
 
-    private final ICustomerEntityMapper iCustomerEntityMapper;
+    private final CognitoClient cognitoClient;
     private final String userPoolId;
 
-    public SearchUniqueCustomerRepositoryAdapter(Environment env, ICustomerEntityMapper iCustomerEntityMapper) {
+    public SearchUniqueCustomerRepositoryAdapter(Environment env, CognitoClient cognitoClient) {
         this.userPoolId = env.getProperty("cognito.userPool.id");
-        this.iCustomerEntityMapper = iCustomerEntityMapper;
+        this.cognitoClient = cognitoClient;
     }
 
     @Override
     public Optional<CustomerModel> findById(String id) {
 
-        try (CognitoIdentityProviderClient cognitoClient = CognitoIdentityProviderClient.builder()
-                .region(Region.US_EAST_1)
-                .credentialsProvider(ProfileCredentialsProvider.create("soat1"))
-                .build()) {
+        try (CognitoIdentityProviderClient client = cognitoClient.connect()) {
 
             String filter = "sub = \"%s\"".formatted(id);
             ListUsersRequest usersRequest = ListUsersRequest.builder()
@@ -44,7 +42,7 @@ public class SearchUniqueCustomerRepositoryAdapter implements ISearchUniqueRepos
                     .filter(filter)
                     .build();
 
-            ListUsersResponse response = cognitoClient.listUsers(usersRequest);
+            ListUsersResponse response = client.listUsers(usersRequest);
             Optional<UserType> user = response.users().stream().findFirst();
 
             if(user.isPresent()){
