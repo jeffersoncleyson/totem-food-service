@@ -11,6 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CustomerConfirmDto {
 
-    private String customerId;
+    private String cpf;
     private String code;
 }

@@ -1,13 +1,12 @@
 package com.totem.food.framework.adapters.out.web.cognito.request;
 
+import com.totem.food.application.exceptions.ExternalCommunicationInvalid;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
 import com.totem.food.framework.adapters.out.web.cognito.config.CognitoClient;
 import com.totem.food.framework.adapters.out.web.cognito.utils.CognitoUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
-import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AttributeType;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.CognitoIdentityProviderException;
@@ -66,7 +65,7 @@ public class CreateCustomerRepositoryAdapter implements ICreateRepositoryPort<Cu
             client.signUp(signUpRequest);
 
         } catch(CognitoIdentityProviderException | NoSuchAlgorithmException | InvalidKeyException e) {
-            throw new RuntimeException(e);
+            throw new ExternalCommunicationInvalid("Error to integrate with user service");
         }
 
         return item;

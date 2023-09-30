@@ -1,19 +1,17 @@
 package com.totem.food.framework.adapters.out.web.cognito.request;
 
+import com.totem.food.application.exceptions.ExternalCommunicationInvalid;
 import com.totem.food.application.ports.out.persistence.commons.IExistsRepositoryPort;
 import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
 import com.totem.food.framework.adapters.out.web.cognito.config.CognitoClient;
-import com.totem.food.framework.adapters.out.web.cognito.utils.CognitoUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
-import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.CognitoIdentityProviderException;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.ListUsersRequest;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.ListUsersResponse;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.UserType;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Component
@@ -47,7 +45,7 @@ public class ExistsCustomerRepositoryAdapter implements IExistsRepositoryPort<Cu
 
 
         } catch (CognitoIdentityProviderException e) {
-            throw new RuntimeException(e);
+            throw new ExternalCommunicationInvalid("Error to integrate with user service");
         }
 
         return false;
