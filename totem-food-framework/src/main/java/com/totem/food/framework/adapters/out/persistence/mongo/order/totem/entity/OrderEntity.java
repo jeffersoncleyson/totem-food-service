@@ -1,6 +1,5 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.order.totem.entity;
 
-import com.totem.food.framework.adapters.out.persistence.mongo.customer.entity.CustomerEntity;
 import com.totem.food.framework.adapters.out.persistence.mongo.product.entity.ProductEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
