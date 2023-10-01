@@ -1,6 +1,7 @@
 package com.totem.food.framework.adapters.out.web.cognito.request;
 
 import com.totem.food.application.exceptions.ExternalCommunicationInvalid;
+import com.totem.food.application.exceptions.InvalidInput;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
 import com.totem.food.framework.adapters.out.web.cognito.config.CognitoClient;
@@ -9,8 +10,11 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AttributeType;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.CodeDeliveryFailureException;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.CognitoIdentityProviderException;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.InvalidPasswordException;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.SignUpRequest;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.UsernameExistsException;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -64,6 +68,12 @@ public class CreateCustomerRepositoryAdapter implements ICreateRepositoryPort<Cu
 
             client.signUp(signUpRequest);
 
+        } catch (UsernameExistsException e){
+            throw new InvalidInput("Error username already exists");
+        } catch(InvalidPasswordException e){
+            throw new InvalidInput("Error invalid password");
+        } catch (CodeDeliveryFailureException e){
+            throw new ExternalCommunicationInvalid("Error to delivery code");
         } catch(CognitoIdentityProviderException | NoSuchAlgorithmException | InvalidKeyException e) {
             throw new ExternalCommunicationInvalid("Error to integrate with user service");
         }

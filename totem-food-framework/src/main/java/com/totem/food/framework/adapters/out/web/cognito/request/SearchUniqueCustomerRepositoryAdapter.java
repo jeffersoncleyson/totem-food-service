@@ -13,6 +13,8 @@ import software.amazon.awssdk.services.cognitoidentityprovider.model.ListUsersRe
 import software.amazon.awssdk.services.cognitoidentityprovider.model.ListUsersResponse;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.UserType;
 
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -42,7 +44,7 @@ public class SearchUniqueCustomerRepositoryAdapter implements ISearchUniqueRepos
             ListUsersResponse response = client.listUsers(usersRequest);
             Optional<UserType> user = response.users().stream().findFirst();
 
-            if(user.isPresent()){
+            if (user.isPresent()) {
 
                 Map<String, String> mapAttributes = user.get()
                         .attributes()
@@ -50,14 +52,14 @@ public class SearchUniqueCustomerRepositoryAdapter implements ISearchUniqueRepos
                         .collect(Collectors.toMap(AttributeType::name, AttributeType::value));
 
                 return Optional.of(new CustomerModel(
-                    mapAttributes.getOrDefault("sub", null),
-                    mapAttributes.getOrDefault("custom:name", null),
-                    mapAttributes.getOrDefault("custom:cpf", ""),
-                    mapAttributes.getOrDefault("email", ""),
-                    mapAttributes.getOrDefault("custom:mobile", null),
-                    "",
-                    null,
-                    null
+                        mapAttributes.getOrDefault("sub", null),
+                        mapAttributes.getOrDefault("custom:name", null),
+                        mapAttributes.getOrDefault("custom:cpf", ""),
+                        mapAttributes.getOrDefault("email", ""),
+                        mapAttributes.getOrDefault("custom:mobile", null),
+                        null,
+                        ZonedDateTime.ofInstant(user.get().userLastModifiedDate(), ZoneOffset.UTC),
+                        ZonedDateTime.ofInstant(user.get().userCreateDate(), ZoneOffset.UTC)
                 ));
             }
 
