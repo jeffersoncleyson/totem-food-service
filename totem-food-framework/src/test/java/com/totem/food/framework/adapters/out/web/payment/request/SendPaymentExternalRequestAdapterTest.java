@@ -79,7 +79,7 @@ class SendPaymentExternalRequestAdapterTest {
 
         //### Given - Objects and Values
         final var pathPaymentGateway = "/payment-gateway";
-        final var paymentGatewayURL = "http://one.my.domain".concat(pathPaymentGateway);
+        final var paymentGatewayURL = "http://localhost".concat(":" + wm.getPort()).concat(pathPaymentGateway);
         final var paymentRequest = PaymentRequestMock.paymentDomain();
 
         final var paymentResponse = PaymentResponseEntityMock.responseEntity();
@@ -87,7 +87,7 @@ class SendPaymentExternalRequestAdapterTest {
 
         //### Given - Mocks
         wm.stubFor(WireMock.post(pathPaymentGateway)
-                .withHost(WireMock.equalTo("one.my.domain"))
+                .withHost(WireMock.equalTo("localhost"))
                 .willReturn(WireMock.ok(json).withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)));
         when(paymentConfigs.getUrl()).thenReturn(paymentGatewayURL);
 
@@ -116,13 +116,13 @@ class SendPaymentExternalRequestAdapterTest {
 
         //### Given - Objects and Values
         final var pathPaymentGateway = "/payment-gateway";
-        final var paymentGatewayURL = "http://one.my.domain".concat(pathPaymentGateway);
+        final var paymentGatewayURL = "http://localhost".concat(":" + wm.getPort()).concat(pathPaymentGateway);
         final var paymentRequest = PaymentRequestMock.paymentDomain();
 
-        final var paymentResponse = PaymentResponseEntityMock.responseEntity();
-        final var json = TestUtils.toJSON(paymentResponse).orElseThrow();
-
         //### Given - Mocks
+        wm.stubFor(WireMock.post(pathPaymentGateway)
+                .withHost(WireMock.equalTo("localhost"))
+                .willReturn(WireMock.serverError().withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)));
         when(paymentConfigs.getUrl()).thenReturn(paymentGatewayURL);
 
         //### When
@@ -144,7 +144,7 @@ class SendPaymentExternalRequestAdapterTest {
 
         //### Given - Objects and Values
         final var pathPaymentGateway = "/payment-gateway";
-        final var paymentGatewayURL = "http://one.my.domain".concat(pathPaymentGateway);
+        final var paymentGatewayURL = "http://localhost".concat(":" + wm.getPort()).concat(pathPaymentGateway);
         final var paymentRequest = PaymentRequestMock.paymentDomain();
 
         final var uuid = UUID.randomUUID().toString();
@@ -159,7 +159,7 @@ class SendPaymentExternalRequestAdapterTest {
 
         //### Given - Mocks
         wm.stubFor(WireMock.post(pathPaymentGateway)
-                .withHost(WireMock.equalTo("one.my.domain"))
+                .withHost(WireMock.equalTo("localhost"))
                 .willReturn(WireMock.badRequest()
                         .withHeaders(new com.github.tomakehurst.wiremock.http.HttpHeaders(List.of(idempotency, contentType)))
                 ));
