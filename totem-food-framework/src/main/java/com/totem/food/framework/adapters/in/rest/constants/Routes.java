@@ -17,7 +17,7 @@ public class Routes {
     public static final String ADM_CUSTOMER = "/administrative/customer";
     public static final String TOTEM_CUSTOMER = "/totem/customer";
     public static final String TOTEM_LOGIN = "/totem/login";
-    public static final String CUSTOMER_ID = "/{customerId}";
+    public static final String CUSTOMER_ID = "/{cpf}";
     public static final String CONFIRM_CUSTOMER = "/code/{code}";
 
     //######## ORDER
