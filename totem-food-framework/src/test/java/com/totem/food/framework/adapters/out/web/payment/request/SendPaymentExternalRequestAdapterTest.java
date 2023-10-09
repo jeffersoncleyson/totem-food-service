@@ -6,9 +6,9 @@ import com.totem.food.application.exceptions.ExternalCommunicationInvalid;
 import com.totem.food.application.ports.in.dtos.payment.PaymentQRCodeDto;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.application.ports.out.web.ISendRequestPort;
+import com.totem.food.framework.adapters.out.web.payment.client.MercadoPagoClient;
 import com.totem.food.framework.adapters.out.web.payment.config.PaymentConfigs;
 import com.totem.food.framework.adapters.out.web.payment.entity.PaymentResponseEntity;
-import com.totem.food.framework.adapters.out.web.payment.mapper.IPaymentRequestMapper;
 import com.totem.food.framework.adapters.out.web.payment.mapper.IPaymentResponseMapper;
 import com.totem.food.framework.test.utils.TestUtils;
 import lombok.SneakyThrows;
@@ -47,8 +47,10 @@ class SendPaymentExternalRequestAdapterTest {
 
     @Spy
     private RestTemplate restTemplate;
+
     @Spy
-    private IPaymentRequestMapper iPaymentRequestMapper = Mappers.getMapper(IPaymentRequestMapper.class);
+    private MercadoPagoClient mercadoPagoClient;
+
     @Spy
     private IPaymentResponseMapper iPaymentResponseMapper = Mappers.getMapper(IPaymentResponseMapper.class);
     @Mock
@@ -65,7 +67,7 @@ class SendPaymentExternalRequestAdapterTest {
     @BeforeEach
     void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
-        sendRequestPort = new SendPaymentExternalRequestAdapter(restTemplate, iPaymentRequestMapper, iPaymentResponseMapper, paymentConfigs);
+        sendRequestPort = new SendPaymentExternalRequestAdapter(iPaymentResponseMapper, mercadoPagoClient);
     }
 
     @SneakyThrows
@@ -96,7 +98,6 @@ class SendPaymentExternalRequestAdapterTest {
 
 
         //### Then
-        verify(iPaymentRequestMapper, times(1)).toEntity(Mockito.any(PaymentModel.class));
         verify(paymentConfigs, times(1)).getUrl();
         verify(restTemplate, times(1)).postForEntity(
                 Mockito.any(URI.class),
@@ -130,7 +131,6 @@ class SendPaymentExternalRequestAdapterTest {
 
         //### Then
         assertEquals("Payment system is unavailable", exception.getMessage());
-        verify(iPaymentRequestMapper, times(1)).toEntity(Mockito.any(PaymentModel.class));
         verify(paymentConfigs, times(1)).getUrl();
         verify(restTemplate, times(1)).postForEntity(
                 Mockito.any(URI.class),
@@ -174,7 +174,6 @@ class SendPaymentExternalRequestAdapterTest {
                 "Invalid communication with endpoint [%s] receive status [%s] with idempotence [%s]",
                 paymentGatewayURL, HttpStatus.BAD_REQUEST.value(), uuid
         ), exception.getMessage());
-        verify(iPaymentRequestMapper, times(1)).toEntity(Mockito.any(PaymentModel.class));
         verify(paymentConfigs, times(1)).getUrl();
         verify(restTemplate, times(1)).postForEntity(
                 Mockito.any(URI.class),

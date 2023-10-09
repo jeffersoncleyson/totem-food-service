@@ -12,7 +12,7 @@ import lombok.Setter;
 public class PaymentQRCodeDto {
 
     private String qrcodeBase64;
-    private String qrcode;
+    private String storeOrderId;
     private String status;
     private String paymentId;
 }
