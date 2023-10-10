@@ -23,4 +23,7 @@ public interface IPaymentMapper {
 
     PaymentModel toModel(PaymentDomain input);
 
+    @Mapping(source = "qrcodeBase64", target = "qrcodeBase64")
+    PaymentModel toModel(PaymentDto input);
+
 }

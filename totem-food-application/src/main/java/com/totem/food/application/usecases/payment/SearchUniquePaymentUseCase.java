@@ -17,9 +17,9 @@ public class SearchUniquePaymentUseCase implements ISearchUniqueUseCase<String, 
     private final ISearchUniqueRepositoryPort<Optional<PaymentModel>> iSearchUniqueRepositoryPort;
     private final IPaymentMapper iPaymentMapper;
 
-
     @Override
     public Optional<PaymentDto> item(String id) {
         return iSearchUniqueRepositoryPort.findById(id).map(iPaymentMapper::toDto);
     }
+
 }

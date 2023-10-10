@@ -1,4 +1,4 @@
-package com.totem.food.framework.adapters.out.web.google;
+package com.totem.food.framework.adapters.out.web.google.client;
 
 import feign.Headers;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RequestParam;
         "Content-Type: application/json; charset=utf-8",
         "Accept: application/json; charset=utf-8"
 })
-public interface GoogleChart {
+public interface GoogleClient {
 
     @GetMapping("/chart")
     byte[] getImageQrCode(@RequestParam("chs") String chs,
                           @RequestParam("cht") String cht,
-                          @RequestParam("chl") String data,
-                          @RequestParam("chld") String chld);
+                          @RequestParam("chld") String chld,
+                          @RequestParam("chl") String data);
 }

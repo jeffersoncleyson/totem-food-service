@@ -33,6 +33,7 @@ public class PaymentMocks {
         return new PaymentDto(
                 UUID.randomUUID().toString(),
                 25.0D,
+                UUID.randomUUID().toString(),
                 PaymentDomain.PaymentStatus.COMPLETED.key,
                 ZonedDateTime.now(ZoneOffset.UTC),
                 ZonedDateTime.now(ZoneOffset.UTC)

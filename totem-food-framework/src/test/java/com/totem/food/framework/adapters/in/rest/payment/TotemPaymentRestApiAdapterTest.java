@@ -3,6 +3,7 @@ package com.totem.food.framework.adapters.in.rest.payment;
 import com.totem.food.application.ports.in.dtos.payment.PaymentCreateDto;
 import com.totem.food.application.ports.in.dtos.payment.PaymentDto;
 import com.totem.food.application.ports.in.dtos.payment.PaymentQRCodeDto;
+import com.totem.food.application.usecases.commons.ICreateImageUseCase;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
 import com.totem.food.application.usecases.commons.ISearchUniqueUseCase;
 import com.totem.food.domain.payment.PaymentDomain;
@@ -50,6 +51,8 @@ class TotemPaymentRestApiAdapterTest {
     private ICreateUseCase<PaymentCreateDto, PaymentQRCodeDto> iCreateUseCase;
     @Mock
     private ISearchUniqueUseCase<String, Optional<PaymentDto>> iSearchUniqueUseCase;
+    @Mock
+    private ICreateImageUseCase<PaymentDto, byte[]> iCreateImageUseCase;
 
     private MockMvc mockMvc;
     private AutoCloseable autoCloseable;
@@ -57,7 +60,7 @@ class TotemPaymentRestApiAdapterTest {
     @BeforeEach
     void setup() {
         autoCloseable = MockitoAnnotations.openMocks(this);
-        final var totemPaymentRestApiAdapter = new TotemPaymentRestApiAdapter(iCreateUseCase, iSearchUniqueUseCase);
+        final var totemPaymentRestApiAdapter = new TotemPaymentRestApiAdapter(iCreateUseCase, iSearchUniqueUseCase, iCreateImageUseCase);
         mockMvc = MockMvcBuilders.standaloneSetup(totemPaymentRestApiAdapter).build();
     }
 

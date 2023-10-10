@@ -508,7 +508,14 @@
 					"name": "/totem/payment/:paymentId",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "withImageQrCode",
+								"value": "true",
+								"description": "Se verdadeiro, Gerar imagem de QR Code, caso contrário, mostrar informações.",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "{{backend}}/totem/payment/:paymentId",
 							"host": [

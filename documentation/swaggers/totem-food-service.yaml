@@ -546,9 +546,16 @@ paths:
           required: true
           schema:
             type: string
+        - name: withImageQrCode
+          in: header
+          description: If true, Generate QR Code image, else show information.
+          required: false
+          schema:
+            type: boolean
+            default: true
       responses:
-        '201':
-          description: created operation
+        '200':
+          description: success operation
           content:
             application/json:
               schema:
@@ -849,10 +856,10 @@ components:
           type: string
           description: base64
           example: 'iVBORw0KGgoAAAANSUhEUgAABRQAAAUUCAYAAACu5p7oAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAIABJREFUeJzs2luO3LiWQNFmI+Y/Zd6vRt36KGNXi7ZOBtcagHD4kNLeiLX33v8DAAAAABD879sDAAAAAAA/h6AIAAAAAGSCIgAAAACQCYoAAAAAQCYoAgAAAACZoAgAAAAAZIIiAAAAAJAJigAAAABAJigCAAAAAJmgCAAAAABkgiIAAAAAkAmKAAAAAEAmKAIAAAAAmaAIAAAAAGSCIgAAAACQCYoAAAAAQCYoAgAAAACZoAgAAAAAZIIiAAAAAJAJigAAAABAJigCA...'
-        qrcode:
+        storeOrderId:
           type: string
-          description: QRCode
-          example: '00020126600014br.gov.bcb.pix0117test@testuser.com0217dados adicionais520400005303986540510.005802BR5913Maria Silva6008Brasilia62070503***6304E2CA'
+          description: order store identification
+          example: 'cb87fb30-db28-46d6-8878-46bd6847624e'
         paymentId:
           type: string
           description: order identification
@@ -881,6 +888,10 @@ components:
           example: '5.90'
         status:
           $ref: '#/components/schemas/PaymentStatusEnum'
+        qrcodeBase64:
+          type: string
+          description: base64 to generate qr code
+          example: '00020101021243650016COM.MERCADOLIBRE020130636cb87fb30-db28-46d6-8878-46bd6847624e5204000053039865802BR5909Test Test6009SAO PAULO62070503***6304535B'
         modifiedAt:
           type: string
           format: date-time

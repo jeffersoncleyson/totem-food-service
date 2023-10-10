@@ -8,15 +8,13 @@ import com.totem.food.framework.adapters.out.web.payment.entity.PaymentItemsRequ
 import com.totem.food.framework.adapters.out.web.payment.entity.PaymentRequestEntity;
 import com.totem.food.framework.adapters.out.web.payment.mapper.IPaymentResponseMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-@Service
-@Log4j2
+@Component
 @RequiredArgsConstructor
 public class SendPaymentExternalRequestAdapter implements ISendRequestPort<PaymentModel, PaymentQRCodeDto> {
 
