@@ -30,6 +30,7 @@ public class PaymentEntity {
     private String status;
     private double price;
     private String token;
+    private String qrcodeBase64;
     private ZonedDateTime modifiedAt;
     private ZonedDateTime createAt;
 }

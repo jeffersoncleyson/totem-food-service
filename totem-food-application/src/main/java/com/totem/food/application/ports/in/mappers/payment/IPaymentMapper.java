@@ -5,6 +5,7 @@ import com.totem.food.application.ports.in.dtos.payment.PaymentDto;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.domain.payment.PaymentDomain;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
 
@@ -15,9 +16,11 @@ public interface IPaymentMapper {
 
     PaymentDomain toDomain(PaymentCreateDto input);
 
+    @Mapping(source = "qrcodeBase64", target = "qrcodeBase64")
     PaymentDto toDto(PaymentModel input);
 
     PaymentDomain toDomain(PaymentModel input);
 
     PaymentModel toModel(PaymentDomain input);
+
 }
