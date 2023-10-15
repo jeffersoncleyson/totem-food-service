@@ -28,6 +28,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -50,7 +51,7 @@ class UpdateStatusOrderUseCaseTest {
     @Mock
     private ISendEmailPort<EmailNotificationDto, Boolean> iSendEmailPort;
     @Mock
-    private ISearchRepositoryPort<PaymentFilterDto, PaymentModel> iSearchPaymentRepositoryPort;
+    private ISearchRepositoryPort<PaymentFilterDto, List<PaymentModel>> iSearchPaymentRepositoryPort;
 
     private IUpdateStatusUseCase<OrderDto> iUpdateStatusUseCase;
     private AutoCloseable closeable;
@@ -59,11 +60,11 @@ class UpdateStatusOrderUseCaseTest {
     void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
         iUpdateStatusUseCase = new UpdateStatusOrderUseCase(
-            iOrderMapper,
-            iSearchUniqueRepositoryPort,
-            iProductRepositoryPort,
-            iSendEmailPort,
-            iSearchPaymentRepositoryPort
+                iOrderMapper,
+                iSearchUniqueRepositoryPort,
+                iProductRepositoryPort,
+                iSendEmailPort,
+                iSearchPaymentRepositoryPort
         );
     }
 
@@ -124,7 +125,7 @@ class UpdateStatusOrderUseCaseTest {
 
         //## Mocks
         when(iSearchUniqueRepositoryPort.findById(Mockito.anyString())).thenReturn(Optional.of(orderDomain));
-        when(iSearchPaymentRepositoryPort.findAll(Mockito.any(PaymentFilterDto.class))).thenReturn(paymentDomain);
+        when(iSearchPaymentRepositoryPort.findAll(Mockito.any(PaymentFilterDto.class))).thenReturn(List.of(paymentDomain));
         when(iProductRepositoryPort.updateItem(Mockito.any(OrderModel.class))).thenReturn(orderDomain);
 
         //## When
@@ -163,7 +164,7 @@ class UpdateStatusOrderUseCaseTest {
         verify(iSearchPaymentRepositoryPort, times(1)).findAll(Mockito.any(PaymentFilterDto.class));
         assertEquals(
                 String.format("Order [%s] needs a payment request or Payment is PENDING",
-                orderDomain.getId()), exceptions.getMessage()
+                        orderDomain.getId()), exceptions.getMessage()
         );
     }
 

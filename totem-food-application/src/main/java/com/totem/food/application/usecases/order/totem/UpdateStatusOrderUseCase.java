@@ -18,6 +18,7 @@ import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import com.totem.food.domain.payment.PaymentDomain;
 import lombok.AllArgsConstructor;
 
+import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -28,7 +29,7 @@ public class UpdateStatusOrderUseCase implements IUpdateStatusUseCase<OrderDto> 
     private final ISearchUniqueRepositoryPort<Optional<OrderModel>> iSearchUniqueRepositoryPort;
     private final IUpdateRepositoryPort<OrderModel> iProductRepositoryPort;
     private final ISendEmailPort<EmailNotificationDto, Boolean> iSendEmailPort;
-    private final ISearchRepositoryPort<PaymentFilterDto, PaymentModel> iSearchPaymentRepositoryPort;
+    private final ISearchRepositoryPort<PaymentFilterDto, List<PaymentModel>> iSearchPaymentRepositoryPort;
 
     @Override
     public OrderDto updateStatus(String id, String status) {
