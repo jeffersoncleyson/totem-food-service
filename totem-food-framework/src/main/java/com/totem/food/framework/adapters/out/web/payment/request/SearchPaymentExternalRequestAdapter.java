@@ -3,9 +3,11 @@ package com.totem.food.framework.adapters.out.web.payment.request;
 import com.totem.food.application.ports.in.dtos.payment.PaymentElementDto;
 import com.totem.food.application.ports.out.web.ISendRequestPort;
 import com.totem.food.framework.adapters.out.web.payment.client.MercadoPagoClient;
+import com.totem.food.framework.adapters.out.web.payment.entity.ElementDataResponseEntity;
 import com.totem.food.framework.adapters.out.web.payment.entity.ElementResponseEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -40,8 +42,15 @@ public class SearchPaymentExternalRequestAdapter implements ISendRequestPort<Str
                 .orderStatus(elementEntity.getData().get(0).getOrderStatus())
                 .totalPayment(elementEntity.getData().get(0).getTotalPayment())
                 .updatePayment(elementEntity.getData().get(0).getUpdatePayment())
-                .externalPaymentId(elementEntity.getData().get(0).getPayments().get(0).getId())
+                .externalPaymentId(getElementPaymentId(elementEntity.getData().get(0)))
                 .build();
+    }
+
+    private String getElementPaymentId(ElementDataResponseEntity elementDataResponseEntity) {
+        if (ObjectUtils.isNotEmpty(elementDataResponseEntity.getPayments())) {
+            return elementDataResponseEntity.getPayments().get(0).getId();
+        }
+        return null;
     }
 
 }

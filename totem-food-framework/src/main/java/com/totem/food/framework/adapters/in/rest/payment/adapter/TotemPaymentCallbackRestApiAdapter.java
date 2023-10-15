@@ -43,6 +43,4 @@ public class TotemPaymentCallbackRestApiAdapter {
         return ResponseEntity.noContent().build();
     }
 
-
-
 }
