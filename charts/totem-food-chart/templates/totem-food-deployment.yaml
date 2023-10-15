@@ -29,6 +29,8 @@ spec:
               name: {{ .Release.Name }}-totem-food-email-secrets
           - secretRef:
               name: {{ .Release.Name }}-totem-food-payment-secrets
+          - secretRef:
+              name: {{ .Release.Name }}-totem-food-cognito-secrets
         ports:
           - containerPort: 8080
             name: http

@@ -2,11 +2,15 @@ replicaCount: 1
 
 image:
   repository: jeffersoncleyson/totem-food-service
-  tag: "v2.0.0"
+  tag: "temporary"
   pullPolicy: IfNotPresent
 
 service:
   type: ClusterIP
+
+loadBalancer:
+  totem_food:
+    createPublicLB: false
 
 secrets:
   database:
@@ -29,6 +33,10 @@ secrets:
   payment:
     gateway:
       url: http://payment-payment-gateway-service.totem-apps.svc.cluster.local:5000/v1/online-payment
+  cognito:
+    userPoolId: userPoolId
+    clientId: clientId
+    clientSecret: clientSecret
 
 ## https://towardsdatascience.com/how-to-set-up-ingress-controller-in-aws-eks-d745d9107307
 ingress:

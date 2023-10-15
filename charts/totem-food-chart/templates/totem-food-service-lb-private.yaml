@@ -1,8 +1,10 @@
-{{- if .Values.loadBalancer.totem_food.createPublicLB }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-totem-food-service-lb
+  name: {{ .Release.Name }}-totem-food-service-lb-private
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: nlb
+    service.beta.kubernetes.io/aws-load-balancer-internal: "true"
   labels:
     app.kubernetes.io/instance: {{ .Release.Name }}-totem-food
     app.kubernetes.io/name: {{ .Release.Name }}-totem-food
@@ -16,9 +18,3 @@ spec:
     app.kubernetes.io/instance: {{ .Release.Name }}-totem-food
     app.kubernetes.io/name: {{ .Release.Name }}-totem-food
   type: LoadBalancer
-  ipFamilies:
-    - IPv4
-  ipFamilyPolicy: SingleStack
-  allocateLoadBalancerNodePorts: true
-  internalTrafficPolicy: Cluster
-{{ end }}
