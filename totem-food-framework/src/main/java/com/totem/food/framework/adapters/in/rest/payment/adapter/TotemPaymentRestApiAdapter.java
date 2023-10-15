@@ -1,4 +1,4 @@
-package com.totem.food.framework.adapters.in.rest.payment;
+package com.totem.food.framework.adapters.in.rest.payment.adapter;
 
 import com.totem.food.application.ports.in.dtos.payment.PaymentCreateDto;
 import com.totem.food.application.ports.in.dtos.payment.PaymentDto;

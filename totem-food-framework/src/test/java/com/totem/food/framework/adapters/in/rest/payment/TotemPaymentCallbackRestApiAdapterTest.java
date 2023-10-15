@@ -2,13 +2,13 @@ package com.totem.food.framework.adapters.in.rest.payment;
 
 import com.totem.food.application.ports.in.dtos.payment.PaymentFilterDto;
 import com.totem.food.application.usecases.commons.IUpdateUseCase;
+import com.totem.food.framework.adapters.in.rest.payment.adapter.TotemPaymentCallbackRestApiAdapter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
@@ -22,6 +22,8 @@ import java.util.UUID;
 import static com.totem.food.framework.adapters.in.rest.constants.Routes.API_VERSION_1;
 import static com.totem.food.framework.adapters.in.rest.constants.Routes.PAYMENT_ORDER_ID;
 import static com.totem.food.framework.adapters.in.rest.constants.Routes.TOTEM_PAYMENT_CALLBACK;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -33,10 +35,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class TotemPaymentCallbackRestApiAdapterTest {
 
     @Mock
-    private IUpdateUseCase<PaymentFilterDto, Boolean> iUpdateUseCase;
+    private final IUpdateUseCase<PaymentFilterDto, Boolean> iUpdateUseCase;
 
     private MockMvc mockMvc;
     private AutoCloseable autoCloseable;
+
+    TotemPaymentCallbackRestApiAdapterTest(IUpdateUseCase<PaymentFilterDto, Boolean> iUpdateUseCase) {
+        this.iUpdateUseCase = iUpdateUseCase;
+    }
 
     @BeforeEach
     void setup() {
@@ -55,7 +61,7 @@ class TotemPaymentCallbackRestApiAdapterTest {
     void getItem(String endpoint) throws Exception {
 
         //### Given - Mocks
-        when(iUpdateUseCase.updateItem(Mockito.any(PaymentFilterDto.class), Mockito.anyString())).thenReturn(true);
+        when(iUpdateUseCase.updateItem(any(), anyString())).thenReturn(true);
 
         //### When
         final var httpServletRequest = put(endpoint, UUID.randomUUID().toString())
@@ -74,7 +80,7 @@ class TotemPaymentCallbackRestApiAdapterTest {
     void getItemNotProcessed(String endpoint) throws Exception {
 
         //### Given - Mocks
-        when(iUpdateUseCase.updateItem(Mockito.any(PaymentFilterDto.class), Mockito.anyString())).thenReturn(false);
+        when(iUpdateUseCase.updateItem(any(), anyString())).thenReturn(false);
 
         //### When
         final var httpServletRequest = put(endpoint, UUID.randomUUID().toString())

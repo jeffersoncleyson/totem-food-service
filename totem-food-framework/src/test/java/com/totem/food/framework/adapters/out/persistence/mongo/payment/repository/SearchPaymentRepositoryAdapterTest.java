@@ -14,13 +14,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyList;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -33,7 +36,7 @@ class SearchPaymentRepositoryAdapterTest {
     @Spy
     private IPaymentEntityMapper iPaymentMapper = Mappers.getMapper(IPaymentEntityMapper.class);
 
-    private ISearchRepositoryPort<PaymentFilterDto, PaymentModel> iSearchRepositoryPort;
+    private ISearchRepositoryPort<PaymentFilterDto, List<PaymentModel>> iSearchRepositoryPort;
     private AutoCloseable autoCloseable;
 
     @BeforeEach
@@ -59,16 +62,16 @@ class SearchPaymentRepositoryAdapterTest {
                 .build();
 
         //## Given Mocks
-        when(repository.findByFilter(Mockito.any(), Mockito.any())).thenReturn(paymentEntity);
+        when(repository.findByFilter(any(), any())).thenReturn(paymentEntity);
 
         //## When
         final var paymentDomain = iSearchRepositoryPort.findAll(paymentFilter);
 
         //## Then
-        verify(repository, times(1)).findByFilter(Mockito.any(), Mockito.any());
-        verify(iPaymentMapper, times(1)).toModel(Mockito.any());
+        verify(repository, times(1)).findByFilter(any(), any());
+        verify(iPaymentMapper, times(1)).toModel(anyList());
 
-        final var paymentEntityConverted = iPaymentMapper.toEntity(paymentDomain);
+        final var paymentEntityConverted = iPaymentMapper.toEntity(paymentDomain.get(0));
         assertThat(paymentEntityConverted)
                 .usingRecursiveComparison()
                 .isEqualTo(paymentEntity);
@@ -86,16 +89,16 @@ class SearchPaymentRepositoryAdapterTest {
                 .build();
 
         //## Given Mocks
-        when(repository.findPaymentByOrderAndStatus(Mockito.any(), Mockito.any())).thenReturn(paymentEntity);
+        when(repository.findPaymentByOrderAndStatus(any(), any())).thenReturn(paymentEntity);
 
         //## When
         final var paymentDomain = iSearchRepositoryPort.findAll(paymentFilter);
 
         //## Then
-        verify(repository, times(1)).findPaymentByOrderAndStatus(Mockito.any(), Mockito.any());
-        verify(iPaymentMapper, times(1)).toModel(Mockito.any());
+        verify(repository, times(1)).findPaymentByOrderAndStatus(any(), any());
+        verify(iPaymentMapper, times(1)).toModel(anyList());
 
-        final var paymentEntityConverted = iPaymentMapper.toEntity(paymentDomain);
+        final var paymentEntityConverted = iPaymentMapper.toEntity(paymentDomain.get(0));
         assertThat(paymentEntityConverted)
                 .usingRecursiveComparison()
                 .isEqualTo(paymentEntity);
@@ -113,9 +116,9 @@ class SearchPaymentRepositoryAdapterTest {
 
         //## Then
         assertNull(paymentDomain);
-        verify(repository, times(0)).findByFilter(Mockito.any(), Mockito.any());
-        verify(repository, times(0)).findPaymentByOrderAndStatus(Mockito.any(), Mockito.any());
-        verify(iPaymentMapper, times(0)).toModel(Mockito.any());
+        verify(repository, times(0)).findByFilter(any(), any());
+        verify(repository, times(0)).findPaymentByOrderAndStatus(any(), any());
+        verify(iPaymentMapper, times(0)).toModel(anyList());
 
     }
 }

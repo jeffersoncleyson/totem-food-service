@@ -3,11 +3,12 @@ package com.totem.food.framework.adapters.out.web.payment.request;
 import com.totem.food.application.ports.in.dtos.payment.PaymentQRCodeDto;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.application.ports.out.web.ISendRequestPort;
+import com.totem.food.framework.adapters.in.rest.payment.entity.PaymentItemsRequestEntity;
+import com.totem.food.framework.adapters.in.rest.payment.entity.PaymentRequestEntity;
 import com.totem.food.framework.adapters.out.web.payment.client.MercadoPagoClient;
-import com.totem.food.framework.adapters.out.web.payment.entity.PaymentItemsRequestEntity;
-import com.totem.food.framework.adapters.out.web.payment.entity.PaymentRequestEntity;
 import com.totem.food.framework.adapters.out.web.payment.mapper.IPaymentResponseMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -18,10 +19,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SendPaymentExternalRequestAdapter implements ISendRequestPort<PaymentModel, PaymentQRCodeDto> {
 
-    private static final String POS_ID = "POSTOTEM001";
-    private static final String USER_ID = "1481636739";
-    private static final String TOKEN = "Bearer TEST-105948482427385-091923-6da7fcb314517a7cee96dee919c54ab5-1481636739";
-    private static final String URL_NOTIFICATION = "https://eoywrutussrdfbi.m.pipedream.net/";
+    @Value("${POS_ID}")
+    private String posId;
+
+    @Value("${USER_ID}")
+    private String userId;
+
+    @Value("${TOKEN}")
+    private String token;
+
+    @Value("${URL_NOTIFICATION}")
+    private static String urlNotification;
+
     private static final ZonedDateTime DURATION_QR_CODE = ZonedDateTime.now().plusHours(1);
 
     private final IPaymentResponseMapper iPaymentResponseMapper;
@@ -32,7 +41,7 @@ public class SendPaymentExternalRequestAdapter implements ISendRequestPort<Payme
 
         var paymentRequest = getPaymentRequestEntity(item);
 
-        var paymentResponse = mercadoPagoClient.createOrder(TOKEN, USER_ID, POS_ID, paymentRequest).getBody();
+        var paymentResponse = mercadoPagoClient.createOrder(token, userId, posId, paymentRequest).getBody();
 
         return iPaymentResponseMapper.toDto(paymentResponse);
     }
@@ -45,7 +54,7 @@ public class SendPaymentExternalRequestAdapter implements ISendRequestPort<Payme
                 .title("Atendimento via Totem")
                 .description("Pedido realizado via auto atendimento Totem")
                 .expirationDate(DURATION_QR_CODE)
-                .notificationUrl(URL_NOTIFICATION)
+                .notificationUrl(urlNotification)
                 .build();
     }
 

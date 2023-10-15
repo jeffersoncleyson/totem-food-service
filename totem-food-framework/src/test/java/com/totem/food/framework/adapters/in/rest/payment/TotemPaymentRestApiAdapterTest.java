@@ -7,6 +7,7 @@ import com.totem.food.application.usecases.commons.ICreateImageUseCase;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
 import com.totem.food.application.usecases.commons.ISearchUniqueUseCase;
 import com.totem.food.domain.payment.PaymentDomain;
+import com.totem.food.framework.adapters.in.rest.payment.adapter.TotemPaymentRestApiAdapter;
 import com.totem.food.framework.test.utils.TestUtils;
 import mocks.dtos.PaymentMocks;
 import org.junit.jupiter.api.AfterEach;

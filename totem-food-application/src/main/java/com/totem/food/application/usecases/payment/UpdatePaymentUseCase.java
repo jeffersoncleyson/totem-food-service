@@ -1,6 +1,7 @@
 package com.totem.food.application.usecases.payment;
 
 import com.totem.food.application.exceptions.ElementNotFoundException;
+import com.totem.food.application.ports.in.dtos.payment.PaymentElementDto;
 import com.totem.food.application.ports.in.dtos.payment.PaymentFilterDto;
 import com.totem.food.application.ports.in.mappers.order.totem.IOrderMapper;
 import com.totem.food.application.ports.in.mappers.payment.IPaymentMapper;
@@ -9,12 +10,14 @@ import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRep
 import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
+import com.totem.food.application.ports.out.web.ISendRequestPort;
 import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.IUpdateUseCase;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import com.totem.food.domain.payment.PaymentDomain;
 import lombok.AllArgsConstructor;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -24,46 +27,53 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
 
     private final IPaymentMapper iPaymentMapper;
     private final IOrderMapper iOrderMapper;
-    private final ISearchRepositoryPort<PaymentFilterDto, PaymentModel> iSearchRepositoryPort;
     private final IUpdateRepositoryPort<PaymentModel> iUpdateRepositoryPort;
-    private final ISearchUniqueRepositoryPort<Optional<OrderModel>> iSearchUniqueRepositoryPort;
+    private final ISearchUniqueRepositoryPort<Optional<OrderModel>> iSearchOrderModel;
+    private final ISearchUniqueRepositoryPort<Optional<PaymentModel>> iSearchPaymentModel;
     private final IUpdateRepositoryPort<OrderModel> iUpdateOrderRepositoryPort;
+    private final ISearchRepositoryPort<PaymentFilterDto, List<PaymentModel>> iSearchRepositoryPort;
+    private final ISendRequestPort<String, PaymentElementDto> iSendRequest;
 
     @Override
     public Boolean updateItem(PaymentFilterDto item, String id) {
 
-        final var paymentModel = iSearchRepositoryPort.findAll(item);
+        var paymentsModel = iSearchRepositoryPort.findAll(item);
 
-        if(Objects.nonNull(paymentModel)){
+        for (PaymentModel model : paymentsModel) {
+            var paymentElementDto = iSendRequest.sendRequest(model.getId());
+            model.setExternalId(paymentElementDto.getExternalPaymentId());
+            iUpdateRepositoryPort.updateItem(model);
+        }
 
-            final var paymentDomain = iPaymentMapper.toDomain(paymentModel);
+        final var paymentModel = iSearchPaymentModel.findById(id)
+                .orElseThrow(() -> new ElementNotFoundException(String.format("Payment external [%s] not found", id)));
 
-            if(paymentDomain.getStatus().equals(PaymentDomain.PaymentStatus.COMPLETED)) return Boolean.TRUE;
+        if (Objects.isNull(paymentModel)) {
+            return false;
+        }
 
-            //## Verify Order and Update
-            final var orderModel = iSearchUniqueRepositoryPort.findById(item.getOrderId())
-                    .orElseThrow(() -> new ElementNotFoundException(
-                            String.format("Order with orderId: [%s] not found", item.getOrderId())
-                    ));
+        final var paymentDomain = iPaymentMapper.toDomain(paymentModel);
 
-            final var orderDomain = iOrderMapper.toDomain(orderModel);
-            orderDomain.updateOrderStatus(OrderStatusEnumDomain.RECEIVED);
-            orderDomain.updateModifiedAt();
-            final var orderModelValidated = iOrderMapper.toModel(orderDomain);
-            iUpdateOrderRepositoryPort.updateItem(orderModelValidated);
-
-            //## Update Payment
-            paymentDomain.updateStatus(PaymentDomain.PaymentStatus.COMPLETED);
-            final var paymentModelConverted = iPaymentMapper.toModel(paymentDomain);
-            iUpdateRepositoryPort.updateItem(paymentModelConverted);
+        if (paymentDomain.getStatus().equals(PaymentDomain.PaymentStatus.COMPLETED)) {
             return Boolean.TRUE;
         }
 
-        throw new ElementNotFoundException(
-                String.format("Payment with filters orderId: [%s] token: [%s] not found",
-                        item.getOrderId(),
-                        item.getToken()
-                )
-        );
+        //## Verify Order and Update
+        final var orderModel = iSearchOrderModel.findById(paymentModel.getOrder().getId())
+                .orElseThrow(() -> new ElementNotFoundException(
+                        String.format("Order with orderId: [%s] not found", paymentModel.getOrder().getId())
+                ));
+
+        final var orderDomain = iOrderMapper.toDomain(orderModel);
+        orderDomain.updateOrderStatus(OrderStatusEnumDomain.RECEIVED);
+        orderDomain.updateModifiedAt();
+        final var orderModelValidated = iOrderMapper.toModel(orderDomain);
+        iUpdateOrderRepositoryPort.updateItem(orderModelValidated);
+
+        //## Update Payment
+        paymentDomain.updateStatus(PaymentDomain.PaymentStatus.COMPLETED);
+        final var paymentModelConverted = iPaymentMapper.toModel(paymentDomain);
+        iUpdateRepositoryPort.updateItem(paymentModelConverted);
+        return Boolean.TRUE;
     }
 }

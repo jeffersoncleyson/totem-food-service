@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Getter
 @Setter
@@ -18,5 +18,5 @@ public class PaymentFilterDto {
     private String orderId;
     private String token;
     private String status;
-    private LocalDateTime timeLastOrders;
+    private ZonedDateTime timeLastOrders;
 }
