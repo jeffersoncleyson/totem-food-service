@@ -4,6 +4,7 @@ import com.totem.food.application.ports.in.dtos.payment.PaymentCallbackDto;
 import com.totem.food.application.ports.in.dtos.payment.PaymentFilterDto;
 import com.totem.food.application.usecases.commons.IUpdateUseCase;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,12 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.ZonedDateTime;
-
 import static com.totem.food.domain.payment.PaymentDomain.PaymentStatus.PENDING;
 import static com.totem.food.framework.adapters.in.rest.constants.Routes.API_VERSION_1;
 import static com.totem.food.framework.adapters.in.rest.constants.Routes.TOTEM_PAYMENT_CALLBACK;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = API_VERSION_1 + TOTEM_PAYMENT_CALLBACK)
@@ -26,14 +26,17 @@ public class TotemPaymentCallbackRestApiAdapter {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> callbackPayment(@RequestBody PaymentCallbackDto paymentCallbackDto) {
+
+        log.info("Callback PaymentID: " + paymentCallbackDto.getData().getId());
+
         var filter = PaymentFilterDto.builder()
                 .status(PENDING.name())
-                .timeLastOrders(ZonedDateTime.now().minusHours(1))
                 .build();
 
         final var processed = iUpdateUseCase.updateItem(filter, paymentCallbackDto.getData().getId());
-        if (Boolean.TRUE.equals(processed)) return ResponseEntity.noContent().build();
-        return ResponseEntity.badRequest().build();
+
+        if (Boolean.TRUE.equals(processed)) return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
 }

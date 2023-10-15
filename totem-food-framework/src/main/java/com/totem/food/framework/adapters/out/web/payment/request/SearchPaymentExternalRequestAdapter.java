@@ -3,11 +3,15 @@ package com.totem.food.framework.adapters.out.web.payment.request;
 import com.totem.food.application.ports.in.dtos.payment.PaymentElementDto;
 import com.totem.food.application.ports.out.web.ISendRequestPort;
 import com.totem.food.framework.adapters.out.web.payment.client.MercadoPagoClient;
-import com.totem.food.framework.adapters.out.web.payment.mapper.IPaymentResponseMapper;
+import com.totem.food.framework.adapters.out.web.payment.entity.ElementResponseEntity;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class SearchPaymentExternalRequestAdapter implements ISendRequestPort<String, PaymentElementDto> {
@@ -15,7 +19,6 @@ public class SearchPaymentExternalRequestAdapter implements ISendRequestPort<Str
     @Value("${TOKEN}")
     private String token;
 
-    private final IPaymentResponseMapper iPaymentResponseMapper;
     private final MercadoPagoClient mercadoPagoClient;
 
     @Override
@@ -23,8 +26,22 @@ public class SearchPaymentExternalRequestAdapter implements ISendRequestPort<Str
 
         var elementEntity = mercadoPagoClient.getOrderDetails(token, externalReference).getBody();
 
-        iPaymentResponseMapper.toDto(elementEntity);
+        if (Objects.isNull(elementEntity)) {
+            log.warn("Element is Null to returner partner Mercado Pago");
+            return null;
+        }
 
-        return iPaymentResponseMapper.toDto(elementEntity);
+        return getPaymentElementDto(elementEntity);
     }
+
+    private PaymentElementDto getPaymentElementDto(ElementResponseEntity elementEntity) {
+        return PaymentElementDto.builder()
+                .externalReference(elementEntity.getData().get(0).getExternalReference())
+                .orderStatus(elementEntity.getData().get(0).getOrderStatus())
+                .totalPayment(elementEntity.getData().get(0).getTotalPayment())
+                .updatePayment(elementEntity.getData().get(0).getUpdatePayment())
+                .externalPaymentId(elementEntity.getData().get(0).getPayments().get(0).getId())
+                .build();
+    }
+
 }

@@ -16,6 +16,7 @@ import com.totem.food.application.usecases.commons.IUpdateUseCase;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import com.totem.food.domain.payment.PaymentDomain;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -39,6 +40,11 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
 
         var paymentsModel = iSearchRepositoryPort.findAll(item);
 
+        if (ObjectUtils.isEmpty(paymentsModel)) {
+            return false;
+        }
+
+        //## Search for payments in the partner and update payment in the database
         for (PaymentModel model : paymentsModel) {
             var paymentElementDto = iSendRequest.sendRequest(model.getId());
             model.setExternalId(paymentElementDto.getExternalPaymentId());
@@ -60,9 +66,7 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
 
         //## Verify Order and Update
         final var orderModel = iSearchOrderModel.findById(paymentModel.getOrder().getId())
-                .orElseThrow(() -> new ElementNotFoundException(
-                        String.format("Order with orderId: [%s] not found", paymentModel.getOrder().getId())
-                ));
+                .orElseThrow(() -> new ElementNotFoundException(String.format("Order with orderId: [%s] not found", paymentModel.getOrder().getId())));
 
         final var orderDomain = iOrderMapper.toDomain(orderModel);
         orderDomain.updateOrderStatus(OrderStatusEnumDomain.RECEIVED);

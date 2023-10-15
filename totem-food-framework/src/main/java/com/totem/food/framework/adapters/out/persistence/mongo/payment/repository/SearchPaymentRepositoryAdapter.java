@@ -13,7 +13,6 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -30,8 +29,7 @@ public class SearchPaymentRepositoryAdapter implements ISearchRepositoryPort<Pay
         @Query("{'order' :{'$ref' : 'order' , '$id' : ?0}, 'status' : ?1}")
         PaymentEntity findPaymentByOrderAndStatus(ObjectId order, String status);
 
-        @Query("{'order' :{'$ref' : 'order' , '$id' : ?0}, 'status' : ?1}")
-        List<PaymentEntity> findByStatusAndModifiedAtBetween(String status, ZonedDateTime start, ZonedDateTime end);
+        List<PaymentEntity> findByStatus(String status);
     }
 
     private final PaymentRepositoryMongoDB repository;
@@ -39,8 +37,8 @@ public class SearchPaymentRepositoryAdapter implements ISearchRepositoryPort<Pay
 
     @Override
     public List<PaymentModel> findAll(PaymentFilterDto item) {
-        if (Objects.nonNull(item.getTimeLastOrders())) {
-            final var entitys = repository.findByStatusAndModifiedAtBetween(item.getStatus(), ZonedDateTime.from(item.getTimeLastOrders()), ZonedDateTime.now());
+        if (Objects.nonNull(item.getStatus())) {
+            List<PaymentEntity> entitys = repository.findByStatus(item.getStatus());
             return iPaymentMapper.toModel(entitys);
         } else if (StringUtils.isNotEmpty(item.getOrderId()) && StringUtils.isNotEmpty(item.getToken())) {
             final var entity = repository.findByFilter(new ObjectId(item.getOrderId()), item.getToken());

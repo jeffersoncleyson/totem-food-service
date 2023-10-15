@@ -26,7 +26,7 @@ public interface MercadoPagoClient {
                                                       @PathVariable(name = "pos_id") String posId,
                                                       @RequestBody PaymentRequestEntity paymentRequestEntity);
 
-    @GetMapping(value = "/merchant_orders")
-    ResponseEntity<ElementResponseEntity> getOrderDetails(@RequestHeader(name = "Authorization") String authorization,
+    @GetMapping(value = "/merchant_orders", produces = "application/json")
+    ResponseEntity<ElementResponseEntity> getOrderDetails(@RequestHeader(name = "Authorization") String token,
                                                           @RequestParam("external_reference") String externalReference);
 }
