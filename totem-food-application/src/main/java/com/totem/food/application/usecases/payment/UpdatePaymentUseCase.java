@@ -46,9 +46,11 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
 
         //## Search for payments in the partner and update payment in the database
         for (PaymentModel model : paymentsModel) {
-            var paymentElementDto = iSendRequest.sendRequest(model.getId());
-            model.setExternalId(paymentElementDto.getExternalPaymentId());
-            iUpdateRepositoryPort.updateItem(model);
+            if (Objects.nonNull(model.getId())) {
+                var paymentElementDto = iSendRequest.sendRequest(model.getId());
+                model.setExternalId(paymentElementDto.getExternalPaymentId());
+                iUpdateRepositoryPort.updateItem(model);
+            }
         }
 
         final var paymentModel = iSearchPaymentModel.findById(id)
