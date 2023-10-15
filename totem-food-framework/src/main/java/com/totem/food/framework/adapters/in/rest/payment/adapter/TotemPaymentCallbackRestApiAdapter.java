@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.ZonedDateTime;
 
 import static com.totem.food.domain.payment.PaymentDomain.PaymentStatus.PENDING;
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.API_VERSION_1;
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.TOTEM_PAYMENT_CALLBACK;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/v1/totem/payment/callback")
+@RequestMapping(value = API_VERSION_1 + TOTEM_PAYMENT_CALLBACK)
 public class TotemPaymentCallbackRestApiAdapter {
 
     private final IUpdateUseCase<PaymentFilterDto, Boolean> iUpdateUseCase;

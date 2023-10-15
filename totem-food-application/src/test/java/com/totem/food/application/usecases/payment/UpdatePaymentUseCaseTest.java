@@ -61,7 +61,7 @@ class UpdatePaymentUseCaseTest {
     private IUpdateRepositoryPort<OrderModel> iUpdateOrderRepositoryPort;
 
     @Mock
-    private ISendRequestPort<PaymentModel, PaymentElementDto> iSendRequest;
+    private ISendRequestPort<String, PaymentElementDto>  iSendRequest;
 
     private UpdatePaymentUseCase updatePaymentUseCase;
 
