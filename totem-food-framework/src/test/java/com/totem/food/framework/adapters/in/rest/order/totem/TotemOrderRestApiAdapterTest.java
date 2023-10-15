@@ -1,13 +1,15 @@
 package com.totem.food.framework.adapters.in.rest.order.totem;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.totem.food.application.ports.in.dtos.context.XUserIdentifierContextDto;
 import com.totem.food.application.ports.in.dtos.order.totem.ItemQuantityDto;
 import com.totem.food.application.ports.in.dtos.order.totem.OrderCreateDto;
 import com.totem.food.application.ports.in.dtos.order.totem.OrderDto;
 import com.totem.food.application.ports.in.dtos.order.totem.OrderFilterDto;
 import com.totem.food.application.ports.in.dtos.order.totem.OrderUpdateDto;
 import com.totem.food.application.ports.in.dtos.product.ProductDto;
-import com.totem.food.application.usecases.commons.ICreateUseCase;
+import com.totem.food.application.usecases.commons.IContextUseCase;
+import com.totem.food.application.usecases.commons.ICreateWithIdentifierUseCase;
 import com.totem.food.application.usecases.commons.ISearchUseCase;
 import com.totem.food.application.usecases.commons.IUpdateStatusUseCase;
 import com.totem.food.application.usecases.commons.IUpdateUseCase;
@@ -39,6 +41,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -62,7 +65,7 @@ class TotemOrderRestApiAdapterTest {
     private AutoCloseable autoCloseable;
 
     @Mock
-    private ICreateUseCase<OrderCreateDto, OrderDto> iCreateUseCase;
+    private ICreateWithIdentifierUseCase<OrderCreateDto, OrderDto> iCreateUseCase;
 
     @Mock
     private ISearchUseCase<OrderFilterDto, List<OrderDto>> iSearchProductUseCase;
@@ -73,12 +76,15 @@ class TotemOrderRestApiAdapterTest {
     @Mock
     private IUpdateStatusUseCase<OrderDto> iUpdateStatusUseCase;
 
+    @Mock
+    private IContextUseCase<XUserIdentifierContextDto, String> iContextUseCase;
+
     private TotemOrderRestApiAdapter totemOrderRestApiAdapter;
 
     @BeforeEach
     void setUp() {
         autoCloseable = MockitoAnnotations.openMocks(this);
-        this.totemOrderRestApiAdapter = new TotemOrderRestApiAdapter(iCreateUseCase, iSearchProductUseCase, iUpdateUseCase, iUpdateStatusUseCase);
+        this.totemOrderRestApiAdapter = new TotemOrderRestApiAdapter(iCreateUseCase, iSearchProductUseCase, iUpdateUseCase, iUpdateStatusUseCase, iContextUseCase);
         mockMvc = MockMvcBuilders.standaloneSetup(totemOrderRestApiAdapter).build();
     }
 
@@ -93,8 +99,8 @@ class TotemOrderRestApiAdapterTest {
     void create(String endpoint) throws Exception {
 
         //## Mock - Object
+        final var customerId = "123";
         var orderCreateDto = new OrderCreateDto();
-        orderCreateDto.setCustomerId("123");
         orderCreateDto.setProducts(List.of(new ItemQuantityDto(1, "produto")));
 
         var orderDto = new OrderDto();
@@ -104,8 +110,10 @@ class TotemOrderRestApiAdapterTest {
         orderDto.setStatus("NEW");
         orderDto.setPrice(25.0);
 
+        when(iContextUseCase.getContext()).thenReturn(customerId);
+
         //## Given
-        when(iCreateUseCase.createItem(any(OrderCreateDto.class))).thenReturn(orderDto);
+        when(iCreateUseCase.createItem(any(OrderCreateDto.class), eq(customerId))).thenReturn(orderDto);
 
         final var jsonOpt = TestUtils.toJSON(orderCreateDto);
         final var json = jsonOpt.orElseThrow();
@@ -131,7 +139,7 @@ class TotemOrderRestApiAdapterTest {
                 .ignoringFieldsOfTypes(ZonedDateTime.class)
                 .isNotNull();
 
-        verify(iCreateUseCase, times(1)).createItem(any(OrderCreateDto.class));
+        verify(iCreateUseCase, times(1)).createItem(any(OrderCreateDto.class), eq(customerId));
     }
 
 

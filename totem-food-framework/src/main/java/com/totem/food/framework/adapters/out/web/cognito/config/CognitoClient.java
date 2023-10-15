@@ -23,7 +23,6 @@ public class CognitoClient {
         }
         return CognitoIdentityProviderClient.builder()
                 .region(Region.US_EAST_1)
-                .credentialsProvider(ProfileCredentialsProvider.create("soat1"))
                 .build();
     }
 }

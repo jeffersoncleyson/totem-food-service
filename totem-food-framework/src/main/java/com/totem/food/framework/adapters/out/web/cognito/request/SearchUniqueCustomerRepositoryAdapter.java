@@ -35,7 +35,7 @@ public class SearchUniqueCustomerRepositoryAdapter implements ISearchUniqueRepos
 
         try (CognitoIdentityProviderClient client = cognitoClient.connect()) {
 
-            String filter = "sub = \"%s\"".formatted(id);
+            String filter = "username = \"%s\"".formatted(id);
             ListUsersRequest usersRequest = ListUsersRequest.builder()
                     .userPoolId(userPoolId)
                     .filter(filter)

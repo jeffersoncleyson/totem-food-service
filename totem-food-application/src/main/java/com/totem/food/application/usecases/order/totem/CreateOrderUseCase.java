@@ -17,6 +17,7 @@ import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
 import com.totem.food.application.ports.out.persistence.product.ProductModel;
 import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
+import com.totem.food.application.usecases.commons.ICreateWithIdentifierUseCase;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import com.totem.food.domain.order.totem.OrderDomain;
 import com.totem.food.domain.product.ProductDomain;
@@ -31,7 +32,7 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @UseCase
-public class CreateOrderUseCase implements ICreateUseCase<OrderCreateDto, OrderDto> {
+public class CreateOrderUseCase implements ICreateWithIdentifierUseCase<OrderCreateDto, OrderDto> {
 
     private final IOrderMapper iOrderMapper;
     private final ICustomerMapper iCustomerMapper;
@@ -41,7 +42,7 @@ public class CreateOrderUseCase implements ICreateUseCase<OrderCreateDto, OrderD
     private final ISearchRepositoryPort<ProductFilterDto, List<ProductModel>> iSearchProductRepositoryPort;
 
     @Override
-    public OrderDto createItem(OrderCreateDto item) {
+    public OrderDto createItem(OrderCreateDto item, String customerIdentifier) {
 
         if(!item.isOrderValid()) {
             throw new InvalidInput("Order is invalid");
@@ -49,7 +50,7 @@ public class CreateOrderUseCase implements ICreateUseCase<OrderCreateDto, OrderD
 
         final var domain = new OrderDomain();
 
-        setCustomer(item, domain);
+        setCustomer(customerIdentifier, domain);
         setProductsToDomain(item, domain);
 
         domain.updateOrderStatus(OrderStatusEnumDomain.NEW);
@@ -61,11 +62,11 @@ public class CreateOrderUseCase implements ICreateUseCase<OrderCreateDto, OrderD
         return iOrderMapper.toDto(domainSaved);
     }
 
-    private void setCustomer(OrderCreateDto item, OrderDomain domain) {
+    private void setCustomer(String identifier, OrderDomain domain) {
 
-        if(StringUtils.isNotEmpty(item.getCustomerId())) {
-            final var customerModel = iSearchUniqueCustomerRepositoryPort.findById(item.getCustomerId())
-                    .orElseThrow(() -> new ElementNotFoundException(String.format("Customer [%s] not found", item.getCustomerId())));
+        if(StringUtils.isNotEmpty(identifier)) {
+            final var customerModel = iSearchUniqueCustomerRepositoryPort.findById(identifier)
+                    .orElseThrow(() -> new ElementNotFoundException(String.format("Customer [%s] not found", identifier)));
             final var customerDomain = iCustomerMapper.toDomain(customerModel);
             domain.setCustomer(customerDomain);
         }
