@@ -30,4 +30,7 @@ public class PaymentModel {
     private PaymentDomain.PaymentStatus status = PaymentDomain.PaymentStatus.PENDING;
     private ZonedDateTime modifiedAt;
     private ZonedDateTime createAt;
+
+    @Setter
+    private String externalId;
 }

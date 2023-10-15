@@ -33,4 +33,6 @@ public class PaymentEntity {
     private String qrcodeBase64;
     private ZonedDateTime modifiedAt;
     private ZonedDateTime createAt;
+
+    private String externalId;
 }

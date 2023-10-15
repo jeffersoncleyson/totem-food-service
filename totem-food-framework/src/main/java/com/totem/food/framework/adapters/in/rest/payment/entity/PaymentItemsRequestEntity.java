@@ -1,4 +1,4 @@
-package com.totem.food.framework.adapters.out.web.payment.entity;
+package com.totem.food.framework.adapters.in.rest.payment.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;

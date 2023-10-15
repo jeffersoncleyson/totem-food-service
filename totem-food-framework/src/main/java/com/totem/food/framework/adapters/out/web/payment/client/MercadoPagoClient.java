@@ -1,6 +1,7 @@
 package com.totem.food.framework.adapters.out.web.payment.client;
 
-import com.totem.food.framework.adapters.out.web.payment.entity.PaymentRequestEntity;
+import com.totem.food.framework.adapters.in.rest.payment.entity.PaymentRequestEntity;
+import com.totem.food.framework.adapters.out.web.payment.entity.ElementResponseEntity;
 import com.totem.food.framework.adapters.out.web.payment.entity.PaymentResponseEntity;
 import feign.Headers;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -26,6 +27,6 @@ public interface MercadoPagoClient {
                                                       @RequestBody PaymentRequestEntity paymentRequestEntity);
 
     @GetMapping(value = "/merchant_orders")
-    ResponseEntity<Object> getOrderDetails(@RequestHeader(name = "Authorization") String authorization,
-                                           @RequestParam("external_reference") String externalReference);
+    ResponseEntity<ElementResponseEntity> getOrderDetails(@RequestHeader(name = "Authorization") String authorization,
+                                                          @RequestParam("external_reference") String externalReference);
 }
