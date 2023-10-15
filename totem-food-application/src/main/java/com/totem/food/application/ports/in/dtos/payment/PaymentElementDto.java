@@ -6,17 +6,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class PaymentFilterDto {
+public class PaymentElementDto {
 
-    private String orderId;
-    private String token;
-    private String status;
-    private LocalDateTime timeLastOrders;
+    private String externalReference;
+    private String orderStatus;
+    private String totalPayment;
+    private String updatePayment;
+    private String externalPaymentId;
 }
