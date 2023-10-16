@@ -6,17 +6,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.ZonedDateTime;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class PaymentFilterDto {
+public class PaymentElementDto {
 
-    private String orderId;
-    private String token;
-    private String status;
-    private ZonedDateTime timeLastOrders;
+    private String externalReference;
+    private String orderStatus;
+    private BigDecimal totalPayment;
+    private String updatePayment;
+    private String externalPaymentId;
 }

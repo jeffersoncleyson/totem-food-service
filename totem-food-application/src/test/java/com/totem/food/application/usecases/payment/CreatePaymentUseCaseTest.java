@@ -7,6 +7,7 @@ import com.totem.food.application.ports.in.mappers.order.totem.IOrderMapper;
 import com.totem.food.application.ports.in.mappers.payment.IPaymentMapper;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
+import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
 import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
@@ -46,6 +47,8 @@ class CreatePaymentUseCaseTest {
 
     @Mock
     private ICreateRepositoryPort<PaymentModel> iCreateRepositoryPort;
+    @Mock
+    private IUpdateRepositoryPort<PaymentModel> iUpdateRepositoryPort;
     @Spy
     private IOrderMapper iOrderMapper = Mappers.getMapper(IOrderMapper.class);
     @Spy
@@ -67,7 +70,7 @@ class CreatePaymentUseCaseTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        createPaymentUseCase = new CreatePaymentUseCase(iCreateRepositoryPort, iOrderMapper, iCustomerMapper, iPaymentMapper, iSearchUniqueOrderRepositoryPort, iSearchUniqueCustomerRepositoryPort, iSendRequest);
+        createPaymentUseCase = new CreatePaymentUseCase(iCreateRepositoryPort, iUpdateRepositoryPort, iOrderMapper, iCustomerMapper, iPaymentMapper, iSearchUniqueOrderRepositoryPort, iSearchUniqueCustomerRepositoryPort, iSendRequest);
     }
 
     @SneakyThrows

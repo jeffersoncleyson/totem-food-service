@@ -3,6 +3,7 @@ package com.totem.food;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
@@ -11,6 +12,7 @@ import java.util.Arrays;
 
 @SpringBootApplication(scanBasePackages = "com.totem.food")
 @EnableMongoRepositories(basePackages = "com.totem.food", considerNestedRepositories = true)
+@EnableFeignClients
 public class TotemFoodBackendApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TotemFoodBackendApplication.class,

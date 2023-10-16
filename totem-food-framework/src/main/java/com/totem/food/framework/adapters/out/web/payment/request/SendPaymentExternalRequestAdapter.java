@@ -1,72 +1,71 @@
 package com.totem.food.framework.adapters.out.web.payment.request;
 
-import com.totem.food.application.exceptions.ExternalCommunicationInvalid;
 import com.totem.food.application.ports.in.dtos.payment.PaymentQRCodeDto;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.application.ports.out.web.ISendRequestPort;
-import com.totem.food.framework.adapters.out.web.payment.config.PaymentConfigs;
-import com.totem.food.framework.adapters.out.web.payment.entity.PaymentResponseEntity;
-import com.totem.food.framework.adapters.out.web.payment.mapper.IPaymentRequestMapper;
+import com.totem.food.framework.adapters.in.rest.payment.entity.PaymentItemsRequestEntity;
+import com.totem.food.framework.adapters.in.rest.payment.entity.PaymentRequestEntity;
+import com.totem.food.framework.adapters.out.web.payment.client.MercadoPagoClient;
 import com.totem.food.framework.adapters.out.web.payment.mapper.IPaymentResponseMapper;
-import lombok.AllArgsConstructor;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.time.ZonedDateTime;
+import java.util.List;
 
-@AllArgsConstructor
 @Component
+@RequiredArgsConstructor
 public class SendPaymentExternalRequestAdapter implements ISendRequestPort<PaymentModel, PaymentQRCodeDto> {
 
-    private final RestTemplate restTemplate;
-    private final IPaymentRequestMapper iPaymentRequestMapper;
+    @Value("${POS_ID}")
+    private String posId;
+
+    @Value("${USER_ID}")
+    private String userId;
+
+    @Value("${TOKEN}")
+    private String token;
+    
+    private static final ZonedDateTime DURATION_QR_CODE = ZonedDateTime.now().plusHours(1);
+
     private final IPaymentResponseMapper iPaymentResponseMapper;
-    private final PaymentConfigs paymentConfigs;
+    private final MercadoPagoClient mercadoPagoClient;
 
     @Override
     public PaymentQRCodeDto sendRequest(PaymentModel item) {
 
-        final var entity = iPaymentRequestMapper.toEntity(item);
+        var paymentRequest = getPaymentRequestEntity(item);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Object> body = new HttpEntity<>(entity, headers);
+        var paymentResponse = mercadoPagoClient.createOrder(token, userId, posId, paymentRequest).getBody();
 
-        final var uri = URI.create(paymentConfigs.getUrl());
-        ResponseEntity<PaymentResponseEntity> responseEntity;
-        try {
-            responseEntity = restTemplate.postForEntity(uri, body, PaymentResponseEntity.class);
-        } catch (HttpClientErrorException clientError){
-            responseEntity = new ResponseEntity<>(
-                    new PaymentResponseEntity(),
-                    clientError.getResponseHeaders(),
-                    clientError.getStatusCode()
-            );
-        } catch (Exception ex){
-            throw new ExternalCommunicationInvalid("Payment system is unavailable");
-        }
-
-
-        if(responseEntity.getStatusCode().is2xxSuccessful()){
-            return iPaymentResponseMapper.toDto(responseEntity.getBody());
-        }
-
-        final var idempotence = Optional.of(responseEntity)
-                .map(HttpEntity::getHeaders)
-                .map( h -> h.getFirst(IDEMPOTENCE_KEY))
-                .orElse("");
-
-        throw new ExternalCommunicationInvalid(
-                String.format(
-                        "Invalid communication with endpoint [%s] receive status [%s] with idempotence [%s]",
-                        uri, responseEntity.getStatusCodeValue(), idempotence
-                )
-        );
+        return iPaymentResponseMapper.toDto(paymentResponse);
     }
+
+    private static PaymentRequestEntity getPaymentRequestEntity(PaymentModel item) {
+        return PaymentRequestEntity.builder()
+                .externalReference(item.getId())
+                .totalAmount(BigDecimal.valueOf(item.getPrice()))
+                .items(getItemsRequest(item))
+                .title("Atendimento via Totem")
+                .description("Pedido realizado via auto atendimento Totem")
+                .expirationDate(DURATION_QR_CODE)
+                .notificationUrl("https://composed-firefly-willingly.ngrok-free.app/v1/totem/payment/callback")
+                .build();
+    }
+
+    private static List<PaymentItemsRequestEntity> getItemsRequest(PaymentModel item) {
+        return List.of(PaymentItemsRequestEntity.builder()
+                .skuNumber(item.getId())
+                .category("Alimentos")
+                .title("Totem Food Service")
+                .description("Pedido via Totem")
+                .quantity(1)
+                .unitPrice(BigDecimal.valueOf(item.getPrice()))
+                .unitMeasure(String.valueOf(item.getPrice()))
+                .totalAmount(BigDecimal.valueOf(item.getPrice()))
+                .build());
+    }
+
 }

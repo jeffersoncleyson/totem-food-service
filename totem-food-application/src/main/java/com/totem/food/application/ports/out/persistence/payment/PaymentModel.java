@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.ZonedDateTime;
 
@@ -22,8 +23,12 @@ public class PaymentModel {
     private double price;
     private String token;
 
+    @Setter
+    private String qrcodeBase64;
+
     @Builder.Default
     private PaymentDomain.PaymentStatus status = PaymentDomain.PaymentStatus.PENDING;
     private ZonedDateTime modifiedAt;
     private ZonedDateTime createAt;
+
 }
