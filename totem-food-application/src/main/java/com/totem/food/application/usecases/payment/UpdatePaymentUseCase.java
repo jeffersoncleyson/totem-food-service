@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -31,7 +32,6 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
     private final IOrderMapper iOrderMapper;
     private final IUpdateRepositoryPort<PaymentModel> iUpdateRepositoryPort;
     private final ISearchUniqueRepositoryPort<Optional<OrderModel>> iSearchOrderModel;
-    private final ISearchUniqueRepositoryPort<Optional<PaymentModel>> iSearchPaymentModel;
     private final IUpdateRepositoryPort<OrderModel> iUpdateOrderRepositoryPort;
     private final ISearchRepositoryPort<PaymentFilterDto, List<PaymentModel>> iSearchRepositoryPort;
     private final ISendRequestPort<String, PaymentElementDto> iSendRequest;
@@ -50,7 +50,7 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
 
             var paymentElementDto = iSendRequest.sendRequest(paymentModel.getId());
 
-            if (paymentElementDto.getOrderStatus().equals("paid")) {
+            if (Objects.nonNull(paymentElementDto) && paymentElementDto.getOrderStatus().equals("paid")) {
 
                 final var paymentDomain = iPaymentMapper.toDomain(paymentModel);
 
@@ -62,16 +62,20 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
                     log.info(String.format("Order %s is received with Payment %s completed", orderModel.getStatus(), paymentDomain.getStatus()));
                 }
 
-                //## Order Update
+                //## Update Order
                 updateOrderReceived(orderModel);
 
                 //## Update Payment
-                paymentDomain.updateStatus(PaymentDomain.PaymentStatus.COMPLETED);
-                final var paymentModelConverted = iPaymentMapper.toModel(paymentDomain);
-                iUpdateRepositoryPort.updateItem(paymentModelConverted);
+                updatePaymentCompleted(paymentDomain);
             }
         }
         return Boolean.TRUE;
+    }
+
+    private void updatePaymentCompleted(PaymentDomain paymentDomain) {
+        paymentDomain.updateStatus(PaymentDomain.PaymentStatus.COMPLETED);
+        final var paymentModelConverted = iPaymentMapper.toModel(paymentDomain);
+        iUpdateRepositoryPort.updateItem(paymentModelConverted);
     }
 
     private void updateOrderReceived(OrderModel orderModel) {
