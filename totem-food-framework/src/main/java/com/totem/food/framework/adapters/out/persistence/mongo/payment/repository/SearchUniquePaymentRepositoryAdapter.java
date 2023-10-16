@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-import java.util.Objects;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -19,7 +18,6 @@ public class SearchUniquePaymentRepositoryAdapter implements ISearchUniqueReposi
     @Repository
     protected interface PaymentRepositoryMongoDB extends BaseRepository<PaymentEntity, String> {
 
-        PaymentEntity findByExternalId(String id);
     }
 
     private final PaymentRepositoryMongoDB repository;
@@ -27,12 +25,6 @@ public class SearchUniquePaymentRepositoryAdapter implements ISearchUniqueReposi
 
     @Override
     public Optional<PaymentModel> findById(String id) {
-        var paymentEntity = repository.findByExternalId(id);
-
-        if (Objects.nonNull(paymentEntity)) {
-            return Optional.ofNullable(iPaymentMapper.toModel(paymentEntity));
-        }
-
         return repository.findById(id).map(iPaymentMapper::toModel);
     }
 

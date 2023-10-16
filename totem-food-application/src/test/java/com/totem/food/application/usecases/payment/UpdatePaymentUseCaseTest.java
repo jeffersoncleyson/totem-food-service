@@ -61,7 +61,7 @@ class UpdatePaymentUseCaseTest {
     private IUpdateRepositoryPort<OrderModel> iUpdateOrderRepositoryPort;
 
     @Mock
-    private ISendRequestPort<String, PaymentElementDto>  iSendRequest;
+    private ISendRequestPort<String, PaymentElementDto> iSendRequest;
 
     private UpdatePaymentUseCase updatePaymentUseCase;
 
@@ -75,7 +75,6 @@ class UpdatePaymentUseCaseTest {
                 iOrderMapper,
                 iUpdateRepositoryPort,
                 iSearchOrderModel,
-                iSearchPaymentModel,
                 iUpdateOrderRepositoryPort,
                 iSearchRepositoryPort,
                 iSendRequest);
@@ -98,7 +97,7 @@ class UpdatePaymentUseCaseTest {
         when(iSearchRepositoryPort.findAll(any())).thenReturn(List.of(paymentModel));
 
         //## When
-        var updateItem = updatePaymentUseCase.updateItem(any(),anyString());
+        var updateItem = updatePaymentUseCase.updateItem(any(), anyString());
 
         //## Then
         assertTrue(updateItem);
@@ -118,7 +117,7 @@ class UpdatePaymentUseCaseTest {
         when(iSearchOrderModel.findById(anyString())).thenReturn(Optional.ofNullable(orderDomain));
 
         //## When
-        var updateItem = updatePaymentUseCase.updateItem(any(),anyString());
+        var updateItem = updatePaymentUseCase.updateItem(any(), anyString());
 
         //## Then
         assertTrue(updateItem);
@@ -141,7 +140,7 @@ class UpdatePaymentUseCaseTest {
 
         //## When
         var exception = assertThrows(ElementNotFoundException.class,
-                () -> updatePaymentUseCase.updateItem(any(),anyString()));
+                () -> updatePaymentUseCase.updateItem(any(), anyString()));
 
         //## Then
         assertEquals(exception.getMessage(), "Order with orderId: [1] not found");
@@ -161,7 +160,7 @@ class UpdatePaymentUseCaseTest {
 
         //## When
         var exception = assertThrows(ElementNotFoundException.class,
-                () -> updatePaymentUseCase.updateItem(any(),anyString()));
+                () -> updatePaymentUseCase.updateItem(any(), anyString()));
 
         //## Then
         assertEquals(exception.getMessage(), "Payment with filters orderId: [1] token: [token] not found");

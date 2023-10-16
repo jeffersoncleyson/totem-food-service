@@ -67,6 +67,8 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
 
                 //## Update Payment
                 updatePaymentCompleted(paymentDomain);
+
+                log.info(String.format("PaymentId=%s - Paid with success", paymentDomain.getStatus()));
             }
         }
         return Boolean.TRUE;

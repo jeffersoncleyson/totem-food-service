@@ -34,5 +34,4 @@ public class PaymentEntity {
     private ZonedDateTime modifiedAt;
     private ZonedDateTime createAt;
 
-    private String externalId;
 }

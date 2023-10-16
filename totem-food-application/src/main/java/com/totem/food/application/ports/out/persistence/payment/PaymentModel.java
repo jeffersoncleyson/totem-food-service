@@ -31,6 +31,4 @@ public class PaymentModel {
     private ZonedDateTime modifiedAt;
     private ZonedDateTime createAt;
 
-    @Setter
-    private String externalId;
 }

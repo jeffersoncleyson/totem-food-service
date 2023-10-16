@@ -9,15 +9,15 @@ import org.mapstruct.ReportingPolicy;
 import java.util.List;
 
 @Mapper(componentModel = "spring",
-	unmappedSourcePolicy = ReportingPolicy.IGNORE,
-	unmappedTargetPolicy = ReportingPolicy.IGNORE)
+        unmappedSourcePolicy = ReportingPolicy.IGNORE,
+        unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface IPaymentEntityMapper {
 
-	@Mapping(source = "status.key", target = "status")
-	PaymentEntity toEntity(PaymentModel input);
+    @Mapping(source = "status.key", target = "status")
+    PaymentEntity toEntity(PaymentModel input);
 
-	PaymentModel toModel(PaymentEntity input);
+    PaymentModel toModel(PaymentEntity input);
 
-	List<PaymentModel> toModel(List<PaymentEntity> input);
+    List<PaymentModel> toModel(List<PaymentEntity> input);
 
 }
