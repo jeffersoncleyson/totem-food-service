@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.ZonedDateTime;
+
 import static com.totem.food.domain.payment.PaymentDomain.PaymentStatus.PENDING;
 import static com.totem.food.framework.adapters.in.rest.constants.Routes.API_VERSION_1;
 import static com.totem.food.framework.adapters.in.rest.constants.Routes.TOTEM_PAYMENT_CALLBACK;
@@ -29,6 +31,7 @@ public class TotemPaymentCallbackRestApiAdapter {
 
         var filter = PaymentFilterDto.builder()
                 .status(PENDING.name())
+                .timeLastOrders(ZonedDateTime.now().minusMinutes(30))
                 .build();
 
         final var processed = iUpdateUseCase.updateItem(filter, "");
