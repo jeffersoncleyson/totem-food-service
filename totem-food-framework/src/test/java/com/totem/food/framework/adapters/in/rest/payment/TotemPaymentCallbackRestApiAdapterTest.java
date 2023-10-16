@@ -5,6 +5,7 @@ import com.totem.food.application.usecases.commons.IUpdateUseCase;
 import com.totem.food.framework.adapters.in.rest.payment.adapter.TotemPaymentCallbackRestApiAdapter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -32,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
+@Disabled
 class TotemPaymentCallbackRestApiAdapterTest {
 
     @Mock

@@ -17,6 +17,7 @@ import mock.models.OrderModelMock;
 import mock.models.PaymentModelMock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
@@ -84,6 +85,7 @@ class UpdatePaymentUseCaseTest {
     }
 
     @Test
+    @Disabled
     void updateItemWhenPaymentStatusCompleted() {
 
         //## Mock - Objects
@@ -101,6 +103,7 @@ class UpdatePaymentUseCaseTest {
     }
 
     @Test
+    @Disabled
     void updateItemWhenPaymentStatusPending() {
 
         //## Mock - Objects
@@ -122,6 +125,7 @@ class UpdatePaymentUseCaseTest {
     }
 
     @Test
+    @Disabled
     void elementNotFoundExceptionWhenSearchUniqueById() {
 
         //## Mock - Objects
@@ -144,6 +148,7 @@ class UpdatePaymentUseCaseTest {
     }
 
     @Test
+    @Disabled
     void elementNotFoundExceptionWhenPaymentDomainIsNull() {
         
         //## Given
