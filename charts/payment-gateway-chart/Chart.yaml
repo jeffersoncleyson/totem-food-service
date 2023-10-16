@@ -1,5 +1,0 @@
-apiVersion: v2
-name: payment-gateway-chart
-description: Mock Payment Gateway
-version: 0.1.0
-appVersion: "v1.0.0"
