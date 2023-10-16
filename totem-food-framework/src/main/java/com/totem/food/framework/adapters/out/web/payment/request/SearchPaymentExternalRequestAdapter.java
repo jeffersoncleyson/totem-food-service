@@ -28,7 +28,7 @@ public class SearchPaymentExternalRequestAdapter implements ISendRequestPort<Str
 
         var elementEntity = mercadoPagoClient.getOrderDetails(token, externalReference).getBody();
 
-        if (Objects.isNull(elementEntity)) {
+        if (Objects.isNull(elementEntity) || Objects.isNull(elementEntity.getData())) {
             log.warn("Element is Null to returner partner Mercado Pago");
             return null;
         }
@@ -42,7 +42,7 @@ public class SearchPaymentExternalRequestAdapter implements ISendRequestPort<Str
                 .orderStatus(elementEntity.getData().get(0).getOrderStatus())
                 .totalPayment(elementEntity.getData().get(0).getTotalPayment())
                 .updatePayment(elementEntity.getData().get(0).getUpdatePayment())
-                .externalPaymentId(getElementPaymentId(elementEntity.getData().get(0)))
+//                .externalPaymentId(getElementPaymentId(elementEntity.getData().get(0)))
                 .build();
     }
 

@@ -27,10 +27,7 @@ public class SendPaymentExternalRequestAdapter implements ISendRequestPort<Payme
 
     @Value("${TOKEN}")
     private String token;
-
-    @Value("${URL_NOTIFICATION}")
-    private static String urlNotification;
-
+    
     private static final ZonedDateTime DURATION_QR_CODE = ZonedDateTime.now().plusHours(1);
 
     private final IPaymentResponseMapper iPaymentResponseMapper;
@@ -54,7 +51,7 @@ public class SendPaymentExternalRequestAdapter implements ISendRequestPort<Payme
                 .title("Atendimento via Totem")
                 .description("Pedido realizado via auto atendimento Totem")
                 .expirationDate(DURATION_QR_CODE)
-                .notificationUrl(String.valueOf(urlNotification))
+                .notificationUrl("https://composed-firefly-willingly.ngrok-free.app/v1/totem/payment/callback")
                 .build();
     }
 

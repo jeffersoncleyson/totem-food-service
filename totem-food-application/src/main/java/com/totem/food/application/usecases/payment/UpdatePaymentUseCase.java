@@ -16,12 +16,13 @@ import com.totem.food.application.usecases.commons.IUpdateUseCase;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import com.totem.food.domain.payment.PaymentDomain;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
+@Slf4j
 @AllArgsConstructor
 @UseCase
 public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Boolean> {
@@ -41,47 +42,43 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
         var paymentsModel = iSearchRepositoryPort.findAll(item);
 
         if (ObjectUtils.isEmpty(paymentsModel)) {
-            return false;
+            return Boolean.FALSE;
         }
 
         //## Search for payments in the partner and update payment in the database
         for (PaymentModel paymentModel : paymentsModel) {
 
-            if (Objects.nonNull(paymentModel.getId())) {
-                var paymentElementDto = iSendRequest.sendRequest(paymentModel.getId());
-                paymentModel.setExternalId(paymentElementDto.getExternalPaymentId());
-                iUpdateRepositoryPort.updateItem(paymentModel);
+            var paymentElementDto = iSendRequest.sendRequest(paymentModel.getId());
+
+            if (paymentElementDto.getOrderStatus().equals("paid")) {
+
+                final var paymentDomain = iPaymentMapper.toDomain(paymentModel);
+
+                final var orderModel = iSearchOrderModel.findById(paymentModel.getOrder().getId())
+                        .orElseThrow(() -> new ElementNotFoundException(String.format("Order with orderId: [%s] not found", paymentModel.getOrder().getId())));
+
+                //## Verify Order is Received and Payment is Completed
+                if (paymentDomain.getStatus().equals(PaymentDomain.PaymentStatus.COMPLETED) && orderModel.getStatus().equals(OrderStatusEnumDomain.RECEIVED)) {
+                    log.info(String.format("Order %s is received with Payment %s completed", orderModel.getStatus(), paymentDomain.getStatus()));
+                }
+
+                //## Order Update
+                updateOrderReceived(orderModel);
+
+                //## Update Payment
+                paymentDomain.updateStatus(PaymentDomain.PaymentStatus.COMPLETED);
+                final var paymentModelConverted = iPaymentMapper.toModel(paymentDomain);
+                iUpdateRepositoryPort.updateItem(paymentModelConverted);
             }
-
         }
+        return Boolean.TRUE;
+    }
 
-        final var paymentModel = iSearchPaymentModel.findById(id)
-                .orElseThrow(() -> new ElementNotFoundException(String.format("Payment external [%s] not found", id)));
-
-        if (Objects.isNull(paymentModel)) {
-            return false;
-        }
-
-        final var paymentDomain = iPaymentMapper.toDomain(paymentModel);
-
-        if (paymentDomain.getStatus().equals(PaymentDomain.PaymentStatus.COMPLETED)) {
-            return Boolean.TRUE;
-        }
-
-        //## Verify Order and Update
-        final var orderModel = iSearchOrderModel.findById(paymentModel.getOrder().getId())
-                .orElseThrow(() -> new ElementNotFoundException(String.format("Order with orderId: [%s] not found", paymentModel.getOrder().getId())));
-
+    private void updateOrderReceived(OrderModel orderModel) {
         final var orderDomain = iOrderMapper.toDomain(orderModel);
         orderDomain.updateOrderStatus(OrderStatusEnumDomain.RECEIVED);
         orderDomain.updateModifiedAt();
         final var orderModelValidated = iOrderMapper.toModel(orderDomain);
         iUpdateOrderRepositoryPort.updateItem(orderModelValidated);
-
-        //## Update Payment
-        paymentDomain.updateStatus(PaymentDomain.PaymentStatus.COMPLETED);
-        final var paymentModelConverted = iPaymentMapper.toModel(paymentDomain);
-        iUpdateRepositoryPort.updateItem(paymentModelConverted);
-        return Boolean.TRUE;
     }
 }

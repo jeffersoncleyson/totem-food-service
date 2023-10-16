@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Objects;
-
 import static com.totem.food.domain.payment.PaymentDomain.PaymentStatus.PENDING;
 import static com.totem.food.framework.adapters.in.rest.constants.Routes.API_VERSION_1;
 import static com.totem.food.framework.adapters.in.rest.constants.Routes.TOTEM_PAYMENT_CALLBACK;
@@ -33,13 +31,12 @@ public class TotemPaymentCallbackRestApiAdapter {
                 .status(PENDING.name())
                 .build();
 
-        if(Objects.isNull(paymentCallbackDto.getData())){
-            return ResponseEntity.noContent().build();
+        final var processed = iUpdateUseCase.updateItem(filter, "");
+
+        if (Boolean.TRUE.equals(processed)) {
+            return ResponseEntity.ok().build();
         }
 
-        final var processed = iUpdateUseCase.updateItem(filter, paymentCallbackDto.getData().getId());
-
-        if (Boolean.TRUE.equals(processed)) return ResponseEntity.ok().build();
         return ResponseEntity.noContent().build();
     }
 
