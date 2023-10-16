@@ -55,9 +55,6 @@ class UpdatePaymentUseCaseTest {
     private ISearchUniqueRepositoryPort<Optional<OrderModel>> iSearchOrderModel;
 
     @Mock
-    private ISearchUniqueRepositoryPort<Optional<PaymentModel>> iSearchPaymentModel;
-
-    @Mock
     private IUpdateRepositoryPort<OrderModel> iUpdateOrderRepositoryPort;
 
     @Mock
@@ -91,7 +88,6 @@ class UpdatePaymentUseCaseTest {
 
         //## Mock - Objects
         var paymentModel = PaymentModelMock.getPaymentStatusCompletedMock();
-        var paymentFilterDto = PaymentFilterDto.builder().orderId("1").token("token").build();
 
         //## Given
         when(iSearchRepositoryPort.findAll(any())).thenReturn(List.of(paymentModel));
@@ -109,7 +105,6 @@ class UpdatePaymentUseCaseTest {
 
         //## Mock - Objects
         var paymentModel = PaymentModelMock.getPaymentStatusPendingMock();
-        var paymentFilterDto = PaymentFilterDto.builder().orderId("1").token("token").build();
         var orderDomain = OrderModelMock.orderModel(OrderStatusEnumDomain.WAITING_PAYMENT);
 
         //## Given
@@ -131,7 +126,6 @@ class UpdatePaymentUseCaseTest {
 
         //## Mock - Objects
         var paymentModel = PaymentModelMock.getPaymentStatusPendingMock();
-        var paymentFilterDto = PaymentFilterDto.builder().orderId("1").token("token").build();
         var orderDomain = OrderModelMock.orderModel(OrderStatusEnumDomain.WAITING_PAYMENT);
 
         //## Given
@@ -151,10 +145,7 @@ class UpdatePaymentUseCaseTest {
 
     @Test
     void elementNotFoundExceptionWhenPaymentDomainIsNull() {
-
-        //## Mock - Objects
-        var paymentFilterDto = PaymentFilterDto.builder().orderId("1").token("token").build();
-
+        
         //## Given
         when(iSearchRepositoryPort.findAll(any())).thenReturn(null);
 

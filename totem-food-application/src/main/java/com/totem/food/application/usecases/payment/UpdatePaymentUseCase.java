@@ -16,14 +16,12 @@ import com.totem.food.application.usecases.commons.IUpdateUseCase;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import com.totem.food.domain.payment.PaymentDomain;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@Slf4j
 @AllArgsConstructor
 @UseCase
 public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Boolean> {
@@ -57,29 +55,28 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
                 final var orderModel = iSearchOrderModel.findById(paymentModel.getOrder().getId())
                         .orElseThrow(() -> new ElementNotFoundException(String.format("Order with orderId: [%s] not found", paymentModel.getOrder().getId())));
 
-                //## Verify Order is Received and Payment is Completed
-                if (paymentDomain.getStatus().equals(PaymentDomain.PaymentStatus.COMPLETED) && orderModel.getStatus().equals(OrderStatusEnumDomain.RECEIVED)) {
-                    log.info(String.format("Order %s is received with Payment %s completed", orderModel.getStatus(), paymentDomain.getStatus()));
+                if (verifyOrderPaid(paymentDomain, orderModel)) {
+                    updateOrderReceived(orderModel);
+                    updatePaymentCompleted(paymentDomain);
                 }
-
-                //## Update Order
-                updateOrderReceived(orderModel);
-
-                //## Update Payment
-                updatePaymentCompleted(paymentDomain);
-
-                log.info(String.format("PaymentId=%s - Paid with success", paymentDomain.getId()));
             }
         }
         return Boolean.TRUE;
     }
 
+    //## Verify Order is Received and Payment is Completed
+    private static boolean verifyOrderPaid(PaymentDomain paymentDomain, OrderModel orderModel) {
+        return !paymentDomain.getStatus().equals(PaymentDomain.PaymentStatus.COMPLETED) && !orderModel.getStatus().equals(OrderStatusEnumDomain.RECEIVED);
+    }
+
+    //## Update Payment
     private void updatePaymentCompleted(PaymentDomain paymentDomain) {
         paymentDomain.updateStatus(PaymentDomain.PaymentStatus.COMPLETED);
         final var paymentModelConverted = iPaymentMapper.toModel(paymentDomain);
         iUpdateRepositoryPort.updateItem(paymentModelConverted);
     }
 
+    //## Update Order
     private void updateOrderReceived(OrderModel orderModel) {
         final var orderDomain = iOrderMapper.toDomain(orderModel);
         orderDomain.updateOrderStatus(OrderStatusEnumDomain.RECEIVED);
