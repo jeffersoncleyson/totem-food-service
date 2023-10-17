@@ -19,14 +19,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SendPaymentExternalRequestAdapter implements ISendRequestPort<PaymentModel, PaymentQRCodeDto> {
 
-    @Value("${POS_ID}")
+    @Value("${payment.store_id}")
     private String posId;
 
-    @Value("${USER_ID}")
+    @Value("${payment.store_user_id}")
     private String userId;
 
-    @Value("${TOKEN}")
+    @Value("${payment.store_token_id}")
     private String token;
+
+    @Value("${payment.callback}")
+    private String paymentCallback;
     
     private static final ZonedDateTime DURATION_QR_CODE = ZonedDateTime.now().plusHours(1);
 
@@ -43,7 +46,7 @@ public class SendPaymentExternalRequestAdapter implements ISendRequestPort<Payme
         return iPaymentResponseMapper.toDto(paymentResponse);
     }
 
-    private static PaymentRequestEntity getPaymentRequestEntity(PaymentModel item) {
+    private PaymentRequestEntity getPaymentRequestEntity(PaymentModel item) {
         return PaymentRequestEntity.builder()
                 .externalReference(item.getId())
                 .totalAmount(BigDecimal.valueOf(item.getPrice()))
@@ -51,11 +54,11 @@ public class SendPaymentExternalRequestAdapter implements ISendRequestPort<Payme
                 .title("Atendimento via Totem")
                 .description("Pedido realizado via auto atendimento Totem")
                 .expirationDate(DURATION_QR_CODE)
-                .notificationUrl("https://composed-firefly-willingly.ngrok-free.app/v1/totem/payment/callback")
+                .notificationUrl(paymentCallback)
                 .build();
     }
 
-    private static List<PaymentItemsRequestEntity> getItemsRequest(PaymentModel item) {
+    private List<PaymentItemsRequestEntity> getItemsRequest(PaymentModel item) {
         return List.of(PaymentItemsRequestEntity.builder()
                 .skuNumber(item.getId())
                 .category("Alimentos")

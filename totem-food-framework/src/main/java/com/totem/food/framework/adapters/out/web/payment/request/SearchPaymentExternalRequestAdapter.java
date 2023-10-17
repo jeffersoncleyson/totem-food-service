@@ -14,7 +14,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class SearchPaymentExternalRequestAdapter implements ISendRequestPort<String, PaymentElementDto> {
 
-    @Value("${TOKEN}")
+    @Value("${payment.store_token_id}")
     private String token;
 
     private final MercadoPagoClient mercadoPagoClient;

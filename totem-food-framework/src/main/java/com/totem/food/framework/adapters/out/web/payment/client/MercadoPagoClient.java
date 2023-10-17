@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "MercadoPagoAPI", url = "https://api.mercadopago.com")
+@FeignClient(name = "MercadoPagoAPI", url = "${payment.url}")
 @Headers({
         "Content-Type: application/json; charset=utf-8",
         "Accept: application/json; charset=utf-8"

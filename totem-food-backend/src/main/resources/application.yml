@@ -30,7 +30,11 @@ spring:
       authentication-database: admin
 
 payment:
-  url: ${PAYMENT_GATEWAY_URL:http://localhost:5000/v1/online-payment}
+  url: ${PAYMENT_GATEWAY_URL:https://api.mercadopago.com}
+  callback: ${PAYMENT_CALLBACK_URL:https://composed-firefly-willingly.ngrok-free.app/v1/totem/payment/callback}
+  store_id: ${STORE_ID:}
+  store_user_id: ${STORE_USER_ID:}
+  store_token_id: ${STORE_TOKEN:}
 
 mail:
   smtp:
