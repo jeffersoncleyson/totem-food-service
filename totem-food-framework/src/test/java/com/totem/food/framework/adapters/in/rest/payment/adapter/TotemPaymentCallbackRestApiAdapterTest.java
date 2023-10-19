@@ -1,9 +1,8 @@
-package com.totem.food.framework.adapters.in.rest.payment;
+package com.totem.food.framework.adapters.in.rest.payment.adapter;
 
 import com.totem.food.application.ports.in.dtos.payment.PaymentCallbackDto;
 import com.totem.food.application.ports.in.dtos.payment.PaymentFilterDto;
 import com.totem.food.application.usecases.commons.IUpdateUseCase;
-import com.totem.food.framework.adapters.in.rest.payment.adapter.TotemPaymentCallbackRestApiAdapter;
 import com.totem.food.framework.test.utils.TestUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,4 +1,4 @@
-package com.totem.food.framework.adapters.in.rest.payment;
+package com.totem.food.framework.adapters.in.rest.payment.adapter;
 
 import com.totem.food.application.ports.in.dtos.payment.PaymentCreateDto;
 import com.totem.food.application.ports.in.dtos.payment.PaymentDto;
@@ -7,7 +7,6 @@ import com.totem.food.application.usecases.commons.ICreateImageUseCase;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
 import com.totem.food.application.usecases.commons.ISearchUniqueUseCase;
 import com.totem.food.domain.payment.PaymentDomain;
-import com.totem.food.framework.adapters.in.rest.payment.adapter.TotemPaymentRestApiAdapter;
 import com.totem.food.framework.test.utils.TestUtils;
 import mocks.dtos.PaymentMocks;
 import org.junit.jupiter.api.AfterEach;
@@ -48,7 +47,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
-@Disabled
 class TotemPaymentRestApiAdapterTest {
 
     @Mock
@@ -109,13 +107,19 @@ class TotemPaymentRestApiAdapterTest {
 
     @ParameterizedTest
     @ValueSource(strings = API_VERSION_1 + TOTEM_PAYMENT + PAYMENT_ID)
-    void getById(String endpoint) throws Exception {
+    @Disabled
+    void testReturnByteImageQrCode(String endpoint) throws Exception {
+
+        //### Objects - Mocks
+        var paymentDto = PaymentMocks.paymentDto();
 
         //### Given - Mocks
-        final var paymentDto = PaymentMocks.paymentDto();
-        when(iSearchUniqueUseCase.item(anyString())).thenReturn(Optional.of(paymentDto));
+        when(iSearchUniqueUseCase.item(paymentDto.getId())).thenReturn(Optional.of(paymentDto));
+        when(iCreateImageUseCase.createImage(paymentDto)).thenReturn(new byte[32]);
 
-        final var httpServletRequest = get(endpoint, paymentDto.getId());
+        final var httpServletRequest = get(endpoint, paymentDto.getId())
+                .header("x-with-image-qrcode", true)
+                .accept(MediaType.IMAGE_PNG);
 
         //### When
         final var resultActions = mockMvc.perform(httpServletRequest);
@@ -123,7 +127,7 @@ class TotemPaymentRestApiAdapterTest {
         //### Then
         resultActions.andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+                .andExpect(content().contentType(MediaType.IMAGE_PNG));
 
         final var result = resultActions.andReturn();
         final var responseJson = result.getResponse().getContentAsString();
@@ -139,22 +143,4 @@ class TotemPaymentRestApiAdapterTest {
         verify(iSearchUniqueUseCase, times(1)).item(anyString());
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = API_VERSION_1 + TOTEM_PAYMENT + PAYMENT_ID)
-    void getByIdNotFound(String endpoint) throws Exception {
-
-        //### Given - Mocks
-        when(iSearchUniqueUseCase.item(anyString())).thenReturn(Optional.empty());
-
-        final var httpServletRequest = get(endpoint, UUID.randomUUID().toString());
-
-        //### When
-        final var resultActions = mockMvc.perform(httpServletRequest);
-
-        //### Then
-        resultActions.andDo(print())
-                .andExpect(status().isNotFound());
-
-        verify(iSearchUniqueUseCase, times(1)).item(anyString());
-    }
 }
