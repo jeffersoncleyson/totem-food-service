@@ -510,7 +510,7 @@
 						"method": "GET",
 						"header": [
 							{
-								"key": "withImageQrCode",
+								"key": "x-with-image-qrcode",
 								"value": "true",
 								"description": "Se verdadeiro, Gerar imagem de QR Code, caso contrário, mostrar informações.",
 								"type": "text"

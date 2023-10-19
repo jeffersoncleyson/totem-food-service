@@ -12,7 +12,7 @@ public class PaymentModelMock {
     public static PaymentModel getPaymentStatusPendingMock() {
         return PaymentModel.builder()
                 .id("1")
-                .order(OrderDomainMock.getStatusNewMock())
+                .order(OrderDomainMock.getStatusWaitingPaymentMock())
                 .customer(CustomerDomainMock.getMock())
                 .price(49.99)
                 .token("token")

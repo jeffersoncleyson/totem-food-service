@@ -46,7 +46,7 @@ public class TotemPaymentRestApiAdapter implements ICreateRestApiPort<PaymentCre
 
     @GetMapping(value = PAYMENT_ID, produces = MediaType.APPLICATION_JSON_VALUE)
     @Override
-    public ResponseEntity<Object> getImage(@PathVariable String paymentId, @RequestHeader(value = "withImageQrCode", defaultValue = "true") boolean withImageQrCode) {
+    public ResponseEntity<Object> getImage(@PathVariable String paymentId, @RequestHeader(value = "x-with-image-qrcode", defaultValue = "true") boolean withImageQrCode) {
 
         ResponseEntity<PaymentDto> paymentDto = iSearchUniqueUseCase.item(paymentId).map(ResponseEntity.status(HttpStatus.OK)::body)
                 .orElse(ResponseEntity.notFound().build());

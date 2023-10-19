@@ -38,17 +38,24 @@ public class SearchPaymentRepositoryAdapter implements ISearchRepositoryPort<Pay
 
     @Override
     public List<PaymentModel> findAll(PaymentFilterDto item) {
-        if (Objects.nonNull(item.getStatus())) {
-            List<PaymentEntity> entitys = repository.findByStatusAndModifiedAtAfter(item.getStatus(), item.getTimeLastOrders());
-            return iPaymentMapper.toModel(entitys);
-        } else if (StringUtils.isNotEmpty(item.getOrderId()) && StringUtils.isNotEmpty(item.getToken())) {
+
+        if (Objects.nonNull(item.getStatus()) && Objects.nonNull(item.getTimeLastOrders())) {
+            List<PaymentEntity> entities = repository.findByStatusAndModifiedAtAfter(item.getStatus(), item.getTimeLastOrders());
+            return iPaymentMapper.toModel(entities);
+        }
+
+        if (StringUtils.isNotEmpty(item.getOrderId()) && StringUtils.isNotEmpty(item.getToken())) {
             final var entity = repository.findByFilter(new ObjectId(item.getOrderId()), item.getToken());
             return Collections.singletonList(iPaymentMapper.toModel(entity));
-        } else if (StringUtils.isNotEmpty(item.getOrderId()) && StringUtils.isNotEmpty(item.getStatus())) {
+        }
+
+        if (StringUtils.isNotEmpty(item.getOrderId()) && StringUtils.isNotEmpty(item.getStatus())) {
             final var entity = repository.findPaymentByOrderAndStatus(new ObjectId(item.getOrderId()), item.getStatus());
             return Collections.singletonList(iPaymentMapper.toModel(entity));
         }
-        return null;
+
+        return Collections.emptyList();
+
     }
 
 }

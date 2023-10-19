@@ -17,7 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
@@ -35,6 +34,8 @@ import static com.totem.food.framework.adapters.in.rest.constants.Routes.PAYMENT
 import static com.totem.food.framework.adapters.in.rest.constants.Routes.TOTEM_PAYMENT;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -79,7 +80,7 @@ class TotemPaymentRestApiAdapterTest {
         //### Given - Mocks
         final var paymentCreateDto = PaymentMocks.paymentCreateDto(UUID.randomUUID().toString(), "123");
         final var paymentQRCodeDto = PaymentMocks.paymentQRCodeDto(UUID.randomUUID().toString(), PaymentDomain.PaymentStatus.PENDING.key);
-        when(iCreateUseCase.createItem(Mockito.any(PaymentCreateDto.class))).thenReturn(paymentQRCodeDto);
+        when(iCreateUseCase.createItem(any(PaymentCreateDto.class))).thenReturn(paymentQRCodeDto);
 
         //### When
         final var jsonOpt = TestUtils.toJSON(paymentCreateDto);
@@ -103,7 +104,7 @@ class TotemPaymentRestApiAdapterTest {
                 .usingRecursiveComparison()
                 .isEqualTo(paymentQRCodeDtoResponse);
 
-        verify(iCreateUseCase, times(1)).createItem(Mockito.any(PaymentCreateDto.class));
+        verify(iCreateUseCase, times(1)).createItem(any(PaymentCreateDto.class));
     }
 
     @ParameterizedTest
@@ -112,7 +113,7 @@ class TotemPaymentRestApiAdapterTest {
 
         //### Given - Mocks
         final var paymentDto = PaymentMocks.paymentDto();
-        when(iSearchUniqueUseCase.item(Mockito.anyString())).thenReturn(Optional.of(paymentDto));
+        when(iSearchUniqueUseCase.item(anyString())).thenReturn(Optional.of(paymentDto));
 
         final var httpServletRequest = get(endpoint, paymentDto.getId());
 
@@ -135,7 +136,7 @@ class TotemPaymentRestApiAdapterTest {
                 .ignoringFieldsOfTypes(ZonedDateTime.class)
                 .isEqualTo(paymentDto);
 
-        verify(iSearchUniqueUseCase, times(1)).item(Mockito.anyString());
+        verify(iSearchUniqueUseCase, times(1)).item(anyString());
     }
 
     @ParameterizedTest
@@ -143,7 +144,7 @@ class TotemPaymentRestApiAdapterTest {
     void getByIdNotFound(String endpoint) throws Exception {
 
         //### Given - Mocks
-        when(iSearchUniqueUseCase.item(Mockito.anyString())).thenReturn(Optional.empty());
+        when(iSearchUniqueUseCase.item(anyString())).thenReturn(Optional.empty());
 
         final var httpServletRequest = get(endpoint, UUID.randomUUID().toString());
 
@@ -154,6 +155,6 @@ class TotemPaymentRestApiAdapterTest {
         resultActions.andDo(print())
                 .andExpect(status().isNotFound());
 
-        verify(iSearchUniqueUseCase, times(1)).item(Mockito.anyString());
+        verify(iSearchUniqueUseCase, times(1)).item(anyString());
     }
 }

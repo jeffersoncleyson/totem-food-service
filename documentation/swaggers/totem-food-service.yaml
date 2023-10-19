@@ -546,7 +546,7 @@ paths:
           required: true
           schema:
             type: string
-        - name: withImageQrCode
+        - name: x-with-image-qrcode
           in: header
           description: If true, Generate QR Code image, else show information.
           required: false
