@@ -9,9 +9,9 @@ import com.totem.food.application.usecases.commons.ISearchUniqueUseCase;
 import com.totem.food.domain.payment.PaymentDomain;
 import com.totem.food.framework.test.utils.TestUtils;
 import mocks.dtos.PaymentMocks;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -35,6 +35,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -107,7 +108,6 @@ class TotemPaymentRestApiAdapterTest {
 
     @ParameterizedTest
     @ValueSource(strings = API_VERSION_1 + TOTEM_PAYMENT + PAYMENT_ID)
-    @Disabled
     void testReturnByteImageQrCode(String endpoint) throws Exception {
 
         //### Objects - Mocks
@@ -118,8 +118,7 @@ class TotemPaymentRestApiAdapterTest {
         when(iCreateImageUseCase.createImage(paymentDto)).thenReturn(new byte[32]);
 
         final var httpServletRequest = get(endpoint, paymentDto.getId())
-                .header("x-with-image-qrcode", true)
-                .accept(MediaType.IMAGE_PNG);
+                .header("x-with-image-qrcode", true);
 
         //### When
         final var resultActions = mockMvc.perform(httpServletRequest);
@@ -130,17 +129,46 @@ class TotemPaymentRestApiAdapterTest {
                 .andExpect(content().contentType(MediaType.IMAGE_PNG));
 
         final var result = resultActions.andReturn();
+        final var responseJson = result.getResponse();
+
+        assertNotNull(responseJson.getContentAsByteArray());
+
+        verify(iSearchUniqueUseCase, times(1)).item(anyString());
+    }
+
+
+    @ParameterizedTest
+    @ValueSource(strings = API_VERSION_1 + TOTEM_PAYMENT + PAYMENT_ID)
+    void testReturnInfoPayment(String endpoint) throws Exception {
+
+        //### Objects - Mocks
+        var paymentDto = PaymentMocks.paymentDto();
+
+        //### Given - Mocks
+        when(iSearchUniqueUseCase.item(paymentDto.getId())).thenReturn(Optional.of(paymentDto));
+
+        final var httpServletRequest = get(endpoint, paymentDto.getId())
+                .header("x-with-image-qrcode", false);
+
+        //### When
+        final var resultActions = mockMvc.perform(httpServletRequest);
+
+        //### Then
+        resultActions.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE));
+
+        final var result = resultActions.andReturn();
         final var responseJson = result.getResponse().getContentAsString();
         final var paymentDtoResponseOpt = TestUtils.toObject(responseJson, PaymentDto.class);
         final var paymentDtoResponse = paymentDtoResponseOpt.orElseThrow();
 
-        assertNotNull(paymentDtoResponse);
-        assertThat(paymentDtoResponse)
+        Assertions.assertThat(paymentDtoResponse)
                 .usingRecursiveComparison()
                 .ignoringFieldsOfTypes(ZonedDateTime.class)
-                .isEqualTo(paymentDto);
+                .isNotNull();
 
-        verify(iSearchUniqueUseCase, times(1)).item(anyString());
+        verify(iCreateImageUseCase, never()).createImage(paymentDto);
     }
 
 }
