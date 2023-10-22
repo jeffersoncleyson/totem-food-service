@@ -106,6 +106,33 @@ class CreatePaymentUseCaseTest {
     }
 
     @Test
+    void createItemWhenQrCodeNull() {
+
+        //## Mock - Objects
+        var orderDomain = OrderModelMock.orderModel(OrderStatusEnumDomain.WAITING_PAYMENT);
+        var customerModel = CustomerModelMock.getMock();
+        var paymentQRCodeDto = PaymentQRCodeDtoMock.getStatusPendingMock();
+        paymentQRCodeDto.setQrcodeBase64(null);
+        var paymentCreateDto = PaymentCreateDtoMock.getMock();
+        var paymentModel = PaymentModelMock.getPaymentStatusPendingMock();
+
+        //## Give
+        when(iSearchUniqueOrderRepositoryPort.findById(anyString())).thenReturn(Optional.ofNullable(orderDomain));
+        when(iSearchUniqueCustomerRepositoryPort.findById(anyString())).thenReturn(Optional.of(customerModel));
+        when(iCreateRepositoryPort.saveItem(any(PaymentModel.class))).thenReturn(paymentModel);
+        when(iSendRequest.sendRequest(any(PaymentModel.class))).thenReturn(paymentQRCodeDto);
+
+        //## When
+        var qrCode = createPaymentUseCase.createItem(paymentCreateDto);
+
+        //## Then
+        assertThat(qrCode).usingRecursiveComparison().isEqualTo(paymentQRCodeDto);
+        verify(iCreateRepositoryPort, times(1)).saveItem(any());
+        verify(iSendRequest, times(1)).sendRequest(any());
+
+    }
+
+    @Test
     void createItemWhenElementNotFoundException() {
 
         //## Mock - Objects
