@@ -11,7 +11,7 @@ import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @NoArgsConstructor
-public class PaymentRequestMock {
+public class PaymentModelRequestMock {
 
     public static PaymentModel paymentDomain(){
         return PaymentModel.builder()
