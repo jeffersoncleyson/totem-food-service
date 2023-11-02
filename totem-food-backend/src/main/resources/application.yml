@@ -22,12 +22,7 @@ spring:
     default-property-inclusion: non_null
   data:
     mongodb:
-      host: localhost
-      port: 27017
-      database: totem-food
-      username: root
-      password: qwe123
-      authentication-database: admin
+      uri: mongodb://root:qwe123@localhost:27017/totem-food?authSource=admin
 
 payment:
   url: ${PAYMENT_GATEWAY_URL:https://api.mercadopago.com}
