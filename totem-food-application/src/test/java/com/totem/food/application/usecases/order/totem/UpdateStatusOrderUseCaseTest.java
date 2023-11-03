@@ -9,12 +9,15 @@ import com.totem.food.application.ports.out.email.ISendEmailPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
+import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
 import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.application.usecases.commons.IUpdateStatusUseCase;
 import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import lombok.SneakyThrows;
+import mock.domain.CustomerDomainMock;
 import mock.domain.OrderDomainMock;
+import mock.models.CustomerModelMock;
 import mock.models.OrderModelMock;
 import mock.models.PaymentModelMock;
 import org.junit.jupiter.api.AfterEach;
@@ -53,6 +56,9 @@ class UpdateStatusOrderUseCaseTest {
     @Mock
     private ISearchRepositoryPort<PaymentFilterDto, List<PaymentModel>> iSearchPaymentRepositoryPort;
 
+    @Mock
+    private ISearchUniqueRepositoryPort<Optional<CustomerModel>> iSearchUniqueCustomerRepositoryPort;
+
     private IUpdateStatusUseCase<OrderDto> iUpdateStatusUseCase;
     private AutoCloseable closeable;
 
@@ -64,7 +70,8 @@ class UpdateStatusOrderUseCaseTest {
                 iSearchUniqueRepositoryPort,
                 iProductRepositoryPort,
                 iSendEmailPort,
-                iSearchPaymentRepositoryPort
+                iSearchPaymentRepositoryPort,
+                iSearchUniqueCustomerRepositoryPort
         );
     }
 
@@ -126,21 +133,12 @@ class UpdateStatusOrderUseCaseTest {
         //## Mocks
         when(iSearchUniqueRepositoryPort.findById(Mockito.anyString())).thenReturn(Optional.of(orderDomain));
         when(iSearchPaymentRepositoryPort.findAll(Mockito.any(PaymentFilterDto.class))).thenReturn(List.of(paymentDomain));
-        when(iProductRepositoryPort.updateItem(Mockito.any(OrderModel.class))).thenReturn(orderDomain);
 
         //## When
-        final var orderDto = iUpdateStatusUseCase.updateStatus(orderDomain.getId(), OrderStatusEnumDomain.RECEIVED.key);
+        final var exception = assertThrows(ElementNotFoundException.class, () -> iUpdateStatusUseCase.updateStatus(orderDomain.getId(), OrderStatusEnumDomain.RECEIVED.key));
 
         //## Then
-        verify(iOrderMapper, times(1)).toDto(any());
-        verify(iSearchUniqueRepositoryPort, times(1)).findById(Mockito.anyString());
-        verify(iSearchPaymentRepositoryPort, times(1)).findAll(Mockito.any(PaymentFilterDto.class));
-        verify(iProductRepositoryPort, times(1)).updateItem(Mockito.any(OrderModel.class));
-
-        final var orderDtoExpected = iOrderMapper.toDto(orderDomain);
-        assertThat(orderDto).usingRecursiveComparison()
-                .isEqualTo(orderDtoExpected);
-
+        assertEquals(exception.getMessage(), String.format("Order [%s] needs a payment request or Payment is PENDING", orderDomain.getId()));
     }
 
     @Test
@@ -174,10 +172,12 @@ class UpdateStatusOrderUseCaseTest {
         //## Mock - Objects
         var orderDomain = OrderModelMock.orderModel(OrderStatusEnumDomain.IN_PREPARATION);
         var orderDomainReady = OrderModelMock.orderModel(OrderStatusEnumDomain.READY);
+        var customerModel = CustomerModelMock.getMock();
 
         //## Mocks
         when(iSearchUniqueRepositoryPort.findById(Mockito.anyString())).thenReturn(Optional.of(orderDomain));
         when(iProductRepositoryPort.updateItem(Mockito.any(OrderModel.class))).thenReturn(orderDomainReady);
+        when(iSearchUniqueCustomerRepositoryPort.findById(Mockito.anyString())).thenReturn(Optional.of(customerModel));
 
         //## When
         final var orderDto = iUpdateStatusUseCase.updateStatus(orderDomain.getId(), OrderStatusEnumDomain.READY.key);
