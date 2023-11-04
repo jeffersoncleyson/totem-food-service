@@ -77,7 +77,7 @@ jobs:
           context: .
           file: ./DockerfileGitHubActions
           push: true
-          tags: jeffersoncleyson/totem-food-service:${{ github.event.inputs.imageTag }}
+          tags: jeffersoncleyson/totem-food-service:temp-${{ github.event.inputs.imageTag }}
 
   deploy_eks:
     needs: push_to_registry
@@ -108,4 +108,4 @@ jobs:
         uses: WyriHaximus/github-action-helm3@v3
         with:
           exec: |
-            helm upgrade ${{ vars.RELEASE_NAME }} ./totem-food-service-helm-chart/totem-food-chart --namespace ${{ vars.NAMESPACE }} --set=image.tag=temp-${{ github.ref }}
+            helm upgrade ${{ vars.RELEASE_NAME }} ./totem-food-service-helm-chart/totem-food-chart --namespace ${{ vars.NAMESPACE }} --set=image.tag=temp-${{ github.event.inputs.imageTag }}
