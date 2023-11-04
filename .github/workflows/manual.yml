@@ -50,7 +50,6 @@ jobs:
     needs: build
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/v')
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
@@ -84,7 +83,6 @@ jobs:
     needs: push_to_registry
     name: Deploy
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/v')
     steps:
 
       - name: Configure AWS Credentials
