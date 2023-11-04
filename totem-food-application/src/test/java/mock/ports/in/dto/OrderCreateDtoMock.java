@@ -9,7 +9,6 @@ public class OrderCreateDtoMock {
 
     public static OrderCreateDto getMock(String productId) {
         var orderCreate = new OrderCreateDto();
-        orderCreate.setCustomerId("1");
         orderCreate.setProducts(List.of(new ItemQuantityDto(1, productId)));
         return orderCreate;
     }

@@ -19,6 +19,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.ZonedDateTime;
+import java.util.Comparator;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -75,7 +76,7 @@ class UpdateOrderRepositoryAdapterTest {
 
         assertThat(orderDomain)
                 .usingRecursiveComparison()
-                .ignoringFields("customer.id", "id")
+                .ignoringFields("customer", "id")
                 .ignoringFieldsOfTypes(ZonedDateTime.class)
                 .isEqualTo(orderDomainSaved);
 

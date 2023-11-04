@@ -546,9 +546,16 @@ paths:
           required: true
           schema:
             type: string
+        - name: x-with-image-qrcode
+          in: header
+          description: If true, Generate QR Code image, else show information.
+          required: false
+          schema:
+            type: boolean
+            default: true
       responses:
-        '201':
-          description: created operation
+        '200':
+          description: success operation
           content:
             application/json:
               schema:
@@ -557,31 +564,23 @@ paths:
           description: Invalid input
 
 
-  /totem/payment/callback/order/{orderId}:
-    put:
+  /totem/payment/callback:
+    post:
       tags:
         - Payment Gateway
       summary: Update order
       description: Update order
       operationId: orderCallbackStatus
-      parameters:
-        - name: orderId
-          in: path
-          description: ID of orderId to return
-          required: true
-          schema:
-            type: string
-        - name: token
-          in: header
-          description: Order token
-          required: true
-          schema:
-            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentCallbackDto'
       responses:
-        '202':
-          description: "Accepted"
-        '405':
-          description: Invalid input
+        '200':
+          description: "Ok"
+        '204':
+          description: "No Content"
 
 components:
   schemas:
@@ -849,10 +848,10 @@ components:
           type: string
           description: base64
           example: 'iVBORw0KGgoAAAANSUhEUgAABRQAAAUUCAYAAACu5p7oAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAIABJREFUeJzs2luO3LiWQNFmI+Y/Zd6vRt36KGNXi7ZOBtcagHD4kNLeiLX33v8DAAAAABD879sDAAAAAAA/h6AIAAAAAGSCIgAAAACQCYoAAAAAQCYoAgAAAACZoAgAAAAAZIIiAAAAAJAJigAAAABAJigCAAAAAJmgCAAAAABkgiIAAAAAkAmKAAAAAEAmKAIAAAAAmaAIAAAAAGSCIgAAAACQCYoAAAAAQCYoAgAAAACZoAgAAAAAZIIiAAAAAJAJigAAAABAJigCA...'
-        qrcode:
+        storeOrderId:
           type: string
-          description: QRCode
-          example: '00020126600014br.gov.bcb.pix0117test@testuser.com0217dados adicionais520400005303986540510.005802BR5913Maria Silva6008Brasilia62070503***6304E2CA'
+          description: order store identification
+          example: 'cb87fb30-db28-46d6-8878-46bd6847624e'
         paymentId:
           type: string
           description: order identification
@@ -881,6 +880,10 @@ components:
           example: '5.90'
         status:
           $ref: '#/components/schemas/PaymentStatusEnum'
+        qrcodeBase64:
+          type: string
+          description: base64 to generate qr code
+          example: '00020101021243650016COM.MERCADOLIBRE020130636cb87fb30-db28-46d6-8878-46bd6847624e5204000053039865802BR5909Test Test6009SAO PAULO62070503***6304535B'
         modifiedAt:
           type: string
           format: date-time
@@ -891,3 +894,48 @@ components:
           format: date-time
           example: '2023-06-09T00:00:51.623596531Z'
           description: Date of creation
+
+    PaymentCallbackDto:
+      type: object
+      description: "https://www.mercadopago.com.br/developers/pt/docs/your-integrations/notifications/webhooks"
+      properties:
+        action:
+          type: string
+          description: Type of notification received, if payment.created or payment.updated
+          example: 'payment.updated'
+        apiVersion:
+          type: string
+          description: Indicates whether it is a duplicate notification or not
+          example: 'v1'
+        dateCreated:
+          type: string
+          format: date-time
+          description: Resource creation date (payments)
+          example: '2015-03-25T10:04:58.396-04:00'
+        paymentId:
+          type: string
+          description: Notification ID
+          example: 'cb87fb30-46d6-8878-46bd6847624e'
+        liveMode:
+          type: string
+          description: Indicates whether the URL entered is valid
+          example: '/v1/totem/payment/callback'
+        type:
+          type: string
+          description: Type of notification received (payments)
+          example: 'payments'
+        sellerId:
+          type: string
+          description: Seller UserID
+          example: '12345'
+        data:
+          $ref: '#/components/schemas/PaymentDataDto'
+
+    PaymentDataDto:
+      type: object
+      description: ID do payment ou merchant_order
+      properties:
+        id:
+          type: string
+          description: ID do payment ou merchant_order
+          example: '652d74dff3fc61160d792436'

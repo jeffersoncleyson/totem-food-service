@@ -8,6 +8,7 @@ import com.totem.food.application.ports.in.mappers.order.totem.IOrderMapper;
 import com.totem.food.application.ports.in.mappers.payment.IPaymentMapper;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
+import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
 import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
@@ -28,6 +29,7 @@ import java.util.UUID;
 public class CreatePaymentUseCase implements ICreateUseCase<PaymentCreateDto, PaymentQRCodeDto> {
 
     private final ICreateRepositoryPort<PaymentModel> iCreateRepositoryPort;
+    private final IUpdateRepositoryPort<PaymentModel> iUpdateRepositoryPort;
     private final IOrderMapper iOrderMapper;
     private final ICustomerMapper iCustomerMapper;
     private final IPaymentMapper iPaymentMapper;
@@ -41,7 +43,7 @@ public class CreatePaymentUseCase implements ICreateUseCase<PaymentCreateDto, Pa
         final var orderDomain = iSearchUniqueOrderRepositoryPort.findById(item.getOrderId())
                 .orElseThrow(() -> new ElementNotFoundException(String.format("Order [%s] not found", item.getOrderId())));
 
-        if(orderDomain.getStatus().equals(OrderStatusEnumDomain.WAITING_PAYMENT)) {
+        if (orderDomain.getStatus().equals(OrderStatusEnumDomain.WAITING_PAYMENT)) {
             final var paymentDomainBuilder = PaymentDomain.builder();
 
             Optional.ofNullable(item.getCustomerId())
@@ -65,8 +67,16 @@ public class CreatePaymentUseCase implements ICreateUseCase<PaymentCreateDto, Pa
             paymentDomain.fillDates();
 
             final var paymentModel = iPaymentMapper.toModel(paymentDomain);
+
             final var paymentDomainSaved = iCreateRepositoryPort.saveItem(paymentModel);
+
             final var paymentDto = iSendRequest.sendRequest(paymentDomainSaved);
+
+            if (paymentDto.getQrcodeBase64() != null) {
+                paymentDomainSaved.setQrcodeBase64(paymentDto.getQrcodeBase64());
+                iUpdateRepositoryPort.updateItem(paymentDomainSaved);
+            }
+
             paymentDto.setStatus(PaymentDomain.PaymentStatus.PENDING.key);
             paymentDto.setPaymentId(paymentDomainSaved.getId());
             return paymentDto;

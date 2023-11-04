@@ -59,7 +59,7 @@ class SearchOrderUseCaseTest {
     void items() {
 
         //## Mock - Objects
-        var orderFilterDto = OrderFilterDto.builder().orderId("1").customerId("1").build();
+        var orderFilterDto = OrderFilterDto.builder().orderId("1").cpf("1").build();
         var orderDomain = OrderModelMock.orderModel(OrderStatusEnumDomain.NEW);
         var orderDto = OrderDtoMock.getMock();
 
@@ -80,7 +80,7 @@ class SearchOrderUseCaseTest {
     void sortedOrderByStatusWhenSortedFlagIsTrue() {
 
         //## Mock - Object
-        var filter = OrderFilterDto.builder().customerId("123").onlyTreadmill(true).build();
+        var filter = OrderFilterDto.builder().cpf("123").onlyTreadmill(true).build();
 
         var order1 = createOrder("1", "NEW");
         var order2 = createOrder("2", "READY");

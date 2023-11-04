@@ -65,7 +65,7 @@ class SearchOrderRepositoryAdapterTest {
 
         //## Then
         assertThat(result).isEmpty();
-        verify(repository, never()).findByFilter(any(ObjectId.class));
+        verify(repository, never()).findByFilter(any(String.class));
         verify(repository, never()).findById(any(String.class));
         verify(repository, never()).findByStatus(any(Set.class));
     }
@@ -76,17 +76,17 @@ class SearchOrderRepositoryAdapterTest {
         //## Mock - Object
         var hexString = new ObjectId().toHexString();
         var filter = OrderFilterDto.builder()
-                .customerId(hexString)
+                .cpf(hexString)
                 .build();
         var orderDomain = OrderDomainMock.getStatusNewMock();
         orderDomain.setId("0aa85a99-82bd-47b6-9f11-74b63f424d72");
         orderDomain.getCustomer().setId("ad852cd2-fd7d-4377-b868-40508b58f384");
         var orderEntity = OrderEntityMock.getMock();
         orderEntity.setId("0aa85a99-82bd-47b6-9f11-74b63f424d72");
-        orderEntity.getCustomer().setId("ad852cd2-fd7d-4377-b868-40508b58f384");
+        orderEntity.setCpf("ad852cd2-fd7d-4377-b868-40508b58f384");
 
         //## Given
-        when(repository.findByFilter(any(ObjectId.class))).thenReturn(List.of(orderEntity));
+        when(repository.findByFilter(any(String.class))).thenReturn(List.of(orderEntity));
 
         //## When
         var result = searchOrderRepositoryAdapter.findAll(filter);
@@ -97,6 +97,7 @@ class SearchOrderRepositoryAdapterTest {
         assertThat(result)
                 .usingRecursiveComparison()
                 .ignoringFieldsOfTypes(ZonedDateTime.class)
+                .ignoringFields("customer")
                 .isEqualTo(List.of(orderDomain));
         verify(repository, times(1)).findByFilter(any());
     }
@@ -111,7 +112,7 @@ class SearchOrderRepositoryAdapterTest {
         orderDomain.getCustomer().setId("ad852cd2-fd7d-4377-b868-40508b58f384");
         var orderEntity = OrderEntityMock.getMock();
         orderEntity.setId("0aa85a99-82bd-47b6-9f11-74b63f424d72");
-        orderEntity.getCustomer().setId("ad852cd2-fd7d-4377-b868-40508b58f384");
+        orderEntity.setCpf("ad852cd2-fd7d-4377-b868-40508b58f384");
 
         //## Given
         when(repository.findById(filter.getOrderId()))
@@ -126,6 +127,7 @@ class SearchOrderRepositoryAdapterTest {
         assertThat(result)
                 .usingRecursiveComparison()
                 .ignoringFieldsOfTypes(ZonedDateTime.class)
+                .ignoringFields("customer")
                 .isEqualTo(List.of(orderDomain));
         verify(repository, times(1)).findById(filter.getOrderId());
     }
@@ -143,7 +145,7 @@ class SearchOrderRepositoryAdapterTest {
         orderDomain.getCustomer().setId("ad852cd2-fd7d-4377-b868-40508b58f384");
         var orderEntity = OrderEntityMock.getMock();
         orderEntity.setId("0aa85a99-82bd-47b6-9f11-74b63f424d72");
-        orderEntity.getCustomer().setId("ad852cd2-fd7d-4377-b868-40508b58f384");
+        orderEntity.setCpf("ad852cd2-fd7d-4377-b868-40508b58f384");
 
         //## Given
         when(repository.findByStatus(filter.getStatus())).thenReturn(List.of(orderEntity));

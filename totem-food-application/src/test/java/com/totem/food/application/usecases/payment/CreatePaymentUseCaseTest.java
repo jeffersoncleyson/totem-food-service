@@ -7,6 +7,7 @@ import com.totem.food.application.ports.in.mappers.order.totem.IOrderMapper;
 import com.totem.food.application.ports.in.mappers.payment.IPaymentMapper;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
+import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.customer.CustomerModel;
 import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
@@ -46,6 +47,8 @@ class CreatePaymentUseCaseTest {
 
     @Mock
     private ICreateRepositoryPort<PaymentModel> iCreateRepositoryPort;
+    @Mock
+    private IUpdateRepositoryPort<PaymentModel> iUpdateRepositoryPort;
     @Spy
     private IOrderMapper iOrderMapper = Mappers.getMapper(IOrderMapper.class);
     @Spy
@@ -67,7 +70,7 @@ class CreatePaymentUseCaseTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        createPaymentUseCase = new CreatePaymentUseCase(iCreateRepositoryPort, iOrderMapper, iCustomerMapper, iPaymentMapper, iSearchUniqueOrderRepositoryPort, iSearchUniqueCustomerRepositoryPort, iSendRequest);
+        createPaymentUseCase = new CreatePaymentUseCase(iCreateRepositoryPort, iUpdateRepositoryPort, iOrderMapper, iCustomerMapper, iPaymentMapper, iSearchUniqueOrderRepositoryPort, iSearchUniqueCustomerRepositoryPort, iSendRequest);
     }
 
     @SneakyThrows
@@ -83,6 +86,33 @@ class CreatePaymentUseCaseTest {
         var orderDomain = OrderModelMock.orderModel(OrderStatusEnumDomain.WAITING_PAYMENT);
         var customerModel = CustomerModelMock.getMock();
         var paymentQRCodeDto = PaymentQRCodeDtoMock.getStatusPendingMock();
+        var paymentCreateDto = PaymentCreateDtoMock.getMock();
+        var paymentModel = PaymentModelMock.getPaymentStatusPendingMock();
+
+        //## Give
+        when(iSearchUniqueOrderRepositoryPort.findById(anyString())).thenReturn(Optional.ofNullable(orderDomain));
+        when(iSearchUniqueCustomerRepositoryPort.findById(anyString())).thenReturn(Optional.of(customerModel));
+        when(iCreateRepositoryPort.saveItem(any(PaymentModel.class))).thenReturn(paymentModel);
+        when(iSendRequest.sendRequest(any(PaymentModel.class))).thenReturn(paymentQRCodeDto);
+
+        //## When
+        var qrCode = createPaymentUseCase.createItem(paymentCreateDto);
+
+        //## Then
+        assertThat(qrCode).usingRecursiveComparison().isEqualTo(paymentQRCodeDto);
+        verify(iCreateRepositoryPort, times(1)).saveItem(any());
+        verify(iSendRequest, times(1)).sendRequest(any());
+
+    }
+
+    @Test
+    void createItemWhenQrCodeNull() {
+
+        //## Mock - Objects
+        var orderDomain = OrderModelMock.orderModel(OrderStatusEnumDomain.WAITING_PAYMENT);
+        var customerModel = CustomerModelMock.getMock();
+        var paymentQRCodeDto = PaymentQRCodeDtoMock.getStatusPendingMock();
+        paymentQRCodeDto.setQrcodeBase64(null);
         var paymentCreateDto = PaymentCreateDtoMock.getMock();
         var paymentModel = PaymentModelMock.getPaymentStatusPendingMock();
 

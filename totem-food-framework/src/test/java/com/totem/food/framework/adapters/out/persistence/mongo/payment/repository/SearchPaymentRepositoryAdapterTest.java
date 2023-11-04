@@ -8,19 +8,25 @@ import com.totem.food.domain.payment.PaymentDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.payment.mapper.IPaymentEntityMapper;
 import lombok.SneakyThrows;
 import mocks.entity.PaymentEntityMock;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.ZonedDateTime;
+import java.util.List;
+
+import static com.totem.food.domain.payment.PaymentDomain.PaymentStatus.PENDING;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyList;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -33,7 +39,7 @@ class SearchPaymentRepositoryAdapterTest {
     @Spy
     private IPaymentEntityMapper iPaymentMapper = Mappers.getMapper(IPaymentEntityMapper.class);
 
-    private ISearchRepositoryPort<PaymentFilterDto, PaymentModel> iSearchRepositoryPort;
+    private ISearchRepositoryPort<PaymentFilterDto, List<PaymentModel>> iSearchRepositoryPort;
     private AutoCloseable autoCloseable;
 
     @BeforeEach
@@ -49,6 +55,35 @@ class SearchPaymentRepositoryAdapterTest {
     }
 
     @Test
+    void findAllWithFilterStatusdAndTimeLastOrders() {
+
+        //## Given
+        final var entities = List.of(PaymentEntityMock.getPaymentEntity(PaymentDomain.PaymentStatus.PENDING));
+        final var paymentFilter = PaymentFilterDto.builder()
+                .status(PENDING.name())
+                .timeLastOrders(ZonedDateTime.now().minusMinutes(30))
+                .build();
+
+        //## Given Mocks
+        when(repository.findByStatusAndModifiedAtAfter(paymentFilter.getStatus(), paymentFilter.getTimeLastOrders()))
+                .thenReturn(entities);
+
+        //## When
+        final var paymentDomains = iSearchRepositoryPort.findAll(paymentFilter);
+
+        //## Then
+        verify(repository, times(1)).findByStatusAndModifiedAtAfter(paymentFilter.getStatus(), paymentFilter.getTimeLastOrders());
+        verify(iPaymentMapper, times(1)).toModel(entities);
+
+        final var paymentEntityConverted = iPaymentMapper.toEntity(paymentDomains.get(0));
+        assertThat(paymentEntityConverted)
+                .usingRecursiveComparison()
+                .ignoringFields("order.cpf")
+                .isEqualTo(entities.get(0));
+
+    }
+
+    @Test
     void findAllWithFilterOrderIdAndToken() {
 
         //## Given
@@ -59,18 +94,20 @@ class SearchPaymentRepositoryAdapterTest {
                 .build();
 
         //## Given Mocks
-        when(repository.findByFilter(Mockito.any(), Mockito.any())).thenReturn(paymentEntity);
+        when(repository.findByFilter(new ObjectId(paymentFilter.getOrderId()), paymentFilter.getToken()))
+                .thenReturn(paymentEntity);
 
         //## When
         final var paymentDomain = iSearchRepositoryPort.findAll(paymentFilter);
 
         //## Then
-        verify(repository, times(1)).findByFilter(Mockito.any(), Mockito.any());
-        verify(iPaymentMapper, times(1)).toModel(Mockito.any());
+        verify(repository, times(1)).findByFilter(new ObjectId(paymentFilter.getOrderId()), paymentFilter.getToken());
+        verify(iPaymentMapper, times(1)).toModel(paymentEntity);
 
-        final var paymentEntityConverted = iPaymentMapper.toEntity(paymentDomain);
+        final var paymentEntityConverted = iPaymentMapper.toEntity(paymentDomain.get(0));
         assertThat(paymentEntityConverted)
                 .usingRecursiveComparison()
+                .ignoringFields("order.cpf")
                 .isEqualTo(paymentEntity);
 
     }
@@ -86,18 +123,20 @@ class SearchPaymentRepositoryAdapterTest {
                 .build();
 
         //## Given Mocks
-        when(repository.findPaymentByOrderAndStatus(Mockito.any(), Mockito.any())).thenReturn(paymentEntity);
+        when(repository.findPaymentByOrderAndStatus(new ObjectId(paymentFilter.getOrderId()), paymentFilter.getStatus()))
+                .thenReturn(paymentEntity);
 
         //## When
         final var paymentDomain = iSearchRepositoryPort.findAll(paymentFilter);
 
         //## Then
-        verify(repository, times(1)).findPaymentByOrderAndStatus(Mockito.any(), Mockito.any());
-        verify(iPaymentMapper, times(1)).toModel(Mockito.any());
+        verify(repository, times(1)).findPaymentByOrderAndStatus(new ObjectId(paymentFilter.getOrderId()), paymentFilter.getStatus());
+        verify(iPaymentMapper, times(1)).toModel(paymentEntity);
 
-        final var paymentEntityConverted = iPaymentMapper.toEntity(paymentDomain);
+        final var paymentEntityConverted = iPaymentMapper.toEntity(paymentDomain.get(0));
         assertThat(paymentEntityConverted)
                 .usingRecursiveComparison()
+                .ignoringFields("order.cpf")
                 .isEqualTo(paymentEntity);
 
     }
@@ -109,13 +148,14 @@ class SearchPaymentRepositoryAdapterTest {
         final var paymentFilter = PaymentFilterDto.builder().build();
 
         //## When
-        final var paymentDomain = iSearchRepositoryPort.findAll(paymentFilter);
+        final var paymentModels = iSearchRepositoryPort.findAll(paymentFilter);
 
         //## Then
-        assertNull(paymentDomain);
-        verify(repository, times(0)).findByFilter(Mockito.any(), Mockito.any());
-        verify(repository, times(0)).findPaymentByOrderAndStatus(Mockito.any(), Mockito.any());
-        verify(iPaymentMapper, times(0)).toModel(Mockito.any());
+        assertEquals(paymentModels, List.of());
+        verify(repository, times(0)).findByStatusAndModifiedAtAfter(any(), any());
+        verify(repository, times(0)).findByFilter(any(), any());
+        verify(repository, times(0)).findPaymentByOrderAndStatus(any(), any());
+        verify(iPaymentMapper, times(0)).toModel(anyList());
 
     }
 }

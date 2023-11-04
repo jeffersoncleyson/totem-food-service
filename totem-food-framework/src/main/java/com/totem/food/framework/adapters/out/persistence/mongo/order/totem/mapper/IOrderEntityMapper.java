@@ -12,7 +12,9 @@ import org.mapstruct.ReportingPolicy;
 public interface IOrderEntityMapper {
 
 	@Mapping(source = "status.key", target = "status")
+	@Mapping(source = "customer.cpf", target = "cpf")
 	OrderEntity toEntity(OrderModel input);
 
+	@Mapping(source = "cpf", target = "customer.cpf")
 	OrderModel toModel(OrderEntity input);
 }

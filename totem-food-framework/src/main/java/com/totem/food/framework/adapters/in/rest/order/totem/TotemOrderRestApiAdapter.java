@@ -1,5 +1,6 @@
 package com.totem.food.framework.adapters.in.rest.order.totem;
 
+import com.totem.food.application.ports.in.dtos.context.XUserIdentifierContextDto;
 import com.totem.food.application.ports.in.dtos.order.totem.OrderCreateDto;
 import com.totem.food.application.ports.in.dtos.order.totem.OrderDto;
 import com.totem.food.application.ports.in.dtos.order.totem.OrderFilterDto;
@@ -8,7 +9,9 @@ import com.totem.food.application.ports.in.rest.ICreateRestApiPort;
 import com.totem.food.application.ports.in.rest.ISearchRestApiPort;
 import com.totem.food.application.ports.in.rest.IUpdateRestApiPort;
 import com.totem.food.application.ports.in.rest.IUpdateStatusRestApiPort;
+import com.totem.food.application.usecases.commons.IContextUseCase;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
+import com.totem.food.application.usecases.commons.ICreateWithIdentifierUseCase;
 import com.totem.food.application.usecases.commons.ISearchUseCase;
 import com.totem.food.application.usecases.commons.IUpdateStatusUseCase;
 import com.totem.food.application.usecases.commons.IUpdateUseCase;
@@ -41,16 +44,17 @@ public class TotemOrderRestApiAdapter implements ICreateRestApiPort<OrderCreateD
         IUpdateRestApiPort<OrderUpdateDto, ResponseEntity<OrderDto>>,
         IUpdateStatusRestApiPort<ResponseEntity<OrderDto>> {
 
-    private final ICreateUseCase<OrderCreateDto, OrderDto> iCreateUseCase;
+    private final ICreateWithIdentifierUseCase<OrderCreateDto, OrderDto> iCreateUseCase;
     private final ISearchUseCase<OrderFilterDto, List<OrderDto>> iSearchProductUseCase;
     private final IUpdateUseCase<OrderUpdateDto, OrderDto> iUpdateUseCase;
     private final IUpdateStatusUseCase<OrderDto> iUpdateStatusUseCase;
+    private final IContextUseCase<XUserIdentifierContextDto, String> iContextUseCase;
 
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Override
     public ResponseEntity<OrderDto> create(@RequestBody OrderCreateDto item) {
-        final var created = iCreateUseCase.createItem(item);
+        final var created = iCreateUseCase.createItem(item, iContextUseCase.getContext());
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
