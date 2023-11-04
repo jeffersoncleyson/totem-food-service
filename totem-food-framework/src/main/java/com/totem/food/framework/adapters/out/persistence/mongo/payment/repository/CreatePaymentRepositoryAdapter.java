@@ -13,19 +13,20 @@ import org.springframework.stereotype.Repository;
 @Component
 public class CreatePaymentRepositoryAdapter implements ICreateRepositoryPort<PaymentModel> {
 
-	@Repository
-	protected interface PaymentRepositoryMongoDB extends BaseRepository<PaymentEntity, String> {
 
-	}
+    @Repository
+    protected interface PaymentRepositoryMongoDB extends BaseRepository<PaymentEntity, String> {
 
-	private final PaymentRepositoryMongoDB repository;
-	private final IPaymentEntityMapper iPaymentMapper;
+    }
 
-	@Override
-	public PaymentModel saveItem(PaymentModel item) {
-		final var entity = iPaymentMapper.toEntity(item);
-		final var entitySaved = repository.save(entity);
-		return iPaymentMapper.toModel(entitySaved);
-	}
+    private final PaymentRepositoryMongoDB repository;
+    private final IPaymentEntityMapper iPaymentMapper;
+
+    @Override
+    public PaymentModel saveItem(PaymentModel item) {
+        final var entity = iPaymentMapper.toEntity(item);
+        final var entitySaved = repository.save(entity);
+        return iPaymentMapper.toModel(entitySaved);
+    }
 
 }

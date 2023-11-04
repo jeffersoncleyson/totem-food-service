@@ -1,4 +1,4 @@
-name: SonarCloud
+name: Analyse, Push and Deploy
 on:
   push:
     branches:
@@ -8,6 +8,11 @@ on:
       - v*
   pull_request:
     types: [opened, synchronize, reopened]
+
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   build:
     name: Build and analyze
@@ -84,3 +89,38 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+  deploy_eks:
+    needs: push_to_registry
+    name: Deploy
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        continue-on-error: false
+        with:
+          role-to-assume: "arn:aws:iam::151403969336:role/oidc-github-actions"
+          role-session-name: "oidc-github-actions"
+          aws-region: ${{ vars.AWS_DEFAULT_REGION }}
+
+      - name: Setting EKS Context
+        continue-on-error: false
+        run: |
+          aws eks update-kubeconfig --name ${{ vars.CLUSTER_NAME }} --region ${{ vars.AWS_DEFAULT_REGION }}
+
+      - name: Cloning Helm Chart Repository
+        continue-on-error: false
+        run: |
+          git clone https://github.com/jeffersoncleyson/totem-food-service-helm-chart.git -b main
+
+      - name: Updating Helm Chart
+        continue-on-error: false
+        uses: WyriHaximus/github-action-helm3@v3
+        with:
+          exec: |
+            helm upgrade ${{ vars.RELEASE_NAME }} ./totem-food-service-helm-chart/totem-food-chart --namespace ${{ vars.NAMESPACE }} --set=image.tag=${{ github.ref }}
+
+
+

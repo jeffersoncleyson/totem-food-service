@@ -9,7 +9,7 @@ import java.util.Set;
 @Getter
 public class OrderFilterDto {
 
-    private String customerId;
+    private String cpf;
     private String orderId;
     private Set<String> status;
     private Boolean onlyTreadmill;

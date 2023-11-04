@@ -75,12 +75,13 @@ class CreateOrderUseCaseTest {
     void invalidInputWhenCreateItem() {
 
         //## Given - Mock - Objects
+        final var customerId = "11122233344";
         var orderCreateDto = OrderCreateDtoMock.getMock("");
         orderCreateDto.setProducts(List.of());
 
         //## When
         var exception = assertThrows(InvalidInput.class,
-                () -> createOrderUseCase.createItem(orderCreateDto));
+                () -> createOrderUseCase.createItem(orderCreateDto, customerId));
 
         //## Then
         assertEquals(exception.getMessage(), "Order is invalid");
@@ -90,7 +91,7 @@ class CreateOrderUseCaseTest {
     @Test
     void createItem() {
         //## Mock - Objects
-
+        final var customerId = "11122233344";
         var orderDomain = OrderModelMock.orderModel(OrderStatusEnumDomain.NEW);
         var customerModel = CustomerModelMock.getMock();
         var productModel = ProductModelMock.getMock();
@@ -102,7 +103,7 @@ class CreateOrderUseCaseTest {
         when(iSearchProductRepositoryPort.findAll(any(ProductFilterDto.class))).thenReturn(List.of(productModel));
 
         //## When
-        var orderDto = createOrderUseCase.createItem(orderCreateDto);
+        var orderDto = createOrderUseCase.createItem(orderCreateDto, customerId);
 
         //## Then
         assertThat(orderDto).usingRecursiveComparison().isNotNull();

@@ -14,7 +14,7 @@ public class OrderEntityMock {
     public static OrderEntity getMock() {
         return OrderEntity.builder()
                 .id(new ObjectId().toHexString())
-                .customer(CustomerEntityMock.getMock())
+                .cpf(CustomerEntityMock.getMock().getCpf())
                 .products(List.of(ProductEntityMock.getMock()))
                 .status(String.valueOf(NEW))
                 .price(25.0)

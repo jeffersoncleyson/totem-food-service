@@ -14,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderCreateDto {
 
-    private String customerId;
     private List<ItemQuantityDto> products;
 
     public boolean isOrderValid(){

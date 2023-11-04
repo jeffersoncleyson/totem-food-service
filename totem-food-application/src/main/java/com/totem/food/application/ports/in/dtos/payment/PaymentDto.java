@@ -16,6 +16,7 @@ public class PaymentDto {
     private String id;
     private double price;
     private String status;
+    private String qrcodeBase64;
     private ZonedDateTime modifiedAt;
     private ZonedDateTime createAt;
 }
