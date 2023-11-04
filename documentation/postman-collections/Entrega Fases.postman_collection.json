@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "44c95624-d08e-442b-9558-002036efefd8",
-		"name": "Entrega Fase 1 e 2",
+		"name": "Entrega Fase 1, 2 e 3",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "16179794"
 	},
@@ -10,13 +10,52 @@
 			"name": "1 - Identificação Cliente",
 			"item": [
 				{
-					"name": "/totem/customer",
+					"name": "/login",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();",
+									"const statusCode = pm.response.code;",
+									"",
+									"pm.test(\"Expected OAuth Token Response\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    pm.expect(responseJson.access_token).to.be.not.null;",
+									"});",
+									"",
+									"if(statusCode == 200){",
+									"    pm.collectionVariables.set(\"access_token\", responseJson[\"access_token\"])",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "x-anonymous-user",
+								"value": "false",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Jefferson\",\n    \"email\": \"jef@gmail.com\",\n    \"cpf\": \"43285823239\",\n    \"mobile\": \"11966081162\",\n    \"password\": \"123456\"\n}",
+							"raw": "{\n    \"username\": \"12585824659\",\n    \"password\": \"123456\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -24,13 +63,72 @@
 							}
 						},
 						"url": {
-							"raw": "{{backend}}/totem/customer",
+							"raw": "{{gateway}}/login",
 							"host": [
-								"{{backend}}"
+								"{{gateway}}"
 							],
 							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/totem/customer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Jefferson\",\n    \"email\": \"jef.cleyson@gmail.com\",\n    \"cpf\": \"12585824659\",\n    \"mobile\": \"35999089866\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/v1/totem/customer",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"v1",
 								"totem",
 								"customer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/totem/customer/:customerId/code/:code",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{gateway}}/v1/totem/customer/:customerId/code/:code",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"v1",
+								"totem",
+								"customer",
+								":customerId",
+								"code",
+								":code"
+							],
+							"variable": [
+								{
+									"key": "customerId",
+									"value": "12585824659"
+								},
+								{
+									"key": "code",
+									"value": "295675"
+								}
 							]
 						}
 					},
@@ -43,7 +141,7 @@
 						"header": [
 							{
 								"key": "cpf",
-								"value": "12585824659",
+								"value": "12585824565",
 								"type": "text"
 							},
 							{
@@ -68,6 +166,16 @@
 				{
 					"name": "/totem/customer/:customerId",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJDemhabjMwODA0bFlSd1c3ZG05c1JrbUlsZ1UrTE1HY3F6Vml0a0pBZDgwPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIyMGZiMGUxOS00ZDM0LTRmMGEtYmViYy1kNjA2YWMwMzkyNzYiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV9yb2t2NFZvMEciLCJjbGllbnRfaWQiOiI4OTh1Y3RxczJyaHBobnBkMWdib2VzMWJzIiwib3JpZ2luX2p0aSI6IjEzN2UxY2M5LWYzYjItNGQxZC04N2VkLTEwOTU1MTZlZDFmYSIsImV2ZW50X2lkIjoiNmVjNDA1MjQtMTU0YS00YjQ5LTg2NTgtOTVhYWFlZTNhZmUxIiwidG9rZW5fdXNlIjoiYWNjZXNzIiwic2NvcGUiOiJhd3MuY29nbml0by5zaWduaW4udXNlci5hZG1pbiIsImF1dGhfdGltZSI6MTY5NTU4ODkzOCwiZXhwIjoxNjk1NTkyNTM4LCJpYXQiOjE2OTU1ODg5MzgsImp0aSI6IjhlN2UxOWM2LTE1OTctNGEzZi05MTU0LWM2YjNlNDUyMTY1OCIsInVzZXJuYW1lIjoiMTI1ODU4MjQ1NjUifQ.eQNejhFC6pAbkPjG-gaKzzBvh4lbFr_AIm2PewNgwJdjWAq_qZbWHc7h6MKQotcLfeiEcxC4M2l1f0Sf6PoE2TsEhtIjCIHH1MXRSQe_8ZV62pWhcY-5m0qfn4DTswmH_6AKhYNX_qwjJIsILdsM_5dqWCJz9uTqEA5XBtj4AP1bAPdFI8VMIwedBCW7JgL64LPkOaY_6KDb8NuXoACe2QNV8q50z76CUN6tf6Z_2ZeJIwEmaZC9F6DL2bS0RAgKX_IvhZUAm-nFFWUJnXcWO2jWEP0F7Kc0O0-HRmS0CzkdqIM8lWe2-LFv-6zKx5_Z0k9LCkmTpDIwVk1suR1q4w",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [
 							{
@@ -109,6 +217,16 @@
 				{
 					"name": "/administrative/category",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -121,11 +239,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{backend}}/administrative/category",
+							"raw": "{{gateway}}/v1/administrative/category",
 							"host": [
-								"{{backend}}"
+								"{{gateway}}"
 							],
 							"path": [
+								"v1",
 								"administrative",
 								"category"
 							]
@@ -136,14 +255,25 @@
 				{
 					"name": "/administrative/category",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{backend}}/administrative/category",
+							"raw": "{{gateway}}/v1/administrative/category",
 							"host": [
-								"{{backend}}"
+								"{{gateway}}"
 							],
 							"path": [
+								"v1",
 								"administrative",
 								"category"
 							]
@@ -154,6 +284,16 @@
 				{
 					"name": "/administrative/category",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
@@ -178,7 +318,7 @@
 							"variable": [
 								{
 									"key": "categoryId",
-									"value": "64a1ee96b6b6b8721473e10d"
+									"value": "652305c102eb7b77ad4d2ec5"
 								}
 							]
 						}
@@ -188,6 +328,16 @@
 				{
 					"name": "/administrative/category",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
@@ -203,7 +353,7 @@
 							"variable": [
 								{
 									"key": "categoryId",
-									"value": "64a1ee96b6b6b8721473e10d"
+									"value": "6523063202eb7b77ad4d2ec6"
 								}
 							]
 						}
@@ -218,11 +368,21 @@
 				{
 					"name": "/administrative/product",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Sunday\",\n    \"description\": \"Pão com gergilim, hamburger 200g, tomate\",\n    \"image\": \"https://s2.glbimg.com/x4W3eb8dGwiiv6MEzxk6qMeukSs=/smart/e.glbimg.com/og/ed/f/original/2021/05/28/receitas-para-acompanhar-batata-frita.jpg\",\n    \"price\": 15,\n    \"category\": \"64a765241a4d140bb25fbb64\"\n}",
+							"raw": "{\n    \"name\": \"Sunday\",\n    \"description\": \"Chocolate\",\n    \"image\": \"https://s2.glbimg.com/x4W3eb8dGwiiv6MEzxk6qMeukSs=/smart/e.glbimg.com/og/ed/f/original/2021/05/28/receitas-para-acompanhar-batata-frita.jpg\",\n    \"price\": 15,\n    \"category\": \"6544383ce3b6055d9fd06c15\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -230,11 +390,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{backend}}/administrative/product",
+							"raw": "{{gateway}}/v1/administrative/product",
 							"host": [
-								"{{backend}}"
+								"{{gateway}}"
 							],
 							"path": [
+								"v1",
 								"administrative",
 								"product"
 							]
@@ -279,21 +440,32 @@
 				{
 					"name": "/administrative/product",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{backend}}/administrative/product?categoryId=649f656e93ecc62de1ffa263",
+							"raw": "{{gateway}}/v1/administrative/product?categoryId=6544383ce3b6055d9fd06c15",
 							"host": [
-								"{{backend}}"
+								"{{gateway}}"
 							],
 							"path": [
+								"v1",
 								"administrative",
 								"product"
 							],
 							"query": [
 								{
 									"key": "categoryId",
-									"value": "649f656e93ecc62de1ffa263"
+									"value": "6544383ce3b6055d9fd06c15"
 								},
 								{
 									"key": "categoryId",
@@ -308,14 +480,25 @@
 				{
 					"name": "/administrative/product/:productId",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{backend}}/administrative/product/:productId",
+							"raw": "{{gateway}}/v1/administrative/product/:productId",
 							"host": [
-								"{{backend}}"
+								"{{gateway}}"
 							],
 							"path": [
+								"v1",
 								"administrative",
 								"product",
 								":productId"
@@ -323,7 +506,7 @@
 							"variable": [
 								{
 									"key": "productId",
-									"value": "649664ec5b5ed22abab6615f"
+									"value": "65442bf47d5c157756e7adee"
 								}
 							]
 						}
@@ -338,11 +521,21 @@
 				{
 					"name": "/totem/order",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"customerId\": \"64a7652f1a4d140bb25fbb65\",\n    \"products\": [\n        {\n            \"id\": \"64a7653b1a4d140bb25fbb66\",\n            \"qtd\": 2\n        }\n    ]\n}",
+							"raw": "{\n    \"products\": [\n        {\n            \"id\": \"65443843e3b6055d9fd06c16\",\n            \"qtd\": 2\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -350,11 +543,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{backend}}/totem/order",
+							"raw": "{{gateway}}/v1/totem/order",
 							"host": [
-								"{{backend}}"
+								"{{gateway}}"
 							],
 							"path": [
+								"v1",
 								"totem",
 								"order"
 							]
@@ -369,7 +563,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"products\": [\n        {\n            \"id\": \"64a7653b1a4d140bb25fbb66\",\n            \"qtd\": 2\n        }\n    ]\n}",
+							"raw": "{\n    \"products\": [\n        {\n            \"id\": \"6510aa4064398a581445d9d3\",\n            \"qtd\": 3\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -389,7 +583,7 @@
 							"variable": [
 								{
 									"key": "orderId",
-									"value": "64a765521a4d140bb25fbb67"
+									"value": "6510ac9d8728b12cb27a2c27"
 								}
 							]
 						}
@@ -399,26 +593,41 @@
 				{
 					"name": "/totem/order",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{backend}}/totem/order",
+							"raw": "{{gateway}}/v1/totem/order?orderId=654444bfbfcc5f7a6a1402dc",
 							"host": [
-								"{{backend}}"
+								"{{gateway}}"
 							],
 							"path": [
+								"v1",
 								"totem",
 								"order"
 							],
 							"query": [
 								{
-									"key": "customerId",
-									"value": "64a7652f1a4d140bb25fbb65",
+									"key": "cpf",
+									"value": "12585824659",
 									"disabled": true
 								},
 								{
 									"key": "orderId",
-									"value": "64a765521a4d140bb25fbb67",
+									"value": "654444bfbfcc5f7a6a1402dc"
+								},
+								{
+									"key": "onlyTreadmill",
+									"value": "true",
 									"disabled": true
 								},
 								{
@@ -428,12 +637,32 @@
 								},
 								{
 									"key": "status",
+									"value": "WAITING_PAYMENT",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "RECEIVED",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "IN_PREPARATION",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "READY",
+									"disabled": true
+								},
+								{
+									"key": "status",
 									"value": "FINALIZED",
 									"disabled": true
 								},
 								{
-									"key": "onlyTreadmill",
-									"value": "true",
+									"key": "status",
+									"value": "CANCELED",
 									"disabled": true
 								}
 							]
@@ -444,14 +673,25 @@
 				{
 					"name": "/totem/order/:orderId/status/:statusName",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"url": {
-							"raw": "{{backend}}/totem/order/:orderId/status/:statusName",
+							"raw": "{{gateway}}/v1/totem/order/:orderId/status/:statusName",
 							"host": [
-								"{{backend}}"
+								"{{gateway}}"
 							],
 							"path": [
+								"v1",
 								"totem",
 								"order",
 								":orderId",
@@ -461,11 +701,11 @@
 							"variable": [
 								{
 									"key": "orderId",
-									"value": "64a765521a4d140bb25fbb67"
+									"value": "654444bfbfcc5f7a6a1402dc"
 								},
 								{
 									"key": "statusName",
-									"value": "READY"
+									"value": "WAITING_PAYMENT"
 								}
 							]
 						}
@@ -480,11 +720,21 @@
 				{
 					"name": "/totem/payment",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"orderId\": \"64a765521a4d140bb25fbb67\"\n}",
+							"raw": "{\n    \"orderId\": \"654444bfbfcc5f7a6a1402dc\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -492,11 +742,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{backend}}/totem/payment",
+							"raw": "{{gateway}}/v1/totem/payment",
 							"host": [
-								"{{backend}}"
+								"{{gateway}}"
 							],
 							"path": [
+								"v1",
 								"totem",
 								"payment"
 							]
@@ -507,21 +758,31 @@
 				{
 					"name": "/totem/payment/:paymentId",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [
 							{
 								"key": "x-with-image-qrcode",
-								"value": "true",
-								"description": "Se verdadeiro, Gerar imagem de QR Code, caso contrário, mostrar informações.",
+								"value": "false",
 								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "{{backend}}/totem/payment/:paymentId",
+							"raw": "{{gateway}}/v1/totem/payment/:paymentId",
 							"host": [
-								"{{backend}}"
+								"{{gateway}}"
 							],
 							"path": [
+								"v1",
 								"totem",
 								"payment",
 								":paymentId"
@@ -529,7 +790,7 @@
 							"variable": [
 								{
 									"key": "paymentId",
-									"value": "649f695493ecc62de1ffa26c"
+									"value": "654444d4bfcc5f7a6a1402dd"
 								}
 							]
 						}
@@ -543,7 +804,7 @@
 						"header": [
 							{
 								"key": "token",
-								"value": "64078c78-fc83-4be4-8e78-25c91bb99dce",
+								"value": "8589b28f-ae66-44ff-8701-b5b3f19d0a58",
 								"type": "text"
 							}
 						],
@@ -562,7 +823,7 @@
 							"variable": [
 								{
 									"key": "orderId",
-									"value": "64a765521a4d140bb25fbb67"
+									"value": "64eeae39837eff576e53962e"
 								}
 							]
 						}
@@ -678,11 +939,6 @@
 									"key": "status",
 									"value": "WAITING_PAYMENT",
 									"disabled": true
-								},
-								{
-									"key": "onlyTreadmill",
-									"value": "true",
-									"disabled": true
 								}
 							]
 						}
@@ -717,6 +973,15 @@
 			"key": "backend",
 			"value": "http://localhost:8080/v1",
 			"type": "string"
+		},
+		{
+			"key": "gateway",
+			"value": "https://ibs3ipwwxf.execute-api.us-east-1.amazonaws.com/dev/",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": ""
 		}
 	]
 }
