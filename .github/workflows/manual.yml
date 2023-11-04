@@ -1,13 +1,12 @@
-name: Analyse, Push and Deploy
+name: Build and Deploy Temporary Images TAGs
+
 on:
-  push:
-    branches:
-      - main
-      - develop
-    tags:
-      - v*
-  pull_request:
-    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      imageTag:
+        description: 'Temporary Image TAG'
+        required: true
+        default: 'temporary'
 
 permissions:
   id-token: write
@@ -28,13 +27,6 @@ jobs:
           java-version: 17
           distribution: 'zulu' # Alternative distribution options are available.
 
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-
       - name: Cache Maven packages
         uses: actions/cache@v3
         with:
@@ -42,11 +34,10 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Build and analyze
+      - name: Build
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=totem-food-service-4787bf24ba181ac258cb520837a657896a92044c
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: mvn clean install
 
       - name: Upload Artifact Jar
         uses: actions/upload-artifact@v3
@@ -87,8 +78,7 @@ jobs:
           context: .
           file: ./DockerfileGitHubActions
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: jeffersoncleyson/totem-food-service:${{ github.event.inputs.imageTag }}
 
   deploy_eks:
     needs: push_to_registry
@@ -115,12 +105,9 @@ jobs:
         run: |
           git clone https://github.com/jeffersoncleyson/totem-food-service-helm-chart.git -b main
 
-      - name: Updating Helm Chart
+      - name: Updating Helm Chart with Temporary Image TAG
         continue-on-error: false
         uses: WyriHaximus/github-action-helm3@v3
         with:
           exec: |
-            helm upgrade ${{ vars.RELEASE_NAME }} ./totem-food-service-helm-chart/totem-food-chart --namespace ${{ vars.NAMESPACE }} --set=image.tag=${{ github.ref }}
-
-
-
+            helm upgrade ${{ vars.RELEASE_NAME }} ./totem-food-service-helm-chart/totem-food-chart --namespace ${{ vars.NAMESPACE }} --set=image.tag=temp-${{ github.ref }}
